@@ -1,3 +1,12 @@
+/* Import AdminLTE CSS */
+/* @import "../../node_modules/admin-lte/dist/css/adminlte.min.css"; */
+
+/* Import Bootstrap CSS */
+/* @import "../../node_modules/bootstrap/dist/css/bootstrap.min.css"; */
+
+@import 'admin-lte/dist/css/adminlte.min.css';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
