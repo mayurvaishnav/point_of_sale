@@ -44,9 +44,9 @@ class CustomerController extends Controller
         $customer = Customer::create($validatedData);
 
         if (!$customer) {
-            return redirect()->back()->with('error', __('customer.error_creating'));
+            return redirect()->back()->with('error', 'Sorry, there\'re a problem while creating customer.');
         }
-        return redirect()->route('customers.index')->with('success', __('customer.succes_creating'));
+        return redirect()->route('customers.index')->with('success', 'Customer have been created.');
     }
 
     /**
@@ -62,7 +62,6 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        // dd('customer');
         return view('customers.edit', compact('customer'));
     }
 
@@ -84,7 +83,7 @@ class CustomerController extends Controller
 
         Customer::where('id', $customer->id)->update($validatedData);
 
-        return redirect()->route('customers.index')->with('success', __('customer.success_updating'));
+        return redirect()->route('customers.index')->with('success', 'Customer have been updated!');
     }
 
     /**
@@ -94,6 +93,6 @@ class CustomerController extends Controller
     {
         Customer::destroy($customer->id);
 
-        return redirect()->route('customers.index')->with('success', __('customer.success_deleting'));
+        return redirect()->route('customers.index')->with('success', 'Customer have been deleted!');
     }
 }

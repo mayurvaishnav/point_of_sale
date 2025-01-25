@@ -326,6 +326,12 @@ return [
             'icon' => 'far fa fa-address-book',
             'active' => ['admin/customers*'],
         ],
+        [
+            'text' => 'Suppliers',
+            'route' => 'suppliers.index',
+            'icon' => 'far fa-solid fa-circle',
+            'active' => ['admin/suppliers*'],
+        ],
         // [
         //     'text' => 'pages',
         //     'url' => 'admin/pages',

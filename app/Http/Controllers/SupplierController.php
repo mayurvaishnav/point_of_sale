@@ -12,7 +12,9 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        //
+        return view("suppliers.index", [
+            "suppliers" => Supplier::all()
+        ]);
     }
 
     /**
@@ -20,7 +22,7 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        //
+        return view('suppliers.create');
     }
 
     /**
@@ -28,7 +30,23 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50|unique:suppliers,email',
+            'phone' => 'required|string|max:15|unique:suppliers,phone',
+            'address' => 'nullable|string|max:100',
+            'company' => 'nullable|string|max:50',
+            'description' => 'nullable|string|max:100',
+        ];
+
+        $validatedData = $request->validate($rules);
+
+        $supplier = Supplier::create($validatedData);
+
+        if (!$supplier) {
+            return redirect()->back()->with('error', 'Sorry, there\'re a problem while creating supplier.');
+        }
+        return redirect()->route('suppliers.index')->with('success', 'Supplier have been created.');
     }
 
     /**
@@ -44,7 +62,7 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
-        //
+        return view('suppliers.edit', compact('supplier'));
     }
 
     /**
@@ -52,7 +70,20 @@ class SupplierController extends Controller
      */
     public function update(Request $request, Supplier $supplier)
     {
-        //
+        $rules = [
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50|unique:suppliers,email,'.$supplier->id,
+            'phone' => 'required|string|max:15|unique:suppliers,phone,'.$supplier->id,
+            'address' => 'nullable|string|max:100',
+            'company' => 'nullable|string|max:50',
+            'description' => 'nullable|string|max:100',
+        ];
+
+        $validatedData = $request->validate($rules);
+
+        Supplier::where('id', $supplier->id)->update($validatedData);
+
+        return redirect()->route('suppliers.index')->with('success', 'Supplier have been updated!');
     }
 
     /**
@@ -60,6 +91,8 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
-        //
+        Supplier::destroy($supplier->id);
+
+        return redirect()->route('suppliers.index')->with('success', 'Supplier have been deleted!');
     }
 }

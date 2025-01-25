@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\SupplierController;
 
 Route::get('/', function () {
     return redirect('/admin/dashboard');
@@ -38,6 +39,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
     // Route::resource('products', ProductController::class);
     Route::resource('customers', CustomerController::class);
+    Route::resource('suppliers', SupplierController::class);
     // Route::resource('orders', OrderController::class);
 
     // Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

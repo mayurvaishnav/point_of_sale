@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Update Customer')
+@section('title', 'Update Supplier')
 @section('content_header')
-    <h1>Update Customer</h1>
+    <h1>Update Supplier</h1>
 @stop
 
 @section('content')
@@ -10,11 +10,11 @@
     <div class="card">
         <div class="card-body">
 
-            <form action="{{ route('customers.update', $customer) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('suppliers.update', $supplier) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
-                @include('customers.fields')
+                @include('suppliers.fields')
             </form>
         </div>
     </div>
