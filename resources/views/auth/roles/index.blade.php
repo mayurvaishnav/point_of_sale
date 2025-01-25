@@ -10,7 +10,7 @@
             </div>
             <div class="col-sm-6 text-right">
                 @can('role-create')
-                    <a href="{{route('roles.create')}}" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i> Create New Role</a>
+                    <a href="{{route('roles.create')}}" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i> Add Role</a>
                 @endcan
             </div>
         </div>

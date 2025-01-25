@@ -12,7 +12,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return view("categories.index", [
+            "categories" => Category::all()
+        ]);
     }
 
     /**
@@ -20,7 +22,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('categories.create');
     }
 
     /**
@@ -28,7 +30,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name' => 'required|unique:categories,name',
+            'slug' => 'required|unique:categories,slug|alpha_dash',
+            'description' => 'nullable|string|max:1000',
+        ];
+
+        $validatedData = $request->validate($rules);
+
+        $categotry = Category::create($validatedData);
+
+        if (!$categotry) {
+            return redirect()->back()->with('error', 'Sorry, there\'re a problem while creating categotry.');
+        }
+        return redirect()->route('categories.index')->with('success', 'Categotry have been created.');
     }
 
     /**
@@ -44,7 +59,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -52,7 +67,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $rules = [
+            'name' => 'required|unique:categories,name,'.$category->id,
+            'slug' => 'required|alpha_dash|unique:categories,slug,'.$category->id,
+            'description' => 'nullable|string|max:1000',
+        ];
+
+        $validatedData = $request->validate($rules);
+
+        Category::where('id', $category->id)->update($validatedData);
+
+        return redirect()->route('categories.index')->with('success', 'Category have been updated!');
     }
 
     /**
@@ -60,6 +85,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        Category::destroy($category->id);
+
+        return redirect()->route('categories.index')->with('success', 'Category have been deleted!');
     }
 }

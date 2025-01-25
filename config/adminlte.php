@@ -332,6 +332,12 @@ return [
             'icon' => 'far fa-solid fa-circle',
             'active' => ['admin/suppliers*'],
         ],
+        [
+            'text' => 'Categories',
+            'route' => 'categories.index',
+            'icon' => 'far fa-solid fa-circle',
+            'active' => ['admin/categories*'],
+        ],
         // [
         //     'text' => 'pages',
         //     'url' => 'admin/pages',
