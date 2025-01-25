@@ -17,6 +17,8 @@
 
 @section('content')
 
+@include('layouts.alerts')
+
 <div class="card">
     <div class="card-body table-responsive">
         <table class="table table-bordered" id="users-table">

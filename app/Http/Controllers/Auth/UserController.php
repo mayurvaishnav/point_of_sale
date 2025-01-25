@@ -21,10 +21,9 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $users = User::all();
-        $data = $users;
+        $users = User::with('roles')->get();
   
-        return view('auth.users.index',compact('data', 'users'));
+        return view('auth.users.index',compact('users'));
     }
     
     /**
