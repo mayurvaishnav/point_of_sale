@@ -321,6 +321,12 @@ return [
             'icon' => 'far fa fa-cube',
         ],
         [
+            'text' => 'Point of Sale',
+            'route' => 'customers.index',
+            'icon' => 'far fa fa-cart-plus',
+            'active' => ['admin/customers*'],
+        ],
+        [
             'text' => 'Customers',
             'route' => 'customers.index',
             'icon' => 'far fa fa-address-book',
@@ -343,6 +349,12 @@ return [
             'route' => 'products.index',
             'icon' => 'far fa-solid fa-circle',
             'active' => ['admin/products*'],
+        ],
+        [
+            'text' => 'Stock Management',
+            'route' => 'stocks.index',
+            'icon' => 'far fa-solid fa-circle',
+            'active' => ['admin/stock-management*'],
         ],
         // [
         //     'text' => 'pages',

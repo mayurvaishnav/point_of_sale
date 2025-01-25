@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockManagementController;
 use App\Http\Controllers\SupplierController;
 
 Route::get('/', function () {
@@ -43,6 +44,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('categories', CategoryController::class);
+
+    // STOCK MANAGEMENT
+    Route::get('/stock-management', [StockManagementController::class, 'index'])->name('stocks.index');
+    Route::post('/stock-management/add/{productId}', [StockManagementController::class, 'add'])->name('stocks.add');
+    Route::post('/stock-management/adject/{productId}', [StockManagementController::class, 'adject'])->name('stocks.adject');
     // Route::resource('orders', OrderController::class);
 
     // Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
