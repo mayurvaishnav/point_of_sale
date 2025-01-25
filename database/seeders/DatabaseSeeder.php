@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Customer;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Supplier;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -23,35 +24,35 @@ class DatabaseSeeder extends Seeder
         $permissions = [
             [
                 'name' => 'role-list',
-                'group_name' => 'role',
+                'group_name' => 'Role',
             ],
             [
                 'name' => 'role-create',
-                'group_name' => 'role',
+                'group_name' => 'Role',
             ],
             [
                 'name' => 'role-edit',
-                'group_name' => 'role',
+                'group_name' => 'Role',
             ],
             [
                 'name' => 'role-delete',
-                'group_name' => 'role',
+                'group_name' => 'Role',
             ],
             [
                 'name' => 'product-list',
-                'group_name' => 'product',
+                'group_name' => 'Product',
             ],
             [
                 'name' => 'product-create',
-                'group_name' => 'product',
+                'group_name' => 'Product',
             ],
             [
                 'name' => 'product-edit',
-                'group_name' => 'product',
+                'group_name' => 'Product',
             ],
             [
                 'name' => 'product-delete',
-                'group_name' => 'product',
+                'group_name' => 'Product',
             ]
          ];
          
@@ -74,10 +75,11 @@ class DatabaseSeeder extends Seeder
         Supplier::factory(10)->create();
         
         // Create parent categories
-        Category::factory(5)->create();
+        Category::factory(10)->create();
 
         // Create child categories
-        Category::factory(20)->create();
-
+        // Category::factory(20)->create();
+        
+        Product::factory(10)->create();
     }
 }

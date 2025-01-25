@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'parent_id' => fake()->optional(0.5)->randomElement(Category::pluck('id')->toArray()),
+            // 'parent_id' => fake()->optional(0.5)->randomElement(Category::pluck('id')->toArray()),
             'name' => fake()->name,
             'slug' => fake()->slug,
             'description' => fake()->paragraph,

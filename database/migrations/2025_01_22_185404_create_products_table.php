@@ -13,15 +13,19 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('product_name');
+            $table->string('name');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('set null');
-            $table->string('product_code')->nullable();
-            $table->string('product_garage')->nullable();
-            $table->string('product_image')->nullable();
-            $table->integer('product_store')->nullable();
+            $table->string('code')->nullable();
+            $table->string('garage')->nullable();
+            $table->string('image')->nullable();
+            $table->integer('store')->nullable();
+            $table->integer('tax_rate')->nullable();
             $table->decimal('buying_price', 8, 2)->nullable();
             $table->decimal('selling_price', 8, 2)->nullable();
+            $table->decimal('tax', 8, 2)->nullable();
+            $table->integer('quantity')->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

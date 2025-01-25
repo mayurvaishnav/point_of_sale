@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
 
 Route::get('/', function () {
@@ -38,7 +39,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 //     Route::get('/', [HomeController::class, 'index'])->name('home');
     // Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     // Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
-    // Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('categories', CategoryController::class);
