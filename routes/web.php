@@ -67,10 +67,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // POS
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
     Route::post('/pos/pay', [PosController::class, 'pay'])->name('pos.pay');
+    Route::post('/pos/save', [PosController::class, 'save'])->name('pos.save');
 
     // POS CART
-    Route::get('/cart/add-to-cart/{productId}', [CartController::class, 'addToCart'])->name('cart.addToCart');
-    Route::get('/cart/remove-from-cart/{productId}', [CartController::class, 'removeFromCart'])->name('cart.removeFromCart');
+    Route::post('/cart/add-to-cart', [CartController::class, 'addToCart'])->name('cart.addToCart');
+    Route::post('/cart/remove-from-cart', [CartController::class, 'removeFromCart'])->name('cart.removeFromCart');
     Route::delete('/cart/empty', [CartController::class, 'empty'])->name('cart.empty');
 
 

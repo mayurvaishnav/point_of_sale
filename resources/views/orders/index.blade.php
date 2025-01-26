@@ -42,14 +42,15 @@
                     <td class="text-right">€ {{$order->total}}</td>
                     <td class="text-right">{{$order->paid_method}}</td>
                     <td>
-                        {{-- <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                        <form action="{{ route('products.destroy', $order->id) }}" method="POST" style="display:inline">
+                        <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">Details</a>
+                        <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                        <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline">
                             @method('delete')
                             @csrf
                             <button class="btn btn-danger btn-sm btn-delete">
                                 <i class="fas fa-trash"></i>
                             </button>
-                        </form> --}}
+                        </form>
                     </td>
                 </tr>
                 @endforeach
@@ -64,6 +65,7 @@
         $(document).ready(function() {
             $('#orders-table').DataTable({
                 pageLength: 50,
+                order: [[0, 'desc']]
             });
         });
 
