@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockManagementController;
 use App\Http\Controllers\SupplierController;
@@ -49,6 +51,18 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/stock-management', [StockManagementController::class, 'index'])->name('stocks.index');
     Route::post('/stock-management/add/{productId}', [StockManagementController::class, 'add'])->name('stocks.add');
     Route::post('/stock-management/adject/{productId}', [StockManagementController::class, 'adject'])->name('stocks.adject');
+
+
+    // POS
+    Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+
+    // POS CART
+    Route::get('/cart/add-to-cart/{productId}', [CartController::class, 'addToCart'])->name('cart.addToCart');
+    Route::get('/cart/remove-from-cart/{productId}', [CartController::class, 'removeFromCart'])->name('cart.removeFromCart');
+    Route::delete('/cart/empty', [CartController::class, 'empty'])->name('cart.empty');
+
+
+
     // Route::resource('orders', OrderController::class);
 
     // Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

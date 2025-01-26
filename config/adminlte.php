@@ -322,7 +322,7 @@ return [
         ],
         [
             'text' => 'Point of Sale',
-            'route' => 'customers.index',
+            'route' => 'pos.index',
             'icon' => 'far fa fa-cart-plus',
             'active' => ['admin/customers*'],
         ],
