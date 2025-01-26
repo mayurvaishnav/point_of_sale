@@ -55,6 +55,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // POS
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+    Route::post('/pos/pay', [PosController::class, 'pay'])->name('pos.pay');
 
     // POS CART
     Route::get('/cart/add-to-cart/{productId}', [CartController::class, 'addToCart'])->name('cart.addToCart');

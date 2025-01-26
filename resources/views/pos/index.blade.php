@@ -63,6 +63,14 @@ Cart
                 Void Cart
             </button>
         </form>
+
+        <form action="{{ route('pos.pay') }}" method="POST" style="display:inline">
+            @csrf
+            <input type="hidden" name="payment_method" value="cash">
+            <button class="btn btn-primary">
+                Pay by Cash
+            </button>
+        </form>
     </div>
 </div>
 
