@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('customer_credits', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('restrict');
+            $table->foreignId('order_id')->nullable()->constrained('orders')->onDelete('cascade');
+            $table->string('note')->nullable();
+            $table->decimal('credit_amount',10,2)->nullable();
+            $table->decimal('paid_amount',10,2)->nullable();
+            $table->decimal('balance',10,2)->nullable();
             $table->timestamps();
         });
     }

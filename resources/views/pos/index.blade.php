@@ -71,6 +71,22 @@ Cart
                 Pay by Cash
             </button>
         </form>
+
+        <form action="{{ route('pos.pay') }}" method="POST" style="display:inline">
+            @csrf
+            <input type="hidden" name="payment_method" value="card">
+            <button class="btn btn-primary">
+                Pay by Card
+            </button>
+        </form>
+
+        <form action="{{ route('pos.pay') }}" method="POST" style="display:inline">
+            @csrf
+            <input type="hidden" name="payment_method" value="customer_credit">
+            <button class="btn btn-primary">
+                Pay by Customer Credit
+            </button>
+        </form>
     </div>
 </div>
 

@@ -336,7 +336,7 @@ return [
             'text' => 'Customers',
             'route' => 'customers.index',
             'icon' => 'far fa fa-address-book',
-            'active' => ['admin/customers*'],
+            'active' => ['admin/customers/*'],
         ],
         [
             'text' => 'Suppliers',
@@ -361,6 +361,15 @@ return [
             'route' => 'stocks.index',
             'icon' => 'far fa-solid fa-circle',
             'active' => ['admin/stock-management*'],
+        ],
+        [
+            'header'=> ' ',
+        ],
+        [
+            'text' => 'Customer Credits',
+            'route' => 'customer-credits.index',
+            'icon' => 'far fa fa-university',
+            'active' => ['admin/customer-credits*'],
         ],
         // [
         //     'text' => 'pages',

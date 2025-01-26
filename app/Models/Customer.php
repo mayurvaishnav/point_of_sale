@@ -17,4 +17,14 @@ class Customer extends Model
         'company',
         'description'
     ];
+
+    public function customerCredits()
+    {
+        return $this->hasMany(CustomerCredit::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
