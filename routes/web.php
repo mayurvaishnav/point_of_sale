@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockManagementController;
@@ -46,6 +47,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('categories', CategoryController::class);
+
+    // ORDERS
+
+    Route::resource('orders', OrderController::class);
 
     // STOCK MANAGEMENT
     Route::get('/stock-management', [StockManagementController::class, 'index'])->name('stocks.index');

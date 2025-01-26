@@ -12,8 +12,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::orderBy("created_at","desc");
-        return view("products.index", compact("orders"));
+        $orders = Order::with('customer')->get();
+        return view("orders.index", compact("orders"));
     }
 
     /**

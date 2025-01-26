@@ -32,4 +32,12 @@ class Order extends Model
     protected $casts = [
         'paid_method' => PaymentMethod::class,
     ];
+
+    /**
+     * Get the customer that owns the order.
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

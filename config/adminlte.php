@@ -327,6 +327,12 @@ return [
             'active' => ['admin/customers*'],
         ],
         [
+            'text' => 'Orders',
+            'route' => 'orders.index',
+            'icon' => 'far fa fa-money-bill-alt',
+            'active' => ['admin/orders*'],
+        ],
+        [
             'text' => 'Customers',
             'route' => 'customers.index',
             'icon' => 'far fa fa-address-book',
