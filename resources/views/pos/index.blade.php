@@ -9,6 +9,7 @@
             </div>
         </div>
     </div>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('css')
@@ -74,7 +75,7 @@ Cart
                 </div>
                 <div>
                     <div class="card scrollable-card">
-                        <table class="table tale-striped table-responsive">
+                        <table class="table tale-striped table-responsive" id="cart-table">
                             <thead>
                                 <tr>
                                     <th class="name-column">Name</th>
@@ -151,7 +152,9 @@ Cart
                                         @php
                                             $isOutOfStock = $product->quantity <= 0;
                                         @endphp
-                                        <button class="btn btn-outline-info btn-block btn-lg btn-large" @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif>
+                                        <button class="btn btn-outline-info btn-block btn-lg btn-large" 
+                                            @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
+                                        >
                                             @if ($isOutOfStock)
                                                     <i class="fas fa-exclamation-triangle text-danger"></i> 
                                             @endif
@@ -170,7 +173,9 @@ Cart
                     <div class="row mt-3">
                         @foreach ($products as $product)
                             <div class="col-md-4 mb-3 product-item">
-                                <button class="btn btn-outline-info btn-block btn-lg btn-large">
+                                <button class="btn btn-outline-info btn-block btn-lg btn-large"
+                                    @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
+                                >
                                     {{ $product->name }}</br>
                                     <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
                                 </button>
@@ -185,44 +190,6 @@ Cart
 
 @include('pos.miscProduct-modal')
 
-
-Products
-
-<div class="card">
-    <div class="card-body table-responsive">
-        <table class="table table-bordered" id="products-table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>taxRate</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($products as $product)
-                <tr>
-                    <td class="text-right">{{$product->id}}</td>
-                    <td>{{$product->name}}</td>
-                    <td class="text-right">{{$product->quantity}}</td>
-                    <td class="text-right">{{$product->tax_rate}}</td>
-                    <td>
-                        <form action="{{ route('cart.addToCart') }}" method="POST" style="display:inline">
-                            @csrf
-                            <input hidden name="product_id" value="{{ $product->id }}"/>
-                            <input hidden name="customer_id" value="2"/>
-                            <button class="btn btn-success btn-sm">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
 @endsection
 
 @section('js')
@@ -257,33 +224,80 @@ Products
             });
         });
 
+        // Adding misc product
+        $(document).ready(function () {
+            $('#productForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent full page reload
 
-        $(document).ready(function() {
-            $('#products-table').DataTable({
-                pageLength: 50,
+                addToCart(this.product_id, this.product_name, this.price, this.tax_rate);
             });
         });
 
 
-        $(".cart-add-item").click(function(e){
-            e.preventDefault();
-            var form = $(this).parents("form");
+        // Store to Cart
+        function addToCart(id, name, price, tax_rate) {
+            $.ajax({
+                url: "{{ route('cart.addToCart') }}",
+                method: "POST",
+                data: {
+                    product_id: id,
+                    customer_id: 2,
+                    name: name,
+                    price: price,
+                    tax_rate: tax_rate,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+                success: function (response) {
+                    // Swal.fire({
+                    //     icon: 'success',
+                    //     title: 'Success',
+                    //     text: 'Product added successfully!',
+                    //     timer: 2000,
+                    //     showConfirmButton: false
+                    // });
 
-            Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-            if (result.value) {
-                form.submit();
-            }
+                    console.log(response);
+
+                    // Clear the cart table
+                    $('#cart-table tbody').empty();
+
+                    // Convert cartItems object to an array
+                    const cartItems = Object.values(response.cartItems);
+
+                    // Iterate over the cart items and create new rows
+                    cartItems.forEach(cartItem => {
+                        const newRow = `
+                            <tr>
+                                <td>${cartItem.name}</td>
+                                <td>${cartItem.quantity}</td>
+                                <td>${cartItem.price}</td>
+                                <td>
+                                    <form action="{{ route('cart.removeFromCart') }}" method="POST" style="display:inline">
+                                        @csrf
+                                        <input hidden name="cart_item_id" value="${cartItem.id}"/>
+                                        <button class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        `;
+                        // Append the new row to the cart table
+                        $('#cart-table tbody').append(newRow);
+                    });
+                    
+
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong, Please try again.',
+                    });
+                }
             });
-
-        });
+        }
     </script>
 @stop
 

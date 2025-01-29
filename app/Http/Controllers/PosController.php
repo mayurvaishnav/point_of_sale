@@ -70,7 +70,7 @@ class PosController extends Controller
             foreach ($cart->cartItems as $cartItem) {
                 OrderDetail::create([
                     'order_id' => $order->id,
-                    'product_id' => $cartItem->id,
+                    'product_id' => $cartItem->id > 0 ? $cartItem->id : null,
                     'product_name' => $cartItem->name,
                     'quantity' => $cartItem->quantity,
                     'unit_cost' => $cartItem->price,

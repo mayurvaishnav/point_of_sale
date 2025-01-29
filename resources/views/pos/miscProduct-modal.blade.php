@@ -12,7 +12,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="productName">Product Name</label>
-                        <input type="text" class="form-control" id="productName" name="product_name" required>
+                        <input type="text" class="form-control" id="productName" name="product_name">
                     </div>
 
                     <div class="form-group">
@@ -22,7 +22,11 @@
 
                     <div class="form-group">
                         <label for="taxRate">Tax Rate (%)</label>
-                        <input type="number" class="form-control" id="taxRate" name="tax_rate" required>
+                        <select class="form-control" id="taxRate" name="tax_rate" required>
+                            <option value="0">0%</option>
+                            <option value="13.5">13.5%</option>
+                            <option value="23">23%</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -33,7 +37,7 @@
                                 <label class="custom-control-label" for="taxIncludedYes">Yes</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="taxIncludedNo" name="tax_included" class="custom-control-input" value="0" checked>
+                                <input type="radio" id="taxIncludedNo" name="tax_included" class="custom-control-input" value="0">
                                 <label class="custom-control-label" for="taxIncludedNo">No</label>
                             </div>
                         </div>
@@ -42,7 +46,7 @@
 
                     <div class="form-group">
                         <label for="totalPrice">Price to Customer</label>
-                        <input type="text" class="form-control" id="totalPrice" readonly>
+                        <input type="text" class="form-control" id="totalPrice" name="customer_price" readonly>
                     </div>
                     
                     <div class="modal-footer">
