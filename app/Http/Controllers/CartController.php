@@ -21,15 +21,14 @@ class CartController extends Controller
             throw new \Exception("Product out of stock");
         }
 
-        $cartItem = new CartItem();
-        $cartItem->id = $product->id;
-        $cartItem->name = $product->name;
-        $cartItem->quantity = 1;
-        $cartItem->price = $product->selling_price;
-        $cartItem->taxRate = $product->tax_rate;
-        $cartItem->tax = $product->tax;
-        $cartItem->discount = $product->discount;
-        $cartItem->total = $product->selling_price;
+        $cartItem = new CartItem(
+            $product->id,
+            $product->name,
+            1,
+            $product->selling_price,
+            0,
+            $product->tax_rate,
+        );
 
         // dd($cartItem, $customer, $product);
 

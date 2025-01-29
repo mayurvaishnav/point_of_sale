@@ -12,6 +12,46 @@
 @endsection
 
 @section('css')
+<style>
+    .name-column {
+        width: 45%;
+        word-wrap: break-word;
+    }
+
+    .qty-column {
+        width: 20%;
+    }
+
+    .price-column {
+        width: 25%;
+    }
+
+    .delete-column {
+        width: 10%;
+        vertical-align: middle !important;
+    }
+
+    .no-padding {
+        padding: 0;
+    }
+
+    .input-number {
+        padding-right: 0;
+        padding-left: 0.3rem;
+    }
+    .scrollable-card {
+        overflow: auto;
+        max-height: 90vh;
+    }
+    .btn-large {
+        padding: 20px 40px;
+        font-size: 1.5rem;
+        height: 100px;
+    }
+    .nav-tabs .nav-link.active {
+        order: 1 !important;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -19,107 +59,104 @@
 @include('layouts.alerts')
 Cart
 
-
-<div class="form-group">
-    <label for="customer_id">Customers</label>
-    <select class="form-control" name="customer_id" required>
-        <option selected="">-- Select customers --</option>
-        @foreach ($customers as $customer)
-            <option value="{{ $customer->id }}" {{ old('customer_id', $cart->customer->id ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
-        @endforeach
-    </select>
-    @error('customer_id')
-    <span class="invalid-feedback" role="alert">
-        <strong>{{ $message }}</strong>
-    </span>
-    @enderror
-</div>
 <div class="card">
-    <div class="card-body table-responsive">
-        <table class="table table-bordered" id="products-table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Product Price</th>
-                    <th>Sub total</th>
-                    <th>tax</th>
-                    <th>tax Rate</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($cart->cartItems as $item)
-                <tr>
-                    <td class="text-right">{{$item->id}}</td>
-                    <td>{{$item->name}}</td>
-                    <td class="text-right">{{$item->quantity}}</td>
-                    <td class="text-right">{{ $item->price }}</td>
-                    <td class="text-right">{{$item->total}}</td>
-                    <td class="text-right">{{$item->tax}}</td>
-                    <td class="text-right">{{$item->taxRate}}</td>
-                    <td>
-                        <form action="{{ route('cart.removeFromCart') }}" method="POST" style="display:inline">
-                            @csrf
-                            <input hidden name="cart_item_id" value="{{ $item->id }}"/>
-                            <button class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-                <tr>
-                    <td colspan="4" class="text-right">Total</td>
-                    <td class="text-right">{{ $cart->total->total ?? '' }}</td>
-                    <td class="text-right">{{ $cart->total->tax ?? '' }}</td> 
-                    <td class="text-right">{{ $cart->total->taxRate ?? '' }}</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-
-
-
-        <form action="{{ route('cart.empty') }}" method="POST" style="display:inline">
-            @method('delete')
-            @csrf
-            <button class="btn btn-default">
-                Void Cart
-            </button>
-        </form>
-
-        <form action="{{ route('pos.pay') }}" method="POST" style="display:inline">
-            @csrf
-            <input type="hidden" name="payment_method" value="cash">
-            <button class="btn btn-primary">
-                Pay by Cash
-            </button>
-        </form>
-
-        <form action="{{ route('pos.pay') }}" method="POST" style="display:inline">
-            @csrf
-            <input type="hidden" name="payment_method" value="card">
-            <button class="btn btn-primary">
-                Pay by Card
-            </button>
-        </form>
-
-        <form action="{{ route('pos.pay') }}" method="POST" style="display:inline">
-            @csrf
-            <input type="hidden" name="payment_method" value="customer_credit">
-            <button class="btn btn-primary">
-                Pay by Customer Credit
-            </button>
-        </form>
-
-        <form action="{{ route('pos.save') }}" method="POST" style="display:inline">
-            @csrf
-            <button class="btn btn-success">
-                Save for later
-            </button>
-        </form>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 col-lg-4">
+                <!-- Customer select -->
+                <div class="form-group">
+                    <select class="form-control" name="customer_id" required>
+                        <option selected="">-- Select Customer --</option>
+                        @foreach ($customers as $customer)
+                            <option value="{{ $customer->id }}" {{ ($cart->customer_id ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <div class="card scrollable-card">
+                        <table class="table tale-striped table-responsive">
+                            <thead>
+                                <tr>
+                                    <th class="name-column">Name</th>
+                                    <th class="qty-column">Qty</th>
+                                    <th class="price-column">Price</th>
+                                    <th class="delete-column"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($cart->cartItems as $item)
+                                    <tr>
+                                        <td>{{$item->name}}</td>
+                                        <td>
+                                            <input
+                                                type="number" step="1" min="1"
+                                                value={{ $item->quantity }}
+                                                class="form-control input-number"
+                                                {{-- onChange={(e) => updateCart(c.id, e.target.value)} --}}
+                                            />
+                                        </td>
+                                        <td class="">
+                                            <input
+                                                type="text"
+                                                value={{ $item->price }}
+                                                class="form-control input-number"
+                                                {{-- onChange={(e) => updateCart(c.id, e.target.value)} --}}
+                                            />
+                                        </td>
+                                        <td class="delete-column pl-0 pr-0">
+                                            <form action="{{ route('cart.removeFromCart') }}" method="POST" style="display:inline">
+                                                @csrf
+                                                <input hidden name="cart_item_id" value="{{ $item->id }}"/>
+                                                <button class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-8">
+                <!-- Search input -->
+                <div class="form-group">
+                    <input type="text" name="search" class="form-control" id="name"
+                        placeholder="Search product">
+                </div>
+                <!-- product display -->
+                <ul class="nav nav-tabs flex-wrap" id="productTabs" role="tablist">
+                    @foreach ($categories as $category)
+                        <li class="nav-item">
+                            <a class="nav-link {{ $loop->first ? 'active' : '' }}" id="tab-{{ $category->id }}" data-toggle="tab" href="#category-{{ $category->id }}" role="tab" aria-controls="category-{{ $category->id }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $category->name }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+                <div class="tab-content" id="productTabsContent">
+                    @foreach ($categories as $category)
+                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="category-{{ $category->id }}" role="tabpanel" aria-labelledby="tab-{{ $category->id }}">
+                            <div class="row mt-3">
+                                @foreach ($products->where('category_id', $category->id) as $product)
+                                    <div class="col-md-4 mb-3">
+                                        @php
+                                            $isOutOfStock = $product->quantity >= 0;
+                                        @endphp
+                                        <button class="btn btn-outline-info btn-block btn-lg btn-large" @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif>
+                                            @if ($isOutOfStock)
+                                                    <i class="fas fa-exclamation-triangle text-danger"></i> 
+                                            @endif
+                                            {{ $product->name }}</br>
+                                            <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -134,6 +171,7 @@ Products
                     <th>Id</th>
                     <th>Name</th>
                     <th>Quantity</th>
+                    <th>taxRate</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -143,6 +181,7 @@ Products
                     <td class="text-right">{{$product->id}}</td>
                     <td>{{$product->name}}</td>
                     <td class="text-right">{{$product->quantity}}</td>
+                    <td class="text-right">{{$product->tax_rate}}</td>
                     <td>
                         <form action="{{ route('cart.addToCart') }}" method="POST" style="display:inline">
                             @csrf

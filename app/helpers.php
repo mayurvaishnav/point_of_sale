@@ -5,3 +5,7 @@ if (!function_exists('activeSegment')) {
         return request()->segment($segment) == $name ? $class : '';
     }
 }
+
+function formateCurrency($currencyValue) {
+    return number_format($currencyValue,2,'.',',');
+}

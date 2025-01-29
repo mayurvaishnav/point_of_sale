@@ -16,10 +16,10 @@ class CartService {
         return $cart;
     }
 
-    public static function addCartItem(Customer $customer, ?int $order_id, array $cartItems) {
+    public static function addCartItem(?Customer $customer, ?Order $order, array $cartItems) {
         $cart = self::getCart();
 
-        $cart->update($customer, $order_id, $cartItems);
+        $cart->update($customer, $order, $cartItems);
 
         session()->put('cart', $cart);
     }

@@ -20,14 +20,16 @@ class PosController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('category')->get();
         $cart = CartService::getCart();
         $customers = Customer::all();
 
-        // session()->forget('cart');
-        // dd($products, $cartItems, $customers);
+        $categories = $products->pluck('category')->unique();
 
-        return view("pos.index", compact("products","cart", "customers"));
+        // session()->forget('cart');
+        // dd($products, $cart, $customers, $categories);
+
+        return view("pos.index", compact("products","cart", "customers", "categories"));
     }
 
     public function pay(Request $request) {
@@ -53,13 +55,13 @@ class PosController extends Controller
             $order = Order::create([
                 'customer_id' => $customer_id,
                 'user_id' => Auth::user()->id,
-                'status' => 'pending',
+                'status' => 'paid',
                 'order_date' => now()->toDateString(),
                 'paid_method' => $validatedData['payment_method'], 
-                'net_sales' => 100,
+                'net_sales' => $cart->getTotal()->total,
                 'discount' => 0,
-                'tax' => 0,
-                'total' => 1233
+                'tax' => $cart->total->tax,
+                'total' => $cart->total->total
             ]);
 
             $order->invoice_number = "BAC-" . Carbon::parse($order->order_date)->format('Ymd') . "-" . $order->id;
