@@ -121,11 +121,18 @@ Cart
             </div>
             <div class="col-md-6 col-lg-8">
                 <!-- Search input -->
-                <div class="form-group">
-                    <input type="text" name="search" class="form-control" id="name"
-                        placeholder="Search product">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#productModal">Add misc</button>
+                    </div>
+                    <div class="form-group col-md-9">
+                        <input type="text" name="search" class="form-control" id="searchInput"
+                            placeholder="Search product">
+                    </div>
                 </div>
                 <!-- product display -->
+
+                <!-- Tab panel for categories -->
                 <ul class="nav nav-tabs flex-wrap" id="productTabs" role="tablist">
                     @foreach ($categories as $category)
                         <li class="nav-item">
@@ -133,6 +140,8 @@ Cart
                         </li>
                     @endforeach
                 </ul>
+
+                <!-- Tb content for categories -->
                 <div class="tab-content" id="productTabsContent">
                     @foreach ($categories as $category)
                         <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="category-{{ $category->id }}" role="tabpanel" aria-labelledby="tab-{{ $category->id }}">
@@ -140,7 +149,7 @@ Cart
                                 @foreach ($products->where('category_id', $category->id) as $product)
                                     <div class="col-md-4 mb-3">
                                         @php
-                                            $isOutOfStock = $product->quantity >= 0;
+                                            $isOutOfStock = $product->quantity <= 0;
                                         @endphp
                                         <button class="btn btn-outline-info btn-block btn-lg btn-large" @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif>
                                             @if ($isOutOfStock)
@@ -155,10 +164,26 @@ Cart
                         </div>
                     @endforeach
                 </div>
+
+                <!-- Container for all products when searching -->
+                <div id="allProductsContainer" class="d-none">
+                    <div class="row mt-3">
+                        @foreach ($products as $product)
+                            <div class="col-md-4 mb-3 product-item">
+                                <button class="btn btn-outline-info btn-block btn-lg btn-large">
+                                    {{ $product->name }}</br>
+                                    <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@include('pos.miscProduct-modal')
 
 
 Products
@@ -202,11 +227,43 @@ Products
 
 @section('js')
     <script>
+
+        // Search funcationality
+        $(document).ready(function() {
+            $('#searchInput').on('keyup', function() {
+                var query = $(this).val().toLowerCase();
+
+                if (query) {
+                    // Hide tab panel and show all products container
+                    $('#productTabs').addClass('d-none');
+                    $('#productTabsContent').addClass('d-none');
+                    $('#allProductsContainer').removeClass('d-none');
+
+                    // Filter products in all products container
+                    $('#allProductsContainer .product-item').each(function() {
+                        var productText = $(this).text().toLowerCase();
+                        if (productText.includes(query)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                } else {
+                    // Show tab panel and hide all products container
+                    $('#productTabs').removeClass('d-none');
+                    $('#productTabsContent').removeClass('d-none');
+                    $('#allProductsContainer').addClass('d-none');
+                }
+            });
+        });
+
+
         $(document).ready(function() {
             $('#products-table').DataTable({
                 pageLength: 50,
             });
         });
+
 
         $(".cart-add-item").click(function(e){
             e.preventDefault();
