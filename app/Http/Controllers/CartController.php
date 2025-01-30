@@ -60,6 +60,17 @@ class CartController extends Controller
         return redirect()->route('pos.index');
     }
 
+    public function updateCustomer(Request $request)
+    {
+        $id = $request->customer_id;
+
+        $customer = Customer::find($id);
+
+        CartService::updateCustomer($customer);
+
+        return response()->json(CartService::getCart());
+    }
+
     public function updateQuantity(Request $request)
     {
         $id = $request->cart_item_id;

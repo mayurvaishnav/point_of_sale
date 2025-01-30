@@ -86,7 +86,7 @@
                 <!-- Customer select -->
                 <div class="form-group">
                     <select class="form-control select2" name="customer_id" id="customerSelect">
-                        <option>-- Select Customer --</option>
+                        <option value="">-- Select Customer --</option>
                         @foreach ($customers as $customer)
                             <option value="{{ $customer->id }}" {{ ($cart->customer->id ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
                         @endforeach
@@ -295,18 +295,46 @@
                     }
                 });
             });
+
+            // Update Customer selection
+            $('#customerSelect').on('change', function() {
+                const customerId = $(this).val();
+
+                // Add your AJAX request or other logic here to handle the customer change
+                $.ajax({
+                    url: "{{ route('cart.updateCustomer') }}",
+                    method: "POST",
+                    data: {
+                        customer_id: customerId,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        // nothing to do here
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please refresh and try again.',
+                        });
+                    }
+                });
+            });
         });
 
 
 
         // Store to Cart
         function addToCart(id, product_name, customer_price, tax_rate) {
+            $customer_id = $('#customerSelect').val();
+            console.log($customer_id);
             $.ajax({
                 url: "{{ route('cart.addToCart') }}",
                 method: "POST",
                 data: {
                     product_id: id,
-                    customer_id: 2,
+                    customer_id: $customer_id,
                     product_name: product_name,
                     customer_price: customer_price,
                     tax_rate: tax_rate,
