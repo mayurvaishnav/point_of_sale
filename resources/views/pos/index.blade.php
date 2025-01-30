@@ -328,7 +328,6 @@
         // Store to Cart
         function addToCart(id, product_name, customer_price, tax_rate) {
             $customer_id = $('#customerSelect').val();
-            console.log($customer_id);
             $.ajax({
                 url: "{{ route('cart.addToCart') }}",
                 method: "POST",
@@ -347,7 +346,7 @@
                     $('#productModal').modal('hide');
 
                     // Re-render the cart
-                    reRenderCart(Object.values(response.cartItems));
+                    reRenderCart(response);
                 },
                 error: function (xhr) {
                     Swal.fire({
@@ -360,10 +359,15 @@
         }
 
         // Renender cart
-        function reRenderCart(cartItems) {
+        function reRenderCart(response) {
+
+            // Update the customer select
+            $('#customerSelect').val(response.customer.id).trigger('change');
 
             // Clear the cart table
             $('#cart-table tbody').empty();
+
+            cartItems = Object.values(response.cartItems)
 
             // Iterate over the cart items and create new rows
             cartItems.forEach(cartItem => {
