@@ -24,10 +24,18 @@ class CartService {
         session()->put('cart', $cart);
     }
 
-    public function updateQuantity($itemId, $quantity) {
+    public static function updateQuantity($itemId, $quantity) {
         $cart = self::getCart();
         if (isset($cart[$itemId])) {
-            $cart[$itemId]['quantity'] = $quantity;
+            $cart[$itemId]->quantity = $quantity;
+            session()->put('cart', $cart);
+        }
+    }
+
+    public static function updatePrice($itemId, $price) {
+        $cart = self::getCart();
+        if (isset($cart[$itemId])) {
+            $cart[$itemId]->price = $price;
             session()->put('cart', $cart);
         }
     }

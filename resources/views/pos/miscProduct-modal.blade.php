@@ -33,7 +33,7 @@
                         <label>Tax Included?</label>
                         <div>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="taxIncludedYes" name="tax_included" class="custom-control-input" value="1">
+                                <input type="radio" id="taxIncludedYes" name="tax_included" class="custom-control-input" value="1" checked>
                                 <label class="custom-control-label" for="taxIncludedYes">Yes</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">

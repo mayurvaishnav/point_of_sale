@@ -59,6 +59,26 @@ class CartController extends Controller
         return redirect()->route('pos.index');
     }
 
+    public function updateQuantity(Request $request)
+    {
+        $id = $request->cart_item_id;
+        $quantity = $request->quantity;
+
+        CartService::updateQuantity($id, $quantity);
+
+        return redirect()->route('pos.index');
+    }
+
+    public function updatePrice(Request $request)
+    {
+        $id = $request->cart_item_id;
+        $price = $request->price;
+
+        CartService::updatePrice($id, $price);
+
+        return redirect()->route('pos.index');
+    }
+
     public function removeFromCart(Request $request)
     {
         $id = $request->cart_item_id;

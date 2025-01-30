@@ -2,13 +2,13 @@
 
 @section('title', 'Products')
 @section('content_header')
-    <div class="container-fluid">
+    {{-- <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1>POS</h1>
             </div>
         </div>
-    </div>
+    </div> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
@@ -52,15 +52,20 @@
     .nav-tabs .nav-link.active {
         order: 1 !important;
     }
+
+    /* Make the card take up the full viewport height */
+    .full-height-card {
+        height: calc(100vh - 110px);
+        overflow: auto; /* Allow scrolling within the card if needed */
+    }
 </style>
 @endsection
 
 @section('content')
 
 @include('layouts.alerts')
-Cart
 
-<div class="card">
+<div class="card full-height-card">
     <div class="card-body">
         <div class="row">
             <div class="col-md-6 col-lg-4">
@@ -96,7 +101,7 @@ Cart
                                                 {{-- onChange={(e) => updateCart(c.id, e.target.value)} --}}
                                             />
                                         </td>
-                                        <td class="">
+                                        <td>
                                             <input
                                                 type="text"
                                                 value={{ $item->price }}
@@ -133,54 +138,57 @@ Cart
                 </div>
                 <!-- product display -->
 
-                <!-- Tab panel for categories -->
-                <ul class="nav nav-tabs flex-wrap" id="productTabs" role="tablist">
-                    @foreach ($categories as $category)
-                        <li class="nav-item">
-                            <a class="nav-link {{ $loop->first ? 'active' : '' }}" id="tab-{{ $category->id }}" data-toggle="tab" href="#category-{{ $category->id }}" role="tab" aria-controls="category-{{ $category->id }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $category->name }}</a>
-                        </li>
-                    @endforeach
-                </ul>
+                <div style="border: 1px solid #e0e0e0; border-radius: 5px;">
 
-                <!-- Tb content for categories -->
-                <div class="tab-content" id="productTabsContent">
-                    @foreach ($categories as $category)
-                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="category-{{ $category->id }}" role="tabpanel" aria-labelledby="tab-{{ $category->id }}">
-                            <div class="row mt-3">
-                                @foreach ($products->where('category_id', $category->id) as $product)
-                                    <div class="col-md-4 mb-3">
-                                        @php
-                                            $isOutOfStock = $product->quantity <= 0;
-                                        @endphp
-                                        <button class="btn btn-outline-info btn-block btn-lg btn-large" 
-                                            @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
-                                        >
-                                            @if ($isOutOfStock)
-                                                    <i class="fas fa-exclamation-triangle text-danger"></i> 
-                                            @endif
-                                            {{ $product->name }}</br>
-                                            <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
-                                        </button>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                    <!-- Tab panel for categories -->
+                    <ul class="nav nav-tabs flex-wrap" id="productTabs" role="tablist">
+                        @foreach ($categories as $category)
+                            <li class="nav-item">
+                                <a class="nav-link {{ $loop->first ? 'active' : '' }}" id="tab-{{ $category->id }}" data-toggle="tab" href="#category-{{ $category->id }}" role="tab" aria-controls="category-{{ $category->id }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $category->name }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
 
-                <!-- Container for all products when searching -->
-                <div id="allProductsContainer" class="d-none">
-                    <div class="row mt-3">
-                        @foreach ($products as $product)
-                            <div class="col-md-4 mb-3 product-item">
-                                <button class="btn btn-outline-info btn-block btn-lg btn-large"
-                                    @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
-                                >
-                                    {{ $product->name }}</br>
-                                    <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
-                                </button>
+                    <!-- Tb content for categories -->
+                    <div class="tab-content" id="productTabsContent">
+                        @foreach ($categories as $category)
+                            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="category-{{ $category->id }}" role="tabpanel" aria-labelledby="tab-{{ $category->id }}">
+                                <div class="row mt-3">
+                                    @foreach ($products->where('category_id', $category->id) as $product)
+                                        <div class="col-md-4 mb-3">
+                                            @php
+                                                $isOutOfStock = $product->quantity <= 0;
+                                            @endphp
+                                            <button class="btn btn-outline-info btn-block btn-lg btn-large" 
+                                                @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
+                                            >
+                                                @if ($isOutOfStock)
+                                                        <i class="fas fa-exclamation-triangle text-danger"></i> 
+                                                @endif
+                                                {{ $product->name }}</br>
+                                                <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         @endforeach
+                    </div>
+
+                    <!-- Container for all products when searching -->
+                    <div id="allProductsContainer" class="d-none">
+                        <div class="row mt-3">
+                            @foreach ($products as $product)
+                                <div class="col-md-4 mb-3 product-item">
+                                    <button class="btn btn-outline-info btn-block btn-lg btn-large"
+                                        @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
+                                    >
+                                        {{ $product->name }}</br>
+                                        <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -229,21 +237,28 @@ Cart
             $('#productForm').on('submit', function (event) {
                 event.preventDefault(); // Prevent full page reload
 
-                addToCart(this.product_id, this.product_name, this.price, this.tax_rate);
+                const formData = {
+                    product_name: $('#productForm input[name="product_name"]').val(),
+                    customer_price: $('#productForm input[name="customer_price"]').val(),
+                    tax_rate: $('#productForm select[name="tax_rate"]').val(),
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                };
+
+                addToCart(null, formData.product_name, formData.customer_price, formData.tax_rate);
             });
         });
 
 
         // Store to Cart
-        function addToCart(id, name, price, tax_rate) {
+        function addToCart(id, product_name, customer_price, tax_rate) {
             $.ajax({
                 url: "{{ route('cart.addToCart') }}",
                 method: "POST",
                 data: {
                     product_id: id,
                     customer_id: 2,
-                    name: name,
-                    price: price,
+                    product_name: product_name,
+                    customer_price: customer_price,
                     tax_rate: tax_rate,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
@@ -286,6 +301,9 @@ Cart
                         // Append the new row to the cart table
                         $('#cart-table tbody').append(newRow);
                     });
+
+                    // Close the modal
+                    $('#productModal').modal('hide');
                     
 
                 },
@@ -298,6 +316,47 @@ Cart
                 }
             });
         }
+
+
+        // Handle click event on quantity cell
+        // $(document).on('click', '.quantity-cell', function () {
+        //     const cell = $(this);
+        //     const currentQuantity = cell.text();
+        //     const cartItemId = cell.data('id');
+
+        //     // Replace cell content with an input field
+        //     cell.html(`<input type="number" class="form-control quantity-input input-number" value="${currentQuantity}" data-id="${cartItemId}">`);
+        // });
+
+
+
+        // Handle change event on quantity input field
+        // $(document).on('blur', '.quantity-input', function () {
+        //     const input = $(this);
+        //     const newQuantity = input.val();
+        //     const cartItemId = input.data('id');
+
+        //     // Update the quantity in the cart (you can add an AJAX request here to update the server)
+        //     // For now, just update the cell content
+        //     input.parent().text(newQuantity);
+
+        //     // Optionally, you can send an AJAX request to update the quantity on the server
+        //     // $.ajax({
+        //     //     url: "{{ route('cart.updateQuantity') }}",
+        //     //     method: "POST",
+        //     //     data: {
+        //     //         cart_item_id: cartItemId,
+        //     //         quantity: newQuantity,
+        //     //         _token: $('meta[name="csrf-token"]').attr('content')
+        //     //     },
+        //     //     success: function (response) {
+        //     //         // Handle success response
+        //     //     },
+        //     //     error: function (xhr) {
+        //     //         // Handle error response
+        //     //     }
+        //     // });
+        // });
     </script>
 @stop
 
