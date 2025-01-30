@@ -58,6 +58,20 @@
         height: calc(100vh - 110px);
         overflow: auto; /* Allow scrolling within the card if needed */
     }
+
+
+    .parent-div {
+        height: 100%; /* Ensure the parent div takes up the full height */
+    }
+
+    .child-div {
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        height: 100%; /* Make the child div take up the full height of the parent */
+        overflow-y: auto; /* Allow vertical scrolling within the child div if needed */
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+        padding: 0.5rem;
+    }
 </style>
 @endsection
 
@@ -138,56 +152,58 @@
                 </div>
                 <!-- product display -->
 
-                <div style="border: 1px solid #e0e0e0; border-radius: 5px;">
+                <div class="parent-div">
+                    <div class="child-div">
 
-                    <!-- Tab panel for categories -->
-                    <ul class="nav nav-tabs flex-wrap" id="productTabs" role="tablist">
-                        @foreach ($categories as $category)
-                            <li class="nav-item">
-                                <a class="nav-link {{ $loop->first ? 'active' : '' }}" id="tab-{{ $category->id }}" data-toggle="tab" href="#category-{{ $category->id }}" role="tab" aria-controls="category-{{ $category->id }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $category->name }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
+                        <!-- Tab panel for categories -->
+                        <ul class="nav nav-tabs flex-wrap" id="productTabs" role="tablist">
+                            @foreach ($categories as $category)
+                                <li class="nav-item">
+                                    <a class="nav-link {{ $loop->first ? 'active' : '' }}" id="tab-{{ $category->id }}" data-toggle="tab" href="#category-{{ $category->id }}" role="tab" aria-controls="category-{{ $category->id }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $category->name }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
 
-                    <!-- Tb content for categories -->
-                    <div class="tab-content" id="productTabsContent">
-                        @foreach ($categories as $category)
-                            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="category-{{ $category->id }}" role="tabpanel" aria-labelledby="tab-{{ $category->id }}">
-                                <div class="row mt-3">
-                                    @foreach ($products->where('category_id', $category->id) as $product)
-                                        <div class="col-md-4 mb-3">
-                                            @php
-                                                $isOutOfStock = $product->quantity <= 0;
-                                            @endphp
-                                            <button class="btn btn-outline-info btn-block btn-lg btn-large" 
-                                                @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
-                                            >
-                                                @if ($isOutOfStock)
-                                                        <i class="fas fa-exclamation-triangle text-danger"></i> 
-                                                @endif
-                                                {{ $product->name }}</br>
-                                                <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
-                                            </button>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <!-- Container for all products when searching -->
-                    <div id="allProductsContainer" class="d-none">
-                        <div class="row mt-3">
-                            @foreach ($products as $product)
-                                <div class="col-md-4 mb-3 product-item">
-                                    <button class="btn btn-outline-info btn-block btn-lg btn-large"
-                                        @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
-                                    >
-                                        {{ $product->name }}</br>
-                                        <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
-                                    </button>
+                        <!-- Tb content for categories -->
+                        <div class="tab-content" id="productTabsContent">
+                            @foreach ($categories as $category)
+                                <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="category-{{ $category->id }}" role="tabpanel" aria-labelledby="tab-{{ $category->id }}">
+                                    <div class="row mt-3">
+                                        @foreach ($products->where('category_id', $category->id) as $product)
+                                            <div class="col-md-4 mb-3">
+                                                @php
+                                                    $isOutOfStock = $product->quantity <= 0;
+                                                @endphp
+                                                <button class="btn btn-outline-info btn-block btn-lg btn-large" 
+                                                    @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
+                                                >
+                                                    @if ($isOutOfStock)
+                                                            <i class="fas fa-exclamation-triangle text-danger"></i> 
+                                                    @endif
+                                                    {{ $product->name }}</br>
+                                                    <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endforeach
+                        </div>
+
+                        <!-- Container for all products when searching -->
+                        <div id="allProductsContainer" class="d-none">
+                            <div class="row mt-3">
+                                @foreach ($products as $product)
+                                    <div class="col-md-4 mb-3 product-item">
+                                        <button class="btn btn-outline-info btn-block btn-lg btn-large"
+                                            @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
+                                        >
+                                            {{ $product->name }}</br>
+                                            <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
