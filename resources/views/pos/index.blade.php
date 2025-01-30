@@ -85,10 +85,10 @@
             <div class="col-md-6 col-lg-4">
                 <!-- Customer select -->
                 <div class="form-group">
-                    <select class="form-control" name="customer_id" required>
-                        <option selected="">-- Select Customer --</option>
+                    <select class="form-control select2" name="customer_id" id="customerSelect">
+                        <option>-- Select Customer --</option>
                         @foreach ($customers as $customer)
-                            <option value="{{ $customer->id }}" {{ ($cart->customer_id ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
+                            <option value="{{ $customer->id }}" {{ ($cart->customer->id ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -124,13 +124,9 @@
                                             />
                                         </td>
                                         <td class="delete-column pl-0 pr-0">
-                                            <form action="{{ route('cart.removeFromCart') }}" method="POST" style="display:inline">
-                                                @csrf
-                                                <input hidden name="cart_item_id" value="{{ $item->id }}"/>
-                                                <button class="btn btn-danger btn-sm">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
+                                            <button class="btn btn-danger btn-sm deleteFromCart" data-id="{{ $item->id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -219,8 +215,20 @@
 @section('js')
     <script>
 
-        // Search funcationality
+        
         $(document).ready(function() {
+
+            // // Initialize Select2 for customers
+            //     // Initialize Select2 on the customer select element
+            //     $('#customerSelect').select2({
+            //         placeholder: "-- Select Customer --",
+            //         allowClear: true,
+            //         // width: '100%',  // Ensure it takes full width
+            //         // theme: 'bootstrap4' // Apply Bootstrap 4 styling
+            //     });
+            // });
+
+            // Search funcationality
             $('#searchInput').on('keyup', function() {
                 var query = $(this).val().toLowerCase();
 
@@ -246,10 +254,8 @@
                     $('#allProductsContainer').addClass('d-none');
                 }
             });
-        });
 
-        // Adding misc product
-        $(document).ready(function () {
+            // Adding misc product
             $('#productForm').on('submit', function (event) {
                 event.preventDefault(); // Prevent full page reload
 
@@ -262,7 +268,35 @@
 
                 addToCart(null, formData.product_name, formData.customer_price, formData.tax_rate);
             });
+
+            // Delete from card
+            $(document).on('click', '.deleteFromCart', function() {
+                const cartItemId = $(this).data('id');
+
+                // Add your AJAX request or other logic here to handle the deletion
+                $.ajax({
+                    url: "{{ route('cart.removeFromCart') }}",
+                    method: "POST",
+                    data: {
+                        cart_item_id: cartItemId,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        // Re-render the cart
+                        reRenderCart(Object.values(response.cartItems));
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please refresh and try again.',
+                        });
+                    }
+                });
+            });
         });
+
 
 
         // Store to Cart
@@ -280,56 +314,45 @@
                 },
                 dataType: 'json',
                 success: function (response) {
-                    // Swal.fire({
-                    //     icon: 'success',
-                    //     title: 'Success',
-                    //     text: 'Product added successfully!',
-                    //     timer: 2000,
-                    //     showConfirmButton: false
-                    // });
-
-                    console.log(response);
-
-                    // Clear the cart table
-                    $('#cart-table tbody').empty();
-
-                    // Convert cartItems object to an array
-                    const cartItems = Object.values(response.cartItems);
-
-                    // Iterate over the cart items and create new rows
-                    cartItems.forEach(cartItem => {
-                        const newRow = `
-                            <tr>
-                                <td>${cartItem.name}</td>
-                                <td>${cartItem.quantity}</td>
-                                <td>${cartItem.price}</td>
-                                <td>
-                                    <form action="{{ route('cart.removeFromCart') }}" method="POST" style="display:inline">
-                                        @csrf
-                                        <input hidden name="cart_item_id" value="${cartItem.id}"/>
-                                        <button class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        `;
-                        // Append the new row to the cart table
-                        $('#cart-table tbody').append(newRow);
-                    });
-
                     // Close the modal
+                    $('#productForm').trigger("reset");
                     $('#productModal').modal('hide');
-                    
 
+                    // Re-render the cart
+                    reRenderCart(Object.values(response.cartItems));
                 },
                 error: function (xhr) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Something went wrong, Please try again.',
+                        text: 'Something went wrong, Please refresh and try again.',
                     });
                 }
+            });
+        }
+
+        // Renender cart
+        function reRenderCart(cartItems) {
+
+            // Clear the cart table
+            $('#cart-table tbody').empty();
+
+            // Iterate over the cart items and create new rows
+            cartItems.forEach(cartItem => {
+                const newRow = `
+                    <tr>
+                        <td>${cartItem.name}</td>
+                        <td>${cartItem.quantity}</td>
+                        <td>${cartItem.price}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm deleteFromCart" data-id="${cartItem.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                // Append the new row to the cart table
+                $('#cart-table tbody').append(newRow);
             });
         }
 

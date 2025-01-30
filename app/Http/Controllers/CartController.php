@@ -37,6 +37,7 @@ class CartController extends Controller
         } else {
             $keys = array_keys($cart->cartItems);
             $id = !empty($keys) ? min($keys) : 0;
+            $id = $id >= 0 ? 0 : $id;
             $cartItem = new CartItem(
                 $id - 1,
                 $request->product_name,
@@ -66,7 +67,7 @@ class CartController extends Controller
 
         CartService::updateQuantity($id, $quantity);
 
-        return redirect()->route('pos.index');
+        return response()->json(CartService::getCart());
     }
 
     public function updatePrice(Request $request)
@@ -76,7 +77,7 @@ class CartController extends Controller
 
         CartService::updatePrice($id, $price);
 
-        return redirect()->route('pos.index');
+        return response()->json(CartService::getCart());
     }
 
     public function removeFromCart(Request $request)
@@ -84,13 +85,13 @@ class CartController extends Controller
         $id = $request->cart_item_id;
         CartService::removeItem($id);
 
-        return redirect()->route('pos.index');
+        return response()->json(CartService::getCart());
     }
 
     public function empty()
     {
         CartService::clearCart();
 
-        return redirect()->route('pos.index');
+        return response()->json(CartService::getCart());
     }
 }
