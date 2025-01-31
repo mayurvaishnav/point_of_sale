@@ -15,12 +15,20 @@ class Customer extends Model
         'phone',
         'address',
         'company',
-        'description'
+        'description',
+        'brand',
+        'model',
+        'registration_no'
     ];
 
-    public function customerCredits()
+    public function customerAccounts()
     {
-        return $this->hasMany(CustomerCredit::class);
+        return $this->hasMany(CustomerAccount::class);
+    }
+
+    public function customerAccountTransactions()
+    {
+        return $this->hasMany(CustomerAccountTransaction::class);
     }
 
     public function orders()

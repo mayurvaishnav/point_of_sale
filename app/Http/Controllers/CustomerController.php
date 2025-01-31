@@ -36,7 +36,10 @@ class CustomerController extends Controller
             'phone' => 'required|string|max:15|unique:customers,phone',
             'address' => 'nullable|string|max:100',
             'company' => 'nullable|string|max:50',
-            'description' => 'nullable|string|max:100',
+            'description' => 'nullable|string|max:1000',
+            'brand'=> 'nullable|string|max:50',
+            'model'=> 'nullable|string|max:50',
+            'registration_no'=> 'nullable|string|max:50',
         ];
 
         $validatedData = $request->validate($rules);
@@ -77,6 +80,9 @@ class CustomerController extends Controller
             'address' => 'nullable|string|max:100',
             'company' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:100',
+            'brand'=> 'nullable|string|max:50',
+            'model'=> 'nullable|string|max:50',
+            'registration_no'=> 'nullable|string|max:50',
         ];
 
         $validatedData = $request->validate($rules);

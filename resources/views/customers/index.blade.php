@@ -63,7 +63,12 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('#customers-table').DataTable();
+            $('#customers-table').DataTable(
+                {
+                    "order": [[ 0, "asc" ]],
+                    "pageLength": 50
+                }
+            );
         });
 
         $(".btn-delete").click(function(e){
@@ -79,9 +84,9 @@
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
             }).then((result) => {
-            if (result.value) {
-                form.submit();
-            }
+                if (result.value) {
+                    form.submit();
+                }
             });
 
         });
