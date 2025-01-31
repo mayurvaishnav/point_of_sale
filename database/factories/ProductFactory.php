@@ -27,10 +27,13 @@ class ProductFactory extends Factory
             'garage' => fake()->word(),
             'store' => fake()->numberBetween(1,10),
             'buying_price' => fake()->randomFloat(2, 1, 100),
+            'price' => fake()->randomFloat(2, 1, 100),
             'selling_price' => fake()->randomFloat(2, 1, 100),
-            'include_tax' => fake()->boolean(),
+            'tax_included' => fake()->boolean(),
             'stockable' => fake()->boolean(),
             'quantity' => fake()->numberBetween(1,100),
+            'description' => fake()->word(),
+            'brand' => fake()->word(),
             'created_at' => now(),
             'updated_at' => now()
         ];

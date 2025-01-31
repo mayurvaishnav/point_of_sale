@@ -39,17 +39,20 @@ class ProductController extends Controller
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
+            'tax_rate_id' => 'required|exists:tax_rates,id',
+            'price'=> 'required|numeric|min:0',
+            'selling_price' => 'nullable|numeric|min:0',
+            'tax_included'=> 'required|boolean',
+            'stockable'=> 'required|boolean',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'code' => 'nullable|string|max:255',
             'garage' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'store' => 'nullable|integer',
-            'tax_rate' => 'nullable|integer',
+            'store'=> 'nullable|string|max:255',
             'buying_price' => 'nullable|numeric|min:0',
-            'selling_price' => 'nullable|numeric|min:0',
-            'tax' => 'nullable|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'quantity' => 'nullable|integer|min:0',
+            'brand'=> 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
         ];
 
@@ -80,8 +83,9 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         $suppliers = Supplier::all();
+        $taxRates = TaxRate::all();
 
-        return view('products.edit', compact('product','categories','suppliers'));
+        return view('products.edit', compact('product','categories','suppliers', 'taxRates'));
     }
 
     /**
@@ -91,17 +95,20 @@ class ProductController extends Controller
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
+            'tax_rate_id' => 'required|exists:tax_rates,id',
+            'price'=> 'required|numeric|min:0',
+            'selling_price' => 'nullable|numeric|min:0',
+            'tax_included'=> 'required|boolean',
+            'stockable'=> 'required|boolean',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'code' => 'nullable|string|max:255',
             'garage' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'store' => 'nullable|integer',
-            'tax_rate' => 'nullable|integer',
+            'store'=> 'nullable|string|max:255',
             'buying_price' => 'nullable|numeric|min:0',
-            'selling_price' => 'nullable|numeric|min:0',
-            'tax' => 'nullable|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'quantity' => 'nullable|integer|min:0',
+            'brand'=> 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
         ];
 

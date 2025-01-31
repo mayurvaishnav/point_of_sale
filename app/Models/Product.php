@@ -13,16 +13,19 @@ class Product extends Model
         'name',
         'category_id',
         'supplier_id',
+        'tax_rate_id',
         'code',
         'garage',
         'image',
         'store',
-        'tax_rate',
         'buying_price',
+        'price',
         'selling_price',
-        'tax',
+        'tax_included',
         'quantity',
         'description',
+        'brand',
+        'stockable'
     ];
 
     /**

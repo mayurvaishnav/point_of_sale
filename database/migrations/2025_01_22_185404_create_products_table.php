@@ -14,16 +14,17 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('set null');
-            $table->foreignId('tax_rate_id')->nullable()->constrained('tax_rates')->onDelete('set null');
+            $table->foreignId('tax_rate_id')->constrained('tax_rates')->onDelete('restrict');
             $table->string('code')->nullable();
             $table->string('garage')->nullable();
             $table->string('image')->nullable();
-            $table->integer('store')->nullable();
-            $table->decimal('buying_price', 8, 2)->nullable();
-            $table->decimal('selling_price', 8, 2)->nullable();
-            $table->boolean('include_tax')->default(true);
+            $table->string('store')->nullable();
+            $table->decimal('buying_price', 8, 2);
+            $table->decimal('price', 8, 2);
+            $table->decimal('selling_price', 8, 2);
+            $table->boolean('tax_included')->default(true);
             $table->boolean('stockable')->default(false);
             $table->integer('quantity')->nullable();
             $table->text('description')->nullable();
