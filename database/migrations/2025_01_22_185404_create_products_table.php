@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('garage')->nullable();
             $table->string('image')->nullable();
             $table->string('store')->nullable();
-            $table->decimal('buying_price', 8, 2);
+            $table->decimal('buying_price', 8, 2)->nullable();
             $table->decimal('price', 8, 2);
             $table->decimal('selling_price', 8, 2);
             $table->boolean('tax_included')->default(true);

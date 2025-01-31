@@ -3,7 +3,7 @@
         <label for="name">Name</label>
         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
             id="name"
-            placeholder="Name" value="{{ old('name', $product->name ?? '') }}">
+            placeholder="Name" value="{{ old('name', $product->name ?? '') }}" required>
         @error('name')
         <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
@@ -13,8 +13,8 @@
 
     <div class="form-group col-md-6">
         <label for="category_id">Category</label>
-        <select class="form-control" name="category_id" required>
-            <option selected="" disabled>-- Select Category --</option>
+        <select class="form-control @error('category_id') is-invalid @enderror" name="category_id" id="categories" required>
+            <option value="">-- Select Category --</option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}" {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
             @endforeach
@@ -47,10 +47,12 @@
 
             <div class="form-group col-md-6">
                 <label for="tax_rate_id">Tax rate</label>
-                <select name="tax_rate_id" class="form-control" id="tax_rate" required>
-                    <option selected="">-- Select Taxrate --</option>
+                <select name="tax_rate_id" class="form-control @error('tax_rate_id') is-invalid @enderror"" id="tax_rate" required>
+                    <option value="">-- Select Taxrate --</option>
                     @foreach ($taxRates as $rate)
-                        <option value="{{ $rate->id }}" {{ old('tax_rate_id', $product->tax_rate_id ?? '') == $rate->id ? 'selected' : '' }}>{{ $rate->name }}</option>
+                        <option value="{{ $rate->id }}" data-rate="{{ $rate->value }}"
+                            {{ old('tax_rate_id', $product->tax_rate_id ?? '') == $rate->id ? 'selected' : '' }}
+                        >{{ $rate->name }}</option>
                     @endforeach
                 </select>
                 @error('tax_rate_id')
@@ -64,7 +66,7 @@
                 <label for="price">Price</label>
                 <input type="number" step="0.01" name="price" class="form-control @error('price') is-invalid @enderror"
                     id="price"
-                    placeholder="Selling Price" value="{{ old('price', $product->price ?? '') }}">
+                    placeholder="Selling Price" value="{{ old('price', $product->price ?? '') }}" required>
                 @error('price')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -76,14 +78,19 @@
                 <label>Tax Included in price?</label>
                 <div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="taxIncludedYes" name="tax_included" class="custom-control-input" value="1" checked>
+                        <input type="radio" id="taxIncludedYes" name="tax_included" class="custom-control-input @error('tax_included') is-invalid @enderror" value="1" checked>
                         <label class="custom-control-label" for="taxIncludedYes">Yes</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="taxIncludedNo" name="tax_included" class="custom-control-input" value="0">
+                        <input type="radio" id="taxIncludedNo" name="tax_included" class="custom-control-input @error('tax_included') is-invalid @enderror" value="0">
                         <label class="custom-control-label" for="taxIncludedNo">No</label>
                     </div>
                 </div>
+                @error('tax_included')
+                <div class="invalid-feedback d-block">
+                    <strong>{{ $message }}</strong>
+                </div>
+                @enderror
             </div>
 
             <div class="form-group col-md-12">
@@ -105,18 +112,23 @@
         <label>Is product stockable?</label>
         <div>
             <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="stockableYes" name="stockable" class="custom-control-input" value="1"
+                <input type="radio" id="stockableYes" name="stockable" class="custom-control-input @error('stockable') is-invalid @enderror" value="1"
                     {{ old('stockable', $product->stockable ?? '') == 1 ? 'checked' : '' }}
                 >
                 <label class="custom-control-label" for="stockableYes">Yes</label>
             </div>
             <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="stockableNo" name="stockable" class="custom-control-input" value="0"
+                <input type="radio" id="stockableNo" name="stockable" class="custom-control-input @error('stockable') is-invalid @enderror" value="0"
                     {{ old('stockable', $product->stockable ?? '') == 0 ? 'checked' : '' }}
                 >
                 <label class="custom-control-label" for="stockableNo">No</label>
             </div>
         </div>
+        @error('stockable')
+            <div class="invalid-feedback d-block">
+                <strong>{{ $message }}</strong>
+            </div>
+        @enderror
     </div>
 
     <div class="card col-md-12" id="stockInformation" style="display: none;">
@@ -126,8 +138,8 @@
         <div class="card-body row">
             <div class="form-group col-md-12">
                 <label for="supplier_id">Supplier</label>
-                <select class="form-control" name="supplier_id" required>
-                    <option selected="">-- Select Supplier --</option>
+                <select class="form-control" name="supplier_id" id="suppliers">
+                    <option value="">-- Select Supplier --</option>
                     @foreach ($suppliers as $supplier)
                         <option value="{{ $supplier->id }}" {{ old('supplier_id', $product->supplier_id ?? '') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
                     @endforeach
@@ -143,7 +155,7 @@
                 <label for="code">Product Code</label>
                 <input type="text" name="code" class="form-control @error('code') is-invalid @enderror"
                     id="code"
-                    placeholder="code" value="{{ old('name', $product->code ?? '') }}">
+                    placeholder="code" value="{{ old('code', $product->code ?? '') }}">
                 @error('code')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>

@@ -1,14 +1,16 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const productPrice = document.getElementById('price');
-        const taxRate = document.getElementById('tax_rate_id');
+        const taxRateSelect = document.getElementById('tax_rate');
         const taxIncludedYes = document.getElementById('taxIncludedYes');
         const taxIncludedNo = document.getElementById('taxIncludedNo');
-        const totalPrice = document.getElementById('totalPrice');
+        const sellingPrice = document.getElementById('selling_price');
 
-        function calculateTotalPrice() {
+        function calculateSellingPrice() {
             const price = parseFloat(productPrice.value) || 0;
-            const tax = parseFloat(taxRate.value) || 0;
+            // Get the selected option and its data-rate attribute
+            const selectedOption = taxRateSelect.options[taxRateSelect.selectedIndex];
+            const tax = parseFloat(selectedOption.getAttribute('data-rate')) || 0;
             const taxIncluded = taxIncludedYes.checked;
 
             let total;
@@ -18,13 +20,13 @@
                 total = price + (price * (tax / 100));
             }
 
-            totalPrice.value = total.toFixed(2);
+            sellingPrice.value = total.toFixed(2);
         }
 
-        productPrice.addEventListener('input', calculateTotalPrice);
-        taxRate.addEventListener('input', calculateTotalPrice);
-        taxIncludedYes.addEventListener('change', calculateTotalPrice);
-        taxIncludedNo.addEventListener('change', calculateTotalPrice);
+        productPrice.addEventListener('input', calculateSellingPrice);
+        taxRateSelect.addEventListener('change', calculateSellingPrice);
+        taxIncludedYes.addEventListener('change', calculateSellingPrice);
+        taxIncludedNo.addEventListener('change', calculateSellingPrice);
     });
 
     $(document).ready(function() {
@@ -43,6 +45,21 @@
         // Event listeners for the radio buttons
         $('#stockableYes, #stockableNo').change(function() {
             toggleStockInformation();
+        });
+
+        // Select2 for the categories dropdown
+        $('#categories').select2({
+            placeholder: 'Select categories'
+        });
+        
+        // Select2 for the tax_rate dropdown
+        $('#tax_rate').select2({
+            placeholder: 'Select tax rate'
+        });
+        
+        // Select2 for the suppliers dropdown
+        $('#suppliers').select2({
+            placeholder: 'Select suppliers'
         });
     });
 </script>

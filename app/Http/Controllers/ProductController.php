@@ -37,6 +37,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $rules = [
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -55,6 +56,8 @@ class ProductController extends Controller
             'brand'=> 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
         ];
+
+        // dd($request->validate($rules));
 
         $validatedData = $request->validate($rules);
 
