@@ -66,7 +66,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // POS
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
-    Route::post('/pos/pay', [PosController::class, 'pay'])->name('pos.pay');
+    Route::post('/pos/process-payment', [PosController::class, 'processPayment'])->name('pos.processPayment');
     Route::post('/pos/save', [PosController::class, 'save'])->name('pos.save');
 
     // POS CART

@@ -134,6 +134,14 @@
                         </table>
                         <div class="card-footer">
                             <div class="row">
+                                <div class="">
+                                    <span>SubTotal: {{ $cart->getTotalCart()->subTotal }}</span></br>
+                                    <span>Vat: {{ $cart->getTotalCart()->tax }}</span></br>
+                                    <span>discount: {{ $cart->getTotalCart()->discount }}</span></br>
+                                    <span>Total: {{ $cart->getTotalCart()->total }}</span></br>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <button class="btn btn-default btn-block" id="cancle-button">Cancel</button>
                                 </div>
@@ -141,7 +149,7 @@
                                     <button class="btn btn-info btn-block" id="layaway-button">Layaway</button>
                                 </div>
                                 <div class="col-md-4">
-                                    <button class="btn btn-success btn-block" id="settle-button">Settle</button>
+                                    <button class="btn btn-success btn-block" id="settle-button" data-toggle="modal" data-target="#paymentModal">Settle</button>
                                 </div>
                             </div>
                         </div>
@@ -222,6 +230,7 @@
 </div>
 
 @include('pos.miscProduct-modal')
+@include('pos.payment-modal')
 
 @endsection
 
@@ -337,25 +346,39 @@
 
             // Cancel button
             $('#cancle-button').on('click', function() {
-                $.ajax({
-                    url: "{{ route('cart.empty') }}",
-                    method: "POST",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        // Re-render the cart
-                        reRenderCart(response);
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Something went wrong, Please refresh and try again.',
+                Swal.fire({
+                    title: 'Cancel',
+                    text: 'Are you sure you want to clear this cart?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then((result) => {
+                    console.log(result);
+                    if (result.value) {
+                        console.log('cancled');
+                        $.ajax({
+                            url: "{{ route('cart.empty') }}",
+                            method: "POST",
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr('content')
+                            },
+                            dataType: 'json',
+                            success: function (response) {
+                                // Re-render the cart
+                                reRenderCart(response);
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Something went wrong, Please refresh and try again.',
+                                });
+                            }
                         });
                     }
                 });
+                
             });
 
             // Layaway button
@@ -390,6 +413,30 @@
                                 });
                             }
                         });
+                    }
+                });
+            });
+
+            // Settle button
+            $('.payment-option').click(function() {
+                let paymentMethod = $(this).data('method');
+                let amountPaid = $('#amountPaid').val();
+                
+                $.ajax({
+                    url: '{{ route('pos.processPayment') }}', // Change this to your actual route
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        payment_method: paymentMethod,
+                        amount_paid: amountPaid
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        alert('Payment method: ' + response.payment_method + ' selected.');
+                        $('#paymentModal').modal('hide');
+                    },
+                    error: function() {
+                        alert('Something went wrong!');
                     }
                 });
             });

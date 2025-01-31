@@ -324,7 +324,7 @@ return [
             'text' => 'Point of Sale',
             'route' => 'pos.index',
             'icon' => 'far fa fa-cart-plus',
-            'active' => ['admin/customers*'],
+            'active' => ['admin/pos*'],
         ],
         [
             'text' => 'Orders',

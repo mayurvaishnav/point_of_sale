@@ -39,27 +39,6 @@ class Cart extends Facade {
 
     }
 
-    public function getTotal(): array
-    {
-        $cart = [];
-        $cart['name'] = 'Total';
-        $cart['total'] = 0;
-        $cart['tax'] = 0;
-        $cart['subTotal'] = 0;
-        $cart['discount'] = 0;
-
-        foreach ($this->cartItems as $cartItem) {
-            $cart['total'] += $cartItem->total;
-            $cart['tax'] += $cartItem->tax;
-            $cart['subTotal'] += $cartItem->subTotal;
-            $cart['discount'] += $cartItem->discount;
-        }
-
-        $cart['totalAfterDiscount'] = $cart['total'] - $cart['discount'];
-        
-        return $cart;
-    }
-
     public function getTotalCart(): CartItem
     {
         $quantity = 0;

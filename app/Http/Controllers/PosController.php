@@ -32,25 +32,25 @@ class PosController extends Controller
         return view("pos.index", compact("products","cart", "customers", "categories"));
     }
 
-    public function pay(Request $request) {
+    public function processPayment(Request $request) {
 
         $rules = [
-            'payment_method' => 'required'
+            'payment_method' => 'required|string|in:cash,credit_card,customer_credit',
+            'amount_paid' => 'required|numeric'
         ];
 
         $validatedData = $request->validate($rules);
 
         $cart = CartService::getCart();
-        $customer_id = $cart->customer->id;
-        $customer = Customer::find($customer_id);
+        $customer_id = $cart->customer->id ?? null;
 
         // dd($cart, $validatedData);
 
         //validate the cart
 
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
-        try {
+        // try {
 
             $order = Order::create([
                 'customer_id' => $customer_id,
@@ -58,10 +58,10 @@ class PosController extends Controller
                 'status' => 'paid',
                 'order_date' => now()->toDateString(),
                 'paid_method' => $validatedData['payment_method'], 
-                'net_sales' => $cart->getTotal()->total,
+                'net_sales' => $cart->getTotalCart()->subTotal,
                 'discount' => 0,
-                'tax' => $cart->total->tax,
-                'total' => $cart->total->total
+                'tax' => $cart->getTotalCart()->tax,
+                'total' => $cart->getTotalCart()->total
             ]);
 
             $order->invoice_number = "BAC-" . Carbon::parse($order->order_date)->format('Ymd') . "-" . $order->id;
@@ -85,9 +85,14 @@ class PosController extends Controller
                 $product->save();
             }
 
-            $previousBalance = $customer->customerCredits()->latest()->first()->balance ?? 0;
+
+            
 
             if ($validatedData['payment_method'] == 'customer_credit') {
+                $customer = Customer::find($customer_id);
+
+                $previousBalance = $customer->customerCredits()->latest()->first()->balance ?? 0;
+                
                 // Deduct the amount from the customer's credit
                 CustomerCredit::create([
                     'customer_id' => $customer_id,
@@ -99,17 +104,24 @@ class PosController extends Controller
 
             }
 
-            DB::commit();
+            // DB::commit();
 
             // Clear the cart
             CartService::clearCart();
 
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => 'Order has been placed successfully.',
+                    'payment_method' => $validatedData['payment_method']
+                ]);
+            }
+
             return redirect()->route('pos.index')->with('success', 'Order has been placed successfully.');
         
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('pos.index')->with('error', 'Failed to place order. Please try again.');
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     return redirect()->route('pos.index')->with('error', 'Failed to place order. Please try again.');
+        // }
         
     }
 
