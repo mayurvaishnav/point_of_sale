@@ -63,7 +63,9 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('#suppliers-table').DataTable();
+            $('#suppliers-table').DataTable({
+                "pageLength": 50,
+            });
         });
 
         $(".btn-delete").click(function(e){

@@ -33,10 +33,10 @@ class SupplierController extends Controller
         $rules = [
             'name' => 'required|string|max:50',
             'email' => 'required|email|max:50|unique:suppliers,email',
-            'phone' => 'required|string|max:15|unique:suppliers,phone',
+            'phone' => 'required|string|max:20|unique:suppliers,phone',
             'address' => 'nullable|string|max:100',
             'company' => 'nullable|string|max:50',
-            'description' => 'nullable|string|max:100',
+            'description' => 'nullable|string|max:1000',
         ];
 
         $validatedData = $request->validate($rules);
@@ -73,10 +73,10 @@ class SupplierController extends Controller
         $rules = [
             'name' => 'required|string|max:50',
             'email' => 'required|email|max:50|unique:suppliers,email,'.$supplier->id,
-            'phone' => 'required|string|max:15|unique:suppliers,phone,'.$supplier->id,
+            'phone' => 'required|string|max:20|unique:suppliers,phone,'.$supplier->id,
             'address' => 'nullable|string|max:100',
             'company' => 'nullable|string|max:50',
-            'description' => 'nullable|string|max:100',
+            'description' => 'nullable|string|max:1000',
         ];
 
         $validatedData = $request->validate($rules);
