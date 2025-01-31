@@ -12,9 +12,8 @@ class StockManagementController extends Controller
      */
     public function index()
     {
-        return view("stocks.index", [
-            "products" => Product::with(['category', 'supplier'])->get()
-        ]);
+        $products = Product::where('stockable', true)->with(['category', 'supplier'])->get();
+        return view("stocks.index", compact("products"));
     }
     /**
      * Display a listing of the resource.
