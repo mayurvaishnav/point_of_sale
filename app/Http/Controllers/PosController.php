@@ -116,8 +116,6 @@ class PosController extends Controller
     public function save(Request $request) {
 
         $cart = CartService::getCart();
-        $customer_id = $cart->customer->id;
-        $customer = Customer::find($customer_id);
 
         // dd($cart, $validatedData);
 
@@ -128,23 +126,24 @@ class PosController extends Controller
         try {
 
             $order = Order::create([
-                'customer_id' => $customer_id,
+                'customer_id' => $cart->customer->id ?? null,
                 'user_id' => Auth::user()->id,
-                'status' => 'pending',
+                'status' => 'layaway',
                 'order_date' => now()->toDateString(),
-                'net_sales' => 100,
-                'discount' => 0,
-                'tax' => 0,
-                'total' => 1233
+                'net_sales' => $cart->getTotalCart()->subTotal,
+                'discount' => $cart->getTotalCart()->discount,
+                'tax' => $cart->getTotalCart()->tax,
+                'total' => $cart->getTotalCart()->total
             ]);
 
             $order->invoice_number = "BAC-" . Carbon::parse($order->order_date)->format('Ymd') . "-" . $order->id;
             $order->save();
 
             foreach ($cart->cartItems as $cartItem) {
+                $productId = $cartItem->id > 0 ? $cartItem->id : null;
                 OrderDetail::create([
                     'order_id' => $order->id,
-                    'product_id' => $cartItem->id,
+                    'product_id' => $productId,
                     'product_name' => $cartItem->name,
                     'quantity' => $cartItem->quantity,
                     'unit_cost' => $cartItem->price,
@@ -163,6 +162,10 @@ class PosController extends Controller
 
             // Clear the cart
             CartService::clearCart();
+            
+            if ($request->wantsJson()) {
+                return response()->json(CartService::getCart());
+            }
 
             return redirect()->route('pos.index')->with('success', 'Order has been saved for later use.');
         

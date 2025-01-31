@@ -132,6 +132,19 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <button class="btn btn-default btn-block" id="cancle-button">Cancel</button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-info btn-block" id="layaway-button">Layaway</button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-success btn-block" id="settle-button">Settle</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -284,7 +297,7 @@
                     dataType: 'json',
                     success: function (response) {
                         // Re-render the cart
-                        reRenderCart(Object.values(response.cartItems));
+                        reRenderCart(response);
                     },
                     error: function (xhr) {
                         Swal.fire({
@@ -317,6 +330,65 @@
                             icon: 'error',
                             title: 'Error',
                             text: 'Something went wrong, Please refresh and try again.',
+                        });
+                    }
+                });
+            });
+
+            // Cancel button
+            $('#cancle-button').on('click', function() {
+                $.ajax({
+                    url: "{{ route('cart.empty') }}",
+                    method: "POST",
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        // Re-render the cart
+                        reRenderCart(response);
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please refresh and try again.',
+                        });
+                    }
+                });
+            });
+
+            // Layaway button
+            $('#layaway-button').on('click', function() {
+                Swal.fire({
+                    title: 'Layaway',
+                    text: 'Are you sure you want to layaway this cart?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then((result) => {
+                    console.log(result);
+                    if (result.value) {
+                        console.log('Layaway');
+                        $.ajax({
+                            url: "{{ route('pos.save') }}",
+                            method: "POST",
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr('content')
+                            },
+                            dataType: 'json',
+                            success: function (response) {
+                                // Re-render the cart
+                                reRenderCart(response);
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Something went wrong, Please refresh and try again.',
+                                });
+                            }
                         });
                     }
                 });
@@ -362,7 +434,11 @@
         function reRenderCart(response) {
 
             // Update the customer select
-            $('#customerSelect').val(response.customer.id).trigger('change');
+            if (response.customer) {
+                $('#customerSelect').val(response.customer.id).trigger('change');
+            } else {
+                $('#customerSelect').val('').trigger('change');
+            }
 
             // Clear the cart table
             $('#cart-table tbody').empty();
