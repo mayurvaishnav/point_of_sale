@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Supplier;
+use App\Models\TaxRate;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -70,6 +71,11 @@ class DatabaseSeeder extends Seeder
         $permissions = Permission::pluck('id','id')->all();
         $role->syncPermissions($permissions);
         $admin->assignRole([$role->id]);
+
+        // Tax rates
+        TaxRate::create(['name' => '0% Vat', 'value' => 0]);
+        TaxRate::create(['name' => '13.5% Vat', 'value' => 13.5]);
+        TaxRate::create(['name' => '23% Vat', 'value' => 23]);
 
         Customer::factory(10)->create();
         Supplier::factory(10)->create();

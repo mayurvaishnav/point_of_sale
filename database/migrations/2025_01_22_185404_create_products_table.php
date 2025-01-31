@@ -16,16 +16,18 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('set null');
+            $table->foreignId('tax_rate_id')->nullable()->constrained('tax_rates')->onDelete('set null');
             $table->string('code')->nullable();
             $table->string('garage')->nullable();
             $table->string('image')->nullable();
             $table->integer('store')->nullable();
-            $table->integer('tax_rate')->nullable();
             $table->decimal('buying_price', 8, 2)->nullable();
             $table->decimal('selling_price', 8, 2)->nullable();
-            $table->decimal('tax', 8, 2)->nullable();
-            $table->integer('quantity')->default(0);
+            $table->boolean('include_tax')->default(true);
+            $table->boolean('stockable')->default(false);
+            $table->integer('quantity')->nullable();
             $table->text('description')->nullable();
+            $table->string('brand')->nullable();
             $table->timestamps();
         });
     }

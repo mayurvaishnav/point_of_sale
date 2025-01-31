@@ -19,6 +19,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('address')->nullable();
             $table->string('company')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('model')->nullable();
+            $table->string('registration_no')->nullable();
             $table->timestamps();
         });
     }

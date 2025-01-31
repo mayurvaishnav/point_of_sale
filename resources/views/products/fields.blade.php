@@ -41,10 +41,14 @@
 </div>
 
 <div class="form-group">
-    <label for="tax_rate">Tax rate</label>
-    <input type="number" name="tax_rate" class="form-control @error('tax_rate') is-invalid @enderror" id="tax_rate"
-           placeholder="tax_rate" value="{{ old('tax_rate', $product->tax_rate ?? '') }}">
-    @error('tax_rate')
+    <label for="tax_rate_id">Tax rate</label>
+    <select name="tax_rate_id" class="form-control" id="tax_rate" required>
+        <option selected="">-- Select Taxrate --</option>
+        @foreach ($taxRates as $rate)
+            <option value="{{ $rate->id }}" {{ old('tax_rate_id', $product->rate_id ?? '') == $rate->id ? 'selected' : '' }}>{{ $rate->name }}</option>
+        @endforeach
+    </select>
+    @error('tax_rate_id')
     <span class="invalid-feedback" role="alert">
         <strong>{{ $message }}</strong>
     </span>

@@ -11,8 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_credits', function (Blueprint $table) {
+        Schema::create('customer_accounts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('restrict');
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+        Schema::create('customer_account_transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('customer_account_id')->constrained('customer_accounts')->onDelete('restrict');
             $table->foreignId('customer_id')->constrained('customers')->onDelete('restrict');
             $table->foreignId('order_id')->nullable()->constrained('orders')->onDelete('cascade');
             $table->string('note')->nullable();
@@ -28,6 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_credits');
+        Schema::dropIfExists('customer_accounts');
+        Schema::dropIfExists('customer_account_transactions');
     }
 };

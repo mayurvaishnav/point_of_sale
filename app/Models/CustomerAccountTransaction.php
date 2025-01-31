@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerCredit extends Model
+class CustomerAccountTransaction extends Model
 {
     protected $fillable = [
+        "customer_account_id",
         "customer_id",
         "order_id",
         "note",
