@@ -8,7 +8,9 @@
                 <h1>Products</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{{route('products.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Add Product</a>
+                @can('product-create')
+                    <a href="{{route('products.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Add Product</a>
+                @endcan
             </div>
         </div>
     </div>
@@ -46,14 +48,19 @@
                     <td class="text-right">{{$product->quantity}}</td>
                     <td>
                         <span class="d-none">{{$product->description}}</span>
-                        <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline">
-                            @method('delete')
-                            @csrf
-                            <button class="btn btn-danger btn-sm btn-delete" data-url="{{route('products.destroy', $product)}}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        @can('product-edit')
+                            <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                        @endcan
+
+                        @can('product-delete')
+                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline">
+                                @method('delete')
+                                @csrf
+                                <button class="btn btn-danger btn-sm btn-delete" data-url="{{route('products.destroy', $product)}}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
                 @endforeach
