@@ -19,6 +19,7 @@ class CustomerController extends Controller
          $this->middleware('permission:customer-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:customer-delete', ['only' => ['destroy']]);
     }
+    
     /**
      * Display a listing of the resource.
      */

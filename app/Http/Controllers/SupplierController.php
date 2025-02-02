@@ -9,6 +9,19 @@ class SupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function __construct()
+    {
+         $this->middleware('permission:supplier-list', ['only' => ['index']]);
+         $this->middleware('permission:supplier-create', ['only' => ['create','store']]);
+         $this->middleware('permission:supplier-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:supplier-delete', ['only' => ['destroy']]);
+    }
+
+    /**
+     * Display a listing of the resource.
      */
     public function index()
     {

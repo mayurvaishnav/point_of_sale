@@ -8,7 +8,9 @@
                 <h1>Suppliers</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{{route('suppliers.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Add Supplier</a>
+                @can('supplier-create')
+                    <a href="{{route('suppliers.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Add Supplier</a>
+                @endcan
             </div>
         </div>
     </div>
@@ -43,14 +45,19 @@
                     <td>{{$supplier->phone}}</td>
                     <td>{{$supplier->address}}</td>
                     <td>
-                        <a href="{{ route('suppliers.edit', $supplier) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                        <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" style="display:inline">
-                            @method('delete')
-                            @csrf
-                            <button class="btn btn-danger btn-sm btn-delete" data-url="{{route('suppliers.destroy', $supplier)}}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        @can('supplier-edit')
+                            <a href="{{ route('suppliers.edit', $supplier) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                        @endcan
+                        
+                        @can('supplier-delete')
+                            <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" style="display:inline">
+                                @method('delete')
+                                @csrf
+                                <button class="btn btn-danger btn-sm btn-delete" data-url="{{route('suppliers.destroy', $supplier)}}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
                 @endforeach
