@@ -9,7 +9,9 @@
                 <h1>User Management</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{{route('users.create')}}" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i> Add User</a>
+                @can('user-create')
+                    <a href="{{route('users.create')}}" class="btn btn-primary btn-sm mb-2"><i class="fa fa-plus"></i> Add User</a>
+                @endcan
             </div>
         </div>
     </div>
@@ -47,14 +49,18 @@
                         @endif
                         </td>
                         <td>
-                            <a class="btn btn-primary btn-sm" href="{{ route('users.edit',$user->id) }}"><i class="fas fa-edit"></i></a>
+                            @can('user-edit')
+                                <a class="btn btn-primary btn-sm" href="{{ route('users.edit',$user->id) }}"><i class="fas fa-edit"></i></a>
+                            @endcan
         
-                            <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="display:inline">
-                                @csrf
-                                @method('DELETE')
-        
-                                <button type="submit" class="btn btn-danger btn-sm  btn-delete"><i class="fas fa-trash"></i></button>
-                            </form>
+                            @can('user-delete')
+                                <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="display:inline">
+                                    @csrf
+                                    @method('DELETE')
+            
+                                    <button type="submit" class="btn btn-danger btn-sm  btn-delete"><i class="fas fa-trash"></i></button>
+                                </form>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach
