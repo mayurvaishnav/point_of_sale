@@ -222,6 +222,40 @@
                 @enderror
             </div>
 
+            <div class="form-group col-md-12">
+                <label>Automatically order on low stock?</label>
+                <div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="auto_order_at_low_stock_yes" name="auto_order_at_low_stock" class="custom-control-input @error('auto_order_at_low_stock') is-invalid @enderror" value="1"
+                            {{ old('auto_order_at_low_stock', $product->auto_order_at_low_stock ?? '') == 1 ? 'checked' : '' }}
+                        >
+                        <label class="custom-control-label" for="auto_order_at_low_stock_yes">Yes</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="auto_order_at_low_stock_no" name="auto_order_at_low_stock" class="custom-control-input @error('auto_order_at_low_stock') is-invalid @enderror" value="0"
+                            {{ old('auto_order_at_low_stock', $product->auto_order_at_low_stock ?? '') == 0 ? 'checked' : '' }}
+                        >
+                        <label class="custom-control-label" for="auto_order_at_low_stock_no">No</label>
+                    </div>
+                </div>
+                @error('auto_order_at_low_stock')
+                    <div class="invalid-feedback d-block">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                @enderror
+            </div>
+
+            <div class="form-group col-md-12">
+                <label for="low_stock_threshold">Low stock threshold</label>
+                <input type="number" name="low_stock_threshold" class="form-control @error('low_stock_threshold') is-invalid @enderror" id="low_stock_threshold"
+                    placeholder="Low stock threshold" value="{{ old('low_stock_threshold', $product->low_stock_threshold ?? '') }}">
+                @error('low_stock_threshold')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+
         </div>
     </div>
 </div>

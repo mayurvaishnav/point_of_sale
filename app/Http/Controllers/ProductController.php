@@ -55,6 +55,8 @@ class ProductController extends Controller
             'quantity' => 'nullable|integer|min:0',
             'brand'=> 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
+            'auto_order_at_low_stock'=> 'nullable|boolean',
+            'low_stock_threshold'=> 'nullable|integer|min:0',
         ];
 
         // dd($request->validate($rules));
@@ -113,6 +115,8 @@ class ProductController extends Controller
             'quantity' => 'nullable|integer|min:0',
             'brand'=> 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
+            'auto_order_at_low_stock'=> 'nullable|boolean',
+            'low_stock_threshold'=> 'nullable|integer|min:0',
         ];
 
         $validatedData = $request->validate($rules);

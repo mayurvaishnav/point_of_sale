@@ -29,6 +29,8 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->text('description')->nullable();
             $table->string('brand')->nullable();
+            $table->boolean('auto_order_at_low_stock')->default(false);
+            $table->integer('low_stock_threshold')->nullable();
             $table->timestamps();
         });
     }

@@ -45,6 +45,7 @@
                     <td class="text-right">€ {{$product->selling_price}}</td>
                     <td class="text-right">{{$product->quantity}}</td>
                     <td>
+                        <span class="d-none">{{$product->description}}</span>
                         <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline">
                             @method('delete')

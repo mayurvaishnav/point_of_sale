@@ -42,7 +42,7 @@
                     <td class="text-right">€ {{$product->selling_price}}</td>
                     <td class="text-right">{{$product->quantity}}</td>
                     <td>
-                        <input type="hidden" value="{{ $product }}">
+                        <span class="d-none">{{$product}}</span>
                         <button class="btn btn-success btn-sm add-stock-btn" 
                             data-product-id="{{ $product->id }}"  
                             data-product-buying-price="{{ $product->buying_price }}"

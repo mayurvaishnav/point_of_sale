@@ -25,7 +25,9 @@ class Product extends Model
         'quantity',
         'description',
         'brand',
-        'stockable'
+        'stockable',
+        'auto_order_at_low_stock',
+        'low_stock_threshold',
     ];
 
     /**
