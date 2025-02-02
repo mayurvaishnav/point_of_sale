@@ -9,6 +9,18 @@ class StockManagementController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function __construct()
+    {
+         $this->middleware('permission:stock-management-list', ['only' => ['index']]);
+         $this->middleware('permission:stock-management-add-sctock', ['only' => ['add']]);
+         $this->middleware('permission:stock-management-adject', ['only' => ['adject']]);
+    }
+    
+    /**
+     * Display a listing of the resource.
      */
     public function index()
     {

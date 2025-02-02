@@ -43,16 +43,21 @@
                     <td class="text-right">{{$product->quantity}}</td>
                     <td>
                         <span class="d-none">{{$product}}</span>
-                        <button class="btn btn-success btn-sm add-stock-btn" 
-                            data-product-id="{{ $product->id }}"  
-                            data-product-buying-price="{{ $product->buying_price }}"
-                            data-product-name="{{ $product->name }}"
-                        >Add Stock</button>
-                        <button class="btn btn-warning btn-sm adject-stock-btn"
-                            data-product-id="{{ $product->id }}"  
-                            data-product-quantity="{{ $product->quantity }}"
-                            data-product-name="{{ $product->name }}"
-                        >Adject</button>
+                        @can('stock-management-add-sctock')
+                            <button class="btn btn-success btn-sm add-stock-btn" 
+                                data-product-id="{{ $product->id }}"  
+                                data-product-buying-price="{{ $product->buying_price }}"
+                                data-product-name="{{ $product->name }}"
+                            >Add Stock</button>
+                        @endcan
+
+                        @can('stock-management-adject')
+                            <button class="btn btn-warning btn-sm adject-stock-btn"
+                                data-product-id="{{ $product->id }}"  
+                                data-product-quantity="{{ $product->quantity }}"
+                                data-product-name="{{ $product->name }}"
+                            >Adject</button>
+                        @endcan
                     </td>
                 </tr>
                 @endforeach
