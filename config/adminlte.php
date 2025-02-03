@@ -326,7 +326,7 @@ return [
             'route' => 'pos.index',
             'icon' => 'far fa fa-cart-plus',
             'active' => ['admin/pos*'],
-            'can' => 'pos-take-orders',
+            // 'can' => 'pos-take-orders',
         ],
         [
             'text' => 'Orders',
@@ -374,11 +374,11 @@ return [
             'header'=> ' ',
         ],
         [
-            'text' => 'Customer Credits',
-            'route' => 'customer-credits.index',
+            'text' => 'Customer Accounts',
+            'route' => 'customer-accounts.index',
             'icon' => 'far fa fa-university',
-            'active' => ['admin/customer-credits*'],
-            'can' => 'customer-credit-list',
+            'active' => ['admin/customer-accounts*'],
+            'can' => 'customer-account-list',
         ],
         // [
         //     'text' => 'pages',

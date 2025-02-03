@@ -151,20 +151,20 @@ class DatabaseSeeder extends Seeder
                 'group_name' => 'Category',
             ],
             [
-                'name' => 'customer-credit-list',
-                'group_name' => 'Customer Credit',
+                'name' => 'customer-account-list',
+                'group_name' => 'Customer Account',
             ],
             [
-                'name' => 'customer-credit-add-payment',
-                'group_name' => 'Customer Credit',
+                'name' => 'customer-account-details',
+                'group_name' => 'Customer Account',
             ],
             [
-                'name' => 'customer-credit-view',
-                'group_name' => 'Customer Credit',
+                'name' => 'customer-account-add-payment',
+                'group_name' => 'Customer Account',
             ],
             [
-                'name' => 'customer-credit-delete',
-                'group_name' => 'Customer Credit',
+                'name' => 'customer-account-delete-payment',
+                'group_name' => 'Customer Account',
             ],
             [
                 'name' => 'stock-management-list',

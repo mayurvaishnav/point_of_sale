@@ -8,7 +8,7 @@ use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CustomerCreditController;
+use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
@@ -53,10 +53,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('orders', OrderController::class);
 
     // CUSTOMER CREDITS
-    Route::get('/customer-credits', [CustomerCreditController::class, 'index'])->name('customer-credits.index');
-    Route::get('/customer-credits/{customer}', [CustomerCreditController::class, 'details'])->name('customer-credits.details');
-    Route::post('/customer-credits/payment/{customer}', [CustomerCreditController::class, 'addPayment'])->name('customer-credits.addPayment');
-    Route::delete('/customer-credits/payment/{customer}/{customerCredit}', [CustomerCreditController::class, 'deletePayment'])->name('customer-credits.deletePayment');
+    Route::get('/customer-accounts', [CustomerAccountController::class, 'index'])->name('customer-accounts.index');
+    Route::get('/customer-accounts/{customer}', [CustomerAccountController::class, 'details'])->name('customer-accounts.details');
+    Route::post('/customer-accounts/payment/{customer}', [CustomerAccountController::class, 'addPayment'])->name('customer-accounts.addPayment');
+    Route::delete('/customer-accounts/payment/{customer}/{customerCredit}', [CustomerAccountController::class, 'deletePayment'])->name('customer-accounts.deletePayment');
 
     // STOCK MANAGEMENT
     Route::get('/stock-management', [StockManagementController::class, 'index'])->name('stocks.index');
