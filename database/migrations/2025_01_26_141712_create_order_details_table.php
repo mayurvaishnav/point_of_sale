@@ -16,12 +16,14 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('set null');
             $table->string('product_name')->nullable();
-            $table->integer('quantity')->nullable();
-            $table->decimal('unit_cost', 8, 2)->nullable();
-            $table->decimal('net_sales', 8, 2)->nullable();
+            $table->integer('quantity');
+            $table->decimal('unit_price', 8, 2)->nullable();
+            $table->decimal('total_before_tax', 8, 2)->nullable();
             $table->decimal('discount',8,2)->nullable();
             $table->decimal('tax',8,2)->nullable();
+            $table->decimal('tax_rate',8,2)->nullable();
             $table->decimal('total',8,2)->nullable();
+            $table->decimal('total_after_discount',8,2)->nullable();
             $table->timestamps();
         });
     }

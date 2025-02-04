@@ -28,6 +28,7 @@
                     <th>Customer</th>
                     <th>Order Date</th>
                     <th>Amount</th>
+                    <th>Status</th>
                     <th>Payment Method</th>
                     <th>Actions</th>
                 </tr>
@@ -39,8 +40,9 @@
                     <td>{{$order->invoice_number}}</td>
                     <td>{{$order->customer->name ?? ''}}</td>
                     <td>{{$order->order_date }}</td>
-                    <td class="text-right">€ {{$order->total}}</td>
-                    <td class="text-right">{{$order->paid_method}}</td>
+                    <td class="text-right">{{$order->total}}</td>
+                    <td>{{$order->status}}</td>
+                    <td>{{$order->paid_method}}</td>
                     <td>
                         <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">Details</a>
                         <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>

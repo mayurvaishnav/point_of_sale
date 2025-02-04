@@ -22,11 +22,12 @@ class Order extends Model
         'status',
         'order_date',
         'invoice_number',
-        'paid_method',
-        'net_sales',
+        'quantity',
+        'total_before_tax',
         'discount',
         'tax',
         'total',
+        'total_after_discount',
     ];
 
     protected $casts = [
@@ -44,5 +45,10 @@ class Order extends Model
     public function orderDetails() 
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    public function orderPayments() 
+    {
+        return $this->hasMany(OrderPayment::class);
     }
 }

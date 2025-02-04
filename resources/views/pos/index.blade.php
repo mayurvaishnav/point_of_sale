@@ -14,6 +14,7 @@
 
 @section('css')
 <style>
+    /* product button */
     .product-button {
         width: 100%;
         text-align: left;
@@ -36,6 +37,20 @@
             font-size: 0.875rem;
         }
     }
+    .nav-link.active {
+        background-color: #007bff; /* Bootstrap primary color */
+        color: #fff; /* White text color */
+    }
+    .btn-large {
+        padding: 20px 40px;
+        font-size: 1.5rem;
+        height: 100px;
+    }
+    .nav-tabs .nav-link.active {
+        order: 1 !important;
+    }
+
+    /* POS cart table */
     .name-column {
         width: 45%;
         word-wrap: break-word;
@@ -62,17 +77,11 @@
         padding-right: 0;
         padding-left: 0.3rem;
     }
+
+
     .scrollable-card {
         overflow: auto;
         max-height: 90vh;
-    }
-    .btn-large {
-        padding: 20px 40px;
-        font-size: 1.5rem;
-        height: 100px;
-    }
-    .nav-tabs .nav-link.active {
-        order: 1 !important;
     }
 
     /* Make the card take up the full viewport height */
@@ -426,9 +435,7 @@
                     confirmButtonText: 'Yes',
                     cancelButtonText: 'No',
                 }).then((result) => {
-                    console.log(result);
                     if (result.value) {
-                        console.log('Layaway');
                         $.ajax({
                             url: "{{ route('pos.save') }}",
                             method: "POST",
@@ -437,8 +444,9 @@
                             },
                             dataType: 'json',
                             success: function (response) {
-                                // Re-render the cart
-                                reRenderCart(response);
+                                console.log(response);
+                                // Reload the page
+                                location.reload();
                             },
                             error: function (xhr) {
                                 Swal.fire({
@@ -468,6 +476,9 @@
                     dataType: 'json',
                     success: function(response) {
                         $('#paymentModal').modal('hide');
+
+                        // refresh the page
+                        location.reload();
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
@@ -490,7 +501,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
-                                text: 'Something went wrong, Please refresh and try again111.',
+                                text: 'Something went wrong, Please refresh and try again.',
                             });
                         }
                     }

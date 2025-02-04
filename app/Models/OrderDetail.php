@@ -14,11 +14,13 @@ class OrderDetail extends Model
         'product_id',
         'product_name',
         'quantity',
-        'unit_cost',
-        'net_sales',
+        'unit_price',
+        'total_before_tax',
         'discount',
         'tax',
+        'tax_rate',
         'total',
+        'total_after_discount',
     ];
 
     public function order() 

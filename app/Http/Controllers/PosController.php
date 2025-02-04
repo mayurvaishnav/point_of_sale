@@ -27,9 +27,6 @@ class PosController extends Controller
 
         $categories = $products->pluck('category')->unique();
 
-        // session()->forget('cart');
-        // dd($products, $cart, $customers, $categories);
-
         return view("pos.index", compact("products","cart", "customers", "categories"));
     }
 
@@ -67,28 +64,38 @@ class PosController extends Controller
         });
 
         if ($validator->fails()) {
-            // dd($validator->errors());
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
 
-            $order = Order::create([
+            $orderData = [
                 'customer_id' => $customer_id,
                 'user_id' => Auth::user()->id,
                 'status' => 'paid',
                 'order_date' => now()->toDateString(),
-                'paid_method' => $request->payment_method, 
-                'net_sales' => $cart->getTotalCart()->subTotal,
+                'quantity'=> $cart->getTotalCart()->quantity,
                 'discount' => 0,
                 'tax' => $cart->getTotalCart()->tax,
-                'total' => $cart->getTotalCart()->total
-            ]);
+                'total_before_tax'=> $cart->getTotalCart()->subTotal,
+                'total' => $cart->getTotalCart()->total,
+                'total_after_discount'=> $cart->getTotalCart()->totalAfterDiscount,
+            ];
 
-            $order->invoice_number = "BAC-" . Carbon::parse($order->order_date)->format('Ymd') . "-" . $order->id;
-            $order->save();
+            $order = Order::updateOrCreate(
+                ['id' => $cart->order->id ?? null],
+                $orderData
+            );
+
+            if (!$order->invoice_number) {
+                $order->invoice_number = "BAC-" . Carbon::parse($order->order_date)->format('Ymd') . "-" . $order->id;
+                $order->save();
+            }
+
+            // Delete existing order details
+            OrderDetail::where('order_id', $order->id)->delete();
 
             foreach ($cart->cartItems as $cartItem) {
                 OrderDetail::create([
@@ -96,11 +103,13 @@ class PosController extends Controller
                     'product_id' => $cartItem->id > 0 ? $cartItem->id : null,
                     'product_name' => $cartItem->name,
                     'quantity' => $cartItem->quantity,
-                    'unit_cost' => $cartItem->price,
-                    'net_sales' => $cartItem->price * $cartItem->quantity,
+                    'unit_price' => $cartItem->price,
                     'discount' => $cartItem->discount,
+                    'tax_rate'=> $cartItem->taxRate,
                     'tax' => $cartItem->tax,
-                    'total' => $cartItem->price
+                    'total' => $cartItem->total,
+                    'total_before_tax' => $cartItem->subTotal,
+                    'total_after_discount' => $cartItem->totalAfterDiscount
                 ]);
 
                 $product = Product::find($cartItem->id);
@@ -109,8 +118,17 @@ class PosController extends Controller
                     $product->save();
                 }
             }
+
+            // Save the payment
+            $order->orderPayments()->create([
+                'payment_method' => $request->payment_method,
+                'amount_paid' => $request->amount_paid,
+                'amount_due' => $cart->getTotalCart()->total - $request->amount_paid,
+                'payment_status' => $request->amount_paid >= $cart->getTotalCart()->total ? 'paid' : 'partial'
+            ]);
             
 
+            // Deduct the amount from the customer's credit
             if ($request->payment_method == 'customer_account') {
                 $customer = Customer::find($customer_id);
 
@@ -121,7 +139,6 @@ class PosController extends Controller
                 }
 
                 $previousBalance = $customer->customerAccountTransactions()->latest()->first()->balance ?? 0;
-                // dd($customer->customerAccounts()->first());
                 
                 // Deduct the amount from the customer's credit
                 CustomerAccountTransaction::create([
@@ -135,7 +152,7 @@ class PosController extends Controller
 
             }
 
-            // DB::commit();
+            DB::commit();
 
             // Clear the cart
             CartService::clearCart();
@@ -149,56 +166,66 @@ class PosController extends Controller
 
             return redirect()->route('pos.index')->with('success', 'Order has been placed successfully.');
         
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     return redirect()->route('pos.index')->with('error', 'Failed to place order. Please try again.');
-        // }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'error' => 'Something went wrong. Please try again.'
+                ], 500);
+            }
+            return redirect()->route('pos.index')->with('error', 'Failed to place order. Please try again.');
+        }
         
     }
 
     public function save(Request $request) {
 
         $cart = CartService::getCart();
-
-        // dd($cart, $validatedData);
-
-        //validate the cart
+        $customer_id = $cart->customer->id ?? null;
 
         DB::beginTransaction();
-
         try {
 
-            $order = Order::create([
-                'customer_id' => $cart->customer->id ?? null,
+            $orderData = [
+                'customer_id' => $customer_id,
                 'user_id' => Auth::user()->id,
                 'status' => 'layaway',
                 'order_date' => now()->toDateString(),
-                'net_sales' => $cart->getTotalCart()->subTotal,
-                'discount' => $cart->getTotalCart()->discount,
+                'quantity'=> $cart->getTotalCart()->quantity,
+                'discount' => 0,
                 'tax' => $cart->getTotalCart()->tax,
-                'total' => $cart->getTotalCart()->total
-            ]);
+                'total_before_tax'=> $cart->getTotalCart()->subTotal,
+                'total' => $cart->getTotalCart()->total,
+                'total_after_discount'=> $cart->getTotalCart()->totalAfterDiscount,
+            ];
 
-            $order->invoice_number = "BAC-" . Carbon::parse($order->order_date)->format('Ymd') . "-" . $order->id;
-            $order->save();
+            $order = Order::updateOrCreate(
+                ['id' => $cart->order->id ?? null],
+                $orderData
+            );
+
+            if (!$order->invoice_number) {
+                $order->invoice_number = "BAC-" . Carbon::parse($order->order_date)->format('Ymd') . "-" . $order->id;
+                $order->save();
+            }
+
+            // Delete existing order details
+            OrderDetail::where('order_id', $order->id)->delete();
 
             foreach ($cart->cartItems as $cartItem) {
-                $productId = $cartItem->id > 0 ? $cartItem->id : null;
                 OrderDetail::create([
                     'order_id' => $order->id,
-                    'product_id' => $productId,
+                    'product_id' => $cartItem->id > 0 ? $cartItem->id : null,
                     'product_name' => $cartItem->name,
                     'quantity' => $cartItem->quantity,
-                    'unit_cost' => $cartItem->price,
-                    'net_sales' => $cartItem->price * $cartItem->quantity,
+                    'unit_price' => $cartItem->price,
                     'discount' => $cartItem->discount,
+                    'tax_rate'=> $cartItem->taxRate,
                     'tax' => $cartItem->tax,
-                    'total' => $cartItem->price
+                    'total' => $cartItem->total,
+                    'total_before_tax' => $cartItem->subTotal,
+                    'total_after_discount' => $cartItem->totalAfterDiscount
                 ]);
-
-                $product = Product::find($cartItem->id);
-                $product->quantity -= $cartItem->quantity;
-                $product->save();
             }
 
             DB::commit();
@@ -214,6 +241,11 @@ class PosController extends Controller
         
         } catch (\Exception $e) {
             DB::rollBack();
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'error' => 'Something went wrong. Please try again.'
+                ], 500);
+            }
             return redirect()->route('pos.index')->with('error', 'Failed to place order. Please try again.');
         }
         

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Pest\ArchPresets\Custom;
 
 class OrderController extends Controller
 {
@@ -52,7 +54,9 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order->load(['customer', 'orderDetails', 'orderpayments']);
+
+        return view('orders.show', compact('order'));
     }
 
     /**
@@ -60,21 +64,21 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-
         $cartItems = [];
 
-        foreach ($order->orderDetails as $orderDetail) {
-            $item = new CartItem();
-            $item->id = $orderDetail->product->id;
-            $item->name = $orderDetail->product->name;
-            $item->quantity = $orderDetail->quantity;
-            $item->price = $orderDetail->price;
-            $item->taxRate = $orderDetail->tax_rate;
-            $item->tax = $orderDetail->tax;
-            $item->discount = $orderDetail->discount;
-            $item->total = $orderDetail->total;
+        $idForNull = -1;
 
-            $cartItems[$orderDetail->product->id] = $item;
+        foreach ($order->orderDetails as $orderDetail) {
+            $item = new CartItem(
+                $orderDetail->product_id ?? $idForNull--,
+                $orderDetail->product_name,
+                $orderDetail->quantity,
+                $orderDetail->unit_price,
+                $orderDetail->discount,
+                $orderDetail->tax_rate,
+            );
+
+            $cartItems[$item->id] = $item;
         }
 
         $cart = new Cart($order->customer, $order, $cartItems);

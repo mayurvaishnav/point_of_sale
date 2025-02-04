@@ -15,7 +15,6 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         $cart = CartService::getCart();
-        $customer = Customer::find($request->customer_id);
         $cartItem = null;
 
         if ($request->product_id != null) {
@@ -47,12 +46,9 @@ class CartController extends Controller
             );
         }
 
-        // dd($cartItem, $customer, $product);
-
-        CartService::addCartItem($customer , null, [$cartItem]);
+        CartService::addCartItem($cart->customer , $cart->order, [$cartItem]);
 
         if ($request->wantsJson()) {
-            // dd(CartService::getCart());
             return response()->json(CartService::getCart());
         }
 
