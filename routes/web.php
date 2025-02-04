@@ -54,9 +54,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // CUSTOMER CREDITS
     Route::get('/customer-accounts', [CustomerAccountController::class, 'index'])->name('customer-accounts.index');
-    Route::get('/customer-accounts/{customer}', [CustomerAccountController::class, 'details'])->name('customer-accounts.details');
-    Route::post('/customer-accounts/payment/{customer}', [CustomerAccountController::class, 'addPayment'])->name('customer-accounts.addPayment');
-    Route::delete('/customer-accounts/payment/{customer}/{customerCredit}', [CustomerAccountController::class, 'deletePayment'])->name('customer-accounts.deletePayment');
+    Route::get('/customer-accounts/{customerAccount}', [CustomerAccountController::class, 'details'])->name('customer-accounts.details');
+    Route::post('/customer-accounts/payment/{customerAccount}', [CustomerAccountController::class, 'addPayment'])->name('customer-accounts.addPayment');
+    Route::delete('/customer-accounts/payment/{customerAccount}/{customerAccountTransaction}', [CustomerAccountController::class, 'deletePayment'])->name('customer-accounts.deletePayment');
 
     // STOCK MANAGEMENT
     Route::get('/stock-management', [StockManagementController::class, 'index'])->name('stocks.index');

@@ -45,4 +45,11 @@ class Product extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
+
+    /**
+     * Get the tax_rate of the product.
+     */    public function taxRate()
+    {
+        return $this->belongsTo(TaxRate::class);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CartService;
 use App\Models\Customer;
+use App\Models\CustomerAccountTransaction;
 use App\Models\CustomerCredit;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -91,10 +92,18 @@ class PosController extends Controller
             if ($validatedData['payment_method'] == 'customer_credit') {
                 $customer = Customer::find($customer_id);
 
-                $previousBalance = $customer->customerCredits()->latest()->first()->balance ?? 0;
+                if($customer->customerAccounts()->count() == 0) {
+                    $customer->customerAccounts()->create([
+                        'description' => 'Customer account for ' . $customer->name
+                    ]);
+                }
+
+                $previousBalance = $customer->customerAccountTransactions()->latest()->first()->balance ?? 0;
+                // dd($customer->customerAccounts()->first());
                 
                 // Deduct the amount from the customer's credit
-                CustomerCredit::create([
+                CustomerAccountTransaction::create([
+                    'customer_account_id'=> $customer->customerAccounts()->first()->id,
                     'customer_id' => $customer_id,
                     'order_id' => $order->id,
                     'note' => 'Order payment for ' . $order->invoice_number,

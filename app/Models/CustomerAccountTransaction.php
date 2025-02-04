@@ -16,6 +16,11 @@ class CustomerAccountTransaction extends Model
         "balance",
     ];
 
+    public function customerAccount()
+    {
+        return $this->belongsTo(CustomerAccount::class);
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

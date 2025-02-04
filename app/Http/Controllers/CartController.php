@@ -20,7 +20,7 @@ class CartController extends Controller
         $cartItem = null;
 
         if ($request->product_id != null) {
-            $product = Product::find($request->product_id);
+            $product = Product::find($request->product_id)::with('taxRate')->first();
 
             if ($product->quantity < 1) {
                 throw new \Exception("Product out of stock");
@@ -32,7 +32,7 @@ class CartController extends Controller
                 1,
                 $product->selling_price,
                 0,
-                $product->tax_rate,
+                $product->taxRate->value,
             );
         } else {
             $keys = array_keys($cart->cartItems);
