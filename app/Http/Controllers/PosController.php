@@ -113,7 +113,7 @@ class PosController extends Controller
                 ]);
 
                 $product = Product::find($cartItem->id);
-                if($product->stockable) {
+                if($product && $product->stockable) {
                     $product->quantity -= $cartItem->quantity;
                     $product->save();
                 }
@@ -170,7 +170,7 @@ class PosController extends Controller
             DB::rollBack();
             if ($request->wantsJson()) {
                 return response()->json([
-                    'error' => 'Something went wrong. Please try again.'
+                    'error' => 'Something went wrong. Please try again. '
                 ], 500);
             }
             return redirect()->route('pos.index')->with('error', 'Failed to place order. Please try again.');
