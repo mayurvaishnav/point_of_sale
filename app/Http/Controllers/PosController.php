@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\CartService;
 use App\Models\Customer;
 use App\Models\CustomerAccountTransaction;
-use App\Models\CustomerCredit;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
@@ -13,6 +12,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PosController extends Controller
 {
@@ -36,18 +36,40 @@ class PosController extends Controller
     public function processPayment(Request $request) {
 
         $rules = [
-            'payment_method' => 'required|string|in:cash,credit_card,customer_credit',
+            'payment_method' => 'required|string|in:cash,card,customer_account',
             'amount_paid' => 'required|numeric'
         ];
 
-        $validatedData = $request->validate($rules);
+        $validator = Validator::make($request->all(), $rules);
 
         $cart = CartService::getCart();
         $customer_id = $cart->customer->id ?? null;
 
-        // dd($cart, $validatedData);
-
         //validate the cart
+        $validator->after(function ($validator) use ($cart, $request, $customer_id) {
+            // Check if cart is empty
+            if (count($cart->cartItems) == 0) {
+                $validator->errors()->add('cart', 'Cart is empty.');
+            }
+
+            // Check if any product is out of stock
+            foreach ($cart->cartItems as $item) {
+                $product = Product::find($item->id);
+                if ($product && $product->stockable && $product->quantity < $item->quantity) {
+                    $validator->errors()->add('quantity', "Product {$product->name} is out of stock.");
+                }
+            }
+
+            // Check if customer is present for customer_account payment method
+            if ($request->payment_method == 'customer_account' && !$customer_id) {
+                $validator->errors()->add('customer', 'Customer must be selected for customer account payment method.');
+            }
+        });
+
+        if ($validator->fails()) {
+            // dd($validator->errors());
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         // DB::beginTransaction();
 
@@ -58,7 +80,7 @@ class PosController extends Controller
                 'user_id' => Auth::user()->id,
                 'status' => 'paid',
                 'order_date' => now()->toDateString(),
-                'paid_method' => $validatedData['payment_method'], 
+                'paid_method' => $request->payment_method, 
                 'net_sales' => $cart->getTotalCart()->subTotal,
                 'discount' => 0,
                 'tax' => $cart->getTotalCart()->tax,
@@ -82,14 +104,14 @@ class PosController extends Controller
                 ]);
 
                 $product = Product::find($cartItem->id);
-                $product->quantity -= $cartItem->quantity;
-                $product->save();
+                if($product->stockable) {
+                    $product->quantity -= $cartItem->quantity;
+                    $product->save();
+                }
             }
-
-
             
 
-            if ($validatedData['payment_method'] == 'customer_credit') {
+            if ($request->payment_method == 'customer_account') {
                 $customer = Customer::find($customer_id);
 
                 if($customer->customerAccounts()->count() == 0) {
@@ -121,7 +143,7 @@ class PosController extends Controller
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => 'Order has been placed successfully.',
-                    'payment_method' => $validatedData['payment_method']
+                    'payment_method' => $request->payment_method
                 ]);
             }
 

@@ -14,6 +14,28 @@
 
 @section('css')
 <style>
+    .product-button {
+        width: 100%;
+        text-align: left;
+        white-space: normal; /* Allow text to wrap */
+    }
+    .product-info {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; /* Prevent text from wrapping */
+    }
+    .product-quantity {
+        font-size: small;
+        display: block;
+        text-align: center;
+    }
+    @media (max-width: 576px) {
+        .product-info {
+            white-space: normal; /* Allow text to wrap on small screens */
+            font-size: 0.875rem;
+        }
+    }
     .name-column {
         width: 45%;
         word-wrap: break-word;
@@ -189,16 +211,21 @@
                                         @foreach ($products->where('category_id', $category->id) as $product)
                                             <div class="col-md-4 mb-3">
                                                 @php
-                                                    $isOutOfStock = $product->quantity <= 0;
+                                                    $isOutOfStock = $product->stockable ? $product->quantity <= 0 : false;
                                                 @endphp
-                                                <button class="btn btn-outline-info btn-block btn-lg btn-large" 
+                                                <button class="btn btn-outline-info btn-block btn-lg btn-large product-button" 
                                                     @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
                                                 >
-                                                    @if ($isOutOfStock)
-                                                            <i class="fas fa-exclamation-triangle text-danger"></i> 
-                                                    @endif
-                                                    {{ $product->name }}</br>
-                                                    <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
+                                                    <div class="product-info">
+                                                        @if ($isOutOfStock)
+                                                                <i class="fas fa-exclamation-triangle text-danger"></i> 
+                                                        @endif
+                                                        <span class="d-none">{{$product->description}}</span>
+                                                        {{ $product->name }}</br>
+                                                        @if ($product->stockable)
+                                                            <span class="product-quantity">Qty: {{ $product->quantity }}</span>
+                                                        @endif
+                                                    </div>
                                                 </button>
                                             </div>
                                         @endforeach
@@ -212,11 +239,19 @@
                             <div class="row mt-3">
                                 @foreach ($products as $product)
                                     <div class="col-md-4 mb-3 product-item">
-                                        <button class="btn btn-outline-info btn-block btn-lg btn-large"
+                                        @php
+                                            $isOutOfStock = $product->stockable ? $product->quantity <= 0 : false;
+                                        @endphp
+                                        <button class="btn btn-outline-info btn-block btn-lg btn-large product-button"
                                             @if ($isOutOfStock) disabled @else onclick="addToCart({{ $product->id }})"@endif
                                         >
-                                            {{ $product->name }}</br>
-                                            <span style="font-size: small;">Qty: {{ $product->quantity }}</span>
+                                            <div class="product-info">
+                                                <span class="d-none">{{$product->description}}</span>
+                                                {{ $product->name }}</br>
+                                                @if ($product->stockable)
+                                                    <span class="product-quantity">Qty: {{ $product->quantity }}</span>
+                                                @endif
+                                            </div>
                                         </button>
                                     </div>
                                 @endforeach
@@ -423,7 +458,7 @@
                 let amountPaid = $('#amountPaid').val();
                 
                 $.ajax({
-                    url: '{{ route('pos.processPayment') }}', // Change this to your actual route
+                    url: '{{ route('pos.processPayment') }}',
                     type: 'POST',
                     data: {
                         _token: "{{ csrf_token() }}",
@@ -432,11 +467,32 @@
                     },
                     dataType: 'json',
                     success: function(response) {
-                        alert('Payment method: ' + response.payment_method + ' selected.');
                         $('#paymentModal').modal('hide');
                     },
-                    error: function() {
-                        alert('Something went wrong!');
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            // Handle validation errors
+                            let errors = xhr.responseJSON.errors;
+                            let errorMessages = '';
+
+                            for (let field in errors) {
+                                if (errors.hasOwnProperty(field)) {
+                                    errorMessages += errors[field].join('<br>') + '<br>';
+                                }
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessages,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Something went wrong, Please refresh and try again111.',
+                            });
+                        }
                     }
                 });
             });

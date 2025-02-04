@@ -14,15 +14,14 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-        // dd($request->all());
         $cart = CartService::getCart();
         $customer = Customer::find($request->customer_id);
         $cartItem = null;
 
         if ($request->product_id != null) {
-            $product = Product::find($request->product_id)::with('taxRate')->first();
+            $product = Product::with('taxRate')->find($request->product_id);
 
-            if ($product->quantity < 1) {
+            if ($product->stockable == true && $product->quantity < 1) {
                 throw new \Exception("Product out of stock");
             }
 

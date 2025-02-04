@@ -9,7 +9,7 @@ enum PaymentMethod: string
 {
     case CASH = 'cash';
     case CARD = 'card';
-    case CUSTOMER_CREDIT = 'customer_credit';
+    case CUSTOMER_ACCONT = 'customer_account';
 }
 
 class Order extends Model
