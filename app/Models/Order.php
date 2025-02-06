@@ -2,15 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-enum PaymentMethod: string
-{
-    case CASH = 'cash';
-    case CARD = 'card';
-    case CUSTOMER_ACCONT = 'customer_account';
-}
 
 class Order extends Model
 {
@@ -31,8 +25,36 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'paid_method' => PaymentMethod::class,
+        'status' => OrderStatus::class,
     ];
+
+    public function getStatusBadge() 
+    {
+        $status = $this->status;
+
+        switch ($status) {
+            case OrderStatus::PAID:
+                $badgeClass = 'success';
+                break;
+            case OrderStatus::PARTIAL:
+                $badgeClass = 'warning';
+                break;
+            case OrderStatus::DUE:
+                $badgeClass = 'danger';
+                break;
+            case OrderStatus::LAYAWAY:
+                $badgeClass = 'secondary';
+                break;
+            case OrderStatus::CANCELLED:
+                $badgeClass = 'dark';
+                break;
+            default:
+                $badgeClass = 'light';
+                break;
+        }
+
+        return '<span class="badge badge-' . $badgeClass . '">' . $status->value . '</span>';
+    }
 
     /**
      * Get the customer that owns the order.

@@ -18,9 +18,9 @@
 
                     <!-- Payment Method Buttons -->
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-primary btn-lg payment-option" data-method="cash">Cash</button>
-                        <button type="button" class="btn btn-success btn-lg payment-option" data-method="card">Card</button>
-                        <button type="button" class="btn btn-warning btn-lg payment-option" data-method="customer_account">Customer Account</button>
+                        <button type="button" class="btn btn-primary btn-lg payment-option" data-method="CASH">Cash</button>
+                        <button type="button" class="btn btn-success btn-lg payment-option" data-method="CREDIT_CARD">Credit Card</button>
+                        <button type="button" class="btn btn-warning btn-lg payment-option" data-method="CUSTOMER_ACCOUNT">Customer Account</button>
                     </div>
                 </form>
             </div>

@@ -51,6 +51,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // ORDERS
     Route::resource('orders', OrderController::class);
+    Route::post('/orders/update-customer/{order}', [OrderController::class, 'updateCustomer'])->name('orders.updateCustomer');
 
     // CUSTOMER CREDITS
     Route::get('/customer-accounts', [CustomerAccountController::class, 'index'])->name('customer-accounts.index');

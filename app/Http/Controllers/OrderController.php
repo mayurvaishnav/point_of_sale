@@ -19,8 +19,7 @@ class OrderController extends Controller
     function __construct()
     {
          $this->middleware('permission:order-list', ['only' => ['index']]);
-         $this->middleware('permission:order-create', ['only' => ['create','store']]);
-         $this->middleware('permission:order-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:order-edit', ['only' => ['edit','updateCustomer']]);
          $this->middleware('permission:order-delete', ['only' => ['destroy']]);
     }
     
@@ -29,24 +28,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('customer')->latest()->get();
+        $orders = Order::with(['customer', 'orderPayments'])->latest()->get();
         return view("orders.index", compact("orders"));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -54,9 +37,10 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
+        $customers = Customer::all();
         $order->load(['customer', 'orderDetails', 'orderpayments']);
 
-        return view('orders.show', compact('order'));
+        return view('orders.show', compact('order', 'customers'));
     }
 
     /**
@@ -91,9 +75,15 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function updateCustomer(Request $request, Order $order)
     {
-        //
+        $request->validate([
+            "customer_id" => "nullable|exists:customers,id",
+        ]);
+        $order->customer_id = $request->customer_id;
+        $order->save();
+
+        return redirect()->route("orders.show", $order);
     }
 
     /**

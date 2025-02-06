@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use App\Models\CartService;
 use App\Models\Customer;
 use App\Models\CustomerAccountTransaction;
@@ -33,7 +35,7 @@ class PosController extends Controller
     public function processPayment(Request $request) {
 
         $rules = [
-            'payment_method' => 'required|string|in:cash,card,customer_account',
+            'payment_method' => 'required|string|in:CASH,CREDIT_CARD,CUSTOMER_ACCOUNT',
             'amount_paid' => 'required|numeric'
         ];
 
@@ -74,7 +76,7 @@ class PosController extends Controller
             $orderData = [
                 'customer_id' => $customer_id,
                 'user_id' => Auth::user()->id,
-                'status' => 'paid',
+                'status' => $this->getOrderStatus($request->amount_paid, $cart->getTotalCart()->total),
                 'order_date' => now()->toDateString(),
                 'quantity'=> $cart->getTotalCart()->quantity,
                 'discount' => 0,
@@ -124,7 +126,7 @@ class PosController extends Controller
                 'payment_method' => $request->payment_method,
                 'amount_paid' => $request->amount_paid,
                 'amount_due' => $cart->getTotalCart()->total - $request->amount_paid,
-                'payment_status' => $request->amount_paid >= $cart->getTotalCart()->total ? 'paid' : 'partial'
+                'payment_status' => $this->getPaymentStatus($request->amount_paid, $cart->getTotalCart()->total)
             ]);
             
 
@@ -178,6 +180,26 @@ class PosController extends Controller
         
     }
 
+    private function getOrderStatus($paidAmount, $totalAmount) {
+        if ($paidAmount >= $totalAmount) {
+            return OrderStatus::PAID;
+        } elseif ($paidAmount > 0 && $paidAmount < $totalAmount) {
+            return OrderStatus::PARTIAL;
+        } else {
+            return OrderStatus::DUE;
+        }
+    }
+
+    private function getPaymentStatus($paidAmount, $totalAmount) {
+        if ($paidAmount >= $totalAmount) {
+            return PaymentStatus::PAID;
+        } elseif ($paidAmount > 0 && $paidAmount < $totalAmount) {
+            return PaymentStatus::PARTIAL;
+        } else {
+            return PaymentStatus::DUE;
+        }
+    }
+
     public function save(Request $request) {
 
         $cart = CartService::getCart();
@@ -189,7 +211,7 @@ class PosController extends Controller
             $orderData = [
                 'customer_id' => $customer_id,
                 'user_id' => Auth::user()->id,
-                'status' => 'layaway',
+                'status' => OrderStatus::LAYAWAY,
                 'order_date' => now()->toDateString(),
                 'quantity'=> $cart->getTotalCart()->quantity,
                 'discount' => 0,
