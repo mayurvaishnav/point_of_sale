@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethods;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -54,6 +55,30 @@ class Order extends Model
         }
 
         return '<span class="badge badge-' . $badgeClass . '">' . $status->value . '</span>';
+    }
+
+    public function canEditCustomer() 
+    {
+        if($this->orderPayments->first() && $this->orderPayments->first()->payment_method == PaymentMethods::CUSTOMER_ACCOUNT) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function canBeDeleted() 
+    {
+        if($this->orderPayments->first() && $this->orderPayments->first()->payment_method == PaymentMethods::CUSTOMER_ACCOUNT) {
+            $orderTransactionId = $this->customerAccountTransactions->first()->id ?? null;
+
+            $customerLastTransactionId = $this->customer->customerAccountTransactions->last()->id ?? null;
+            if($orderTransactionId != $customerLastTransactionId) {
+                return false;
+            }
+            return true;
+        }
+
+        return true;
     }
 
     /**

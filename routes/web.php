@@ -50,10 +50,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
 
     // ORDERS
-    Route::resource('orders', OrderController::class);
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::put('/orders/{order}', [OrderController::class, 'edit'])->name('orders.edit');
     Route::post('/orders/{order}/update-customer', [OrderController::class, 'updateCustomer'])->name('orders.updateCustomer');
     Route::get('/orders/{order}/download-invoice', [OrderController::class, 'downloadInvoice'])->name('orders.downloadInvoice');
     Route::post('/orders/{order}/email-invoice', [OrderController::class, 'emailInvoice'])->name('orders.emailInvoice');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
     // CUSTOMER CREDITS
     Route::get('/customer-accounts', [CustomerAccountController::class, 'index'])->name('customer-accounts.index');

@@ -62,7 +62,7 @@ class PosController extends Controller
             }
 
             // Check if customer is present for CUSTOMER_ACCONT payment method
-            if ($request->payment_method == PaymentMethods::CUSTOMER_ACCONT->value && !$customer_id) {
+            if ($request->payment_method == PaymentMethods::CUSTOMER_ACCOUNT->value && !$customer_id) {
                 $validator->errors()->add('customer', 'Customer must be selected for customer account payment method.');
             }
         });
@@ -139,7 +139,7 @@ class PosController extends Controller
             $order->customerAccountTransactions()->delete();
 
             // Deduct the amount from the customer's credit
-            if ($request->payment_method == PaymentMethods::CUSTOMER_ACCONT->value) {
+            if ($request->payment_method == PaymentMethods::CUSTOMER_ACCOUNT->value) {
                 $customer = Customer::find($customer_id);
 
                 if($customer->customerAccounts()->count() == 0) {

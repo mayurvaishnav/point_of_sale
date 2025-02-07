@@ -46,13 +46,16 @@
                     <td>
                         <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">Details</a>
                         <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                        <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline">
-                            @method('delete')
-                            @csrf
-                            <button class="btn btn-danger btn-sm btn-delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        
+                        @if($order->canBeDeleted())
+                            <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline">
+                                @method('delete')
+                                @csrf
+                                <button class="btn btn-danger btn-sm btn-delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

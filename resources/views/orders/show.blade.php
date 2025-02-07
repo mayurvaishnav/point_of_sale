@@ -92,10 +92,12 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>Customer Details</h4>
-                    <button class="btn btn-primary btn-sm ml-auto" data-toggle="modal" data-target="#editCustomerModal">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    @include('orders.edit-customer-modal')
+                    @if ($order->canEditCustomer())
+                        <button class="btn btn-primary btn-sm ml-auto" data-toggle="modal" data-target="#editCustomerModal">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        @include('orders.edit-customer-modal')
+                    @endif
                 </div>
                 <div class="card-body table-responsive">
                     @if ($order->customer == null)

@@ -30,7 +30,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with(['customer', 'orderPayments'])->latest()->get();
+        $orders = Order::with(['orderPayments', 'customerAccountTransactions', 'customer.customerAccountTransactions'])->latest()->get();
         return view("orders.index", compact("orders"));
     }
 
@@ -139,6 +139,14 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        if (!$order->canBeDeleted()) {
+            return redirect()->back()->with('error', 'This order cannot be deleted');
+        }
+
+        $order->customerAccountTransactions()->delete();
+        $order->orderPayments()->delete();
+        $order->orderDetails()->delete();
+        $order->delete();
+        return redirect()->back()->with('success','Order deleted successfully');
     }
 }

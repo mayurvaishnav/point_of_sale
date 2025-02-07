@@ -6,5 +6,5 @@ enum PaymentMethods: string
 {
     case CASH = 'CASH';
     case CREDIT_CARD = 'CREDIT_CARD';
-    case CUSTOMER_ACCONT = 'CUSTOMER_ACCOUNT';
+    case CUSTOMER_ACCOUNT = 'CUSTOMER_ACCOUNT';
 }
