@@ -48,7 +48,11 @@
     }
     .nav-tabs .nav-link.active {
         order: 1 !important;
+        background-color: #007bff; /* Change this to your desired background color */
+        color: #fff; /* Optional: Change text color to white */
     }
+    /* .nav-tabs .nav-link.active {
+    } */
 
     /* POS cart table */
     .name-column {
@@ -69,10 +73,6 @@
         vertical-align: middle !important;
     }
 
-    .no-padding {
-        padding: 0;
-    }
-
     .input-number {
         padding-right: 0;
         padding-left: 0.3rem;
@@ -90,19 +90,18 @@
         overflow: auto; /* Allow scrolling within the card if needed */
     }
 
-
-    .parent-div {
-        height: 100%; /* Ensure the parent div takes up the full height */
+    .select2-container .select2-selection--single {
+        height: 40px; /* Adjust this value as needed */
     }
 
-    .child-div {
-        border: 1px solid #e0e0e0;
-        border-radius: 5px;
-        height: 100%; /* Make the child div take up the full height of the parent */
-        overflow-y: auto; /* Allow vertical scrolling within the child div if needed */
-        overflow-x: hidden; /* Prevent horizontal scrolling */
-        padding: 0.5rem;
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 40px; /* Adjust this value as needed */
     }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 40px; /* Adjust this value as needed */
+    }
+
 </style>
 @endsection
 
@@ -112,48 +111,38 @@
 
 <div class="card full-height-card">
     <div class="card-body">
-        <div class="row">
-            <div class="col-md-6 col-lg-4">
-                <!-- Customer select -->
-                <div class="form-group">
-                    <select class="form-control select2" name="customer_id" id="customerSelect">
-                        <option value="">-- Select Customer --</option>
-                        @foreach ($customers as $customer)
-                            <option value="{{ $customer->id }}" {{ ($cart->customer->id ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <div class="card scrollable-card">
+        <div class="row h-100">
+            <div class="col-md-6 col-lg-4 h-100">
+                <div class="card h-100">
+                    <div class="card-header p-0">
+                        <!-- Customer select -->
+                        <div class="form-group">
+                            <select class="form-control select2" name="customer_id" id="customerSelect">
+                                <option value="">-- Select Customer --</option>
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer->id }}" {{ ($cart->customer->id ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body scrollable-card p-0">
                         <table class="table tale-striped table-responsive" id="cart-table">
                             <thead>
                                 <tr>
                                     <th class="name-column">Name</th>
                                     <th class="qty-column">Qty</th>
                                     <th class="price-column">Price</th>
+                                    <th class="total-column">Total</th>
                                     <th class="delete-column"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($cart->cartItems as $item)
                                     <tr>
-                                        <td>{{$item->name}}</td>
-                                        <td>
-                                            <input
-                                                type="number" step="1" min="1"
-                                                value={{ $item->quantity }}
-                                                class="form-control input-number"
-                                                {{-- onChange={(e) => updateCart(c.id, e.target.value)} --}}
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                value={{ $item->price }}
-                                                class="form-control input-number"
-                                                {{-- onChange={(e) => updateCart(c.id, e.target.value)} --}}
-                                            />
-                                        </td>
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->quantity }}</td>
+                                        <td>{{ $item->price }}</td>
+                                        <td>{{ $item->total }}</td>
                                         <td class="delete-column pl-0 pr-0">
                                             <button class="btn btn-danger btn-sm deleteFromCart" data-id="{{ $item->id }}">
                                                 <i class="fas fa-trash"></i>
@@ -163,46 +152,63 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="">
-                                    <span>SubTotal: {{ $cart->getTotalCart()->subTotal }}</span></br>
-                                    <span>Vat: {{ $cart->getTotalCart()->tax }}</span></br>
-                                    <span>discount: {{ $cart->getTotalCart()->discount }}</span></br>
-                                    <span>Total: {{ $cart->getTotalCart()->total }}</span></br>
-                                </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row mb-2">
+                            <table class="col-md-12">
+                                <tbody>
+                                    <tr>
+                                        <td>SubTotal</td>
+                                        <td class="text-right" id="subTotal">{{ $cart->getTotalCart()->subTotal }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Vat</td>
+                                        <td class="text-right" id="vat">{{ $cart->getTotalCart()->tax }}</td>
+                                    </tr>
+                                    @if ($cart->getTotalCart()->discount > 0)
+                                        <tr>
+                                            <td>Discount</td>
+                                            <td class="text-right" id="discount">- {{ $cart->getTotalCart()->discount }}</td>
+                                        </tr>
+                                    @endif
+                                    <tr class="text-danger">
+                                        <td>Balance</td>
+                                        <td class="text-right" id="balance">{{ $cart->getTotalCart()->totalAfterDiscount }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button class="btn btn-default btn-block" id="cancle-button">Cancel</button>
                             </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-default btn-block" id="cancle-button">Cancel</button>
-                                </div>
-                                <div class="col-md-4">
-                                    <button class="btn btn-info btn-block" id="layaway-button">Layaway</button>
-                                </div>
-                                <div class="col-md-4">
-                                    <button class="btn btn-success btn-block" id="settle-button" data-toggle="modal" data-target="#paymentModal">Settle</button>
-                                </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-info btn-block" id="layaway-button">Layaway</button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-block" id="settle-button" data-toggle="modal" data-target="#paymentModal">Settle</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-8">
-                <!-- Search input -->
-                <div class="row">
-                    <div class="col-md-3">
-                        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#productModal">Add misc</button>
+            <div class=" col-md-6 col-lg-8 h-100">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <!-- Search input -->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <button class="btn btn-warning btn-block" data-toggle="modal" data-target="#productModal">Add misc</button>
+                            </div>
+                            <div class="form-group col-md-9">
+                                <input type="text" name="search" class="form-control" id="searchInput"
+                                    placeholder="Search product">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-9">
-                        <input type="text" name="search" class="form-control" id="searchInput"
-                            placeholder="Search product">
-                    </div>
-                </div>
-                <!-- product display -->
 
-                <div class="parent-div">
-                    <div class="child-div">
-
+                    <!-- product display -->
+                    <div class="card-body scrollable-card">
                         <!-- Tab panel for categories -->
                         <ul class="nav nav-tabs flex-wrap" id="productTabs" role="tablist">
                             @foreach ($categories as $category)
@@ -285,14 +291,7 @@
         $(document).ready(function() {
 
             // // Initialize Select2 for customers
-            //     // Initialize Select2 on the customer select element
-            //     $('#customerSelect').select2({
-            //         placeholder: "-- Select Customer --",
-            //         allowClear: true,
-            //         // width: '100%',  // Ensure it takes full width
-            //         // theme: 'bootstrap4' // Apply Bootstrap 4 styling
-            //     });
-            // });
+            $('#customerSelect').select2();
 
             // Search funcationality
             $('#searchInput').on('keyup', function() {
@@ -539,11 +538,29 @@
                     reRenderCart(response);
                 },
                 error: function (xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Something went wrong, Please refresh and try again.',
-                    });
+                    if (xhr.status === 422) {
+                        // Handle validation errors
+                        let errors = xhr.responseJSON.errors;
+                        let errorMessages = '';
+
+                        for (let field in errors) {
+                            if (errors.hasOwnProperty(field)) {
+                                errorMessages += errors[field].join('<br>') + '<br>';
+                            }
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errorMessages,
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please refresh and try again.',
+                        });
+                    }
                 }
             });
         }
@@ -570,6 +587,7 @@
                         <td>${cartItem.name}</td>
                         <td>${cartItem.quantity}</td>
                         <td>${cartItem.price}</td>
+                        <td>${cartItem.total}</td>
                         <td>
                             <button class="btn btn-danger btn-sm deleteFromCart" data-id="${cartItem.id}">
                                 <i class="fas fa-trash"></i>
@@ -580,6 +598,20 @@
                 // Append the new row to the cart table
                 $('#cart-table tbody').append(newRow);
             });
+            console.log("Now updating ..............");
+            updateCartValues(response);
+            console.log("Now updating Done ..............");
+        }
+
+        // Update cart values
+        function updateCartValues(cart) {
+            console.log(cart);
+            $('#subTotal').text(cart.total.subTotal);
+            $('#vat').text(cart.total.tax);
+            if (cart.discount > 0) {
+                $('#discount').text('- ' + cart.total.discount);
+            }
+            $('#balance').text(cart.total.totalAfterDiscount);
         }
 
 

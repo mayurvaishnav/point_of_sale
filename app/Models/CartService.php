@@ -13,6 +13,8 @@ class CartService {
         if ($cart == null) {
             return new Cart();
         }
+        // dd($cart);
+        $cart->refreshTotals();
         return $cart;
     }
 

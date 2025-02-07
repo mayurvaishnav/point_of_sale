@@ -40,4 +40,13 @@ class CartItem {
         $this->subTotal = $subTotal ?? formateCurrency($this->totalAfterDiscount - $this->tax);
     }
 
+    public function refreshTotals(): void
+    {
+        $this->total = (float) formateCurrency($this->price * $this->quantity);
+        $this->totalAfterDiscount = (float) formateCurrency($this->total - $this->discount);
+        $this->tax = (float) ($this->totalAfterDiscount * formateCurrency($this->taxRate/100));
+        $this->subTotal = (float) formateCurrency($this->totalAfterDiscount - $this->tax);
+
+    }
+
 }

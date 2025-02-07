@@ -33,6 +33,7 @@ class Cart extends Facade {
             if (isset($this->cartItems[$cartItem->id])) {
                 // If the item is already in the cart, add the quantity
                 $this->cartItems[$cartItem->id]->quantity += $cartItem->quantity;
+                $this->cartItems[$cartItem->id]->refreshTotals();
             } else {
                 // If the item is not in the cart, add it
                 $this->cartItems[$cartItem->id] = $cartItem;
@@ -59,6 +60,8 @@ class Cart extends Facade {
             $totalAfterDiscount += $cartItem->totalAfterDiscount;
         }
 
+        // dd(formateCurrency($total));
+
         $cartItemTotal = new CartItem(
             null,
             'Total',
@@ -71,8 +74,15 @@ class Cart extends Facade {
             formateCurrency($tax),
             formateCurrency($subTotal)
         );
+
+        $this->total = $cartItemTotal;
         
         return $cartItemTotal;
+    }
+
+    public function refreshTotals()
+    {
+        $this->getTotalCart();
     }
 
     public function removeItem($id)

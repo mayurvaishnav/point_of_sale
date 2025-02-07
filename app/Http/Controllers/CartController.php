@@ -19,9 +19,11 @@ class CartController extends Controller
 
         if ($request->product_id != null) {
             $product = Product::with('taxRate')->find($request->product_id);
+            $requestedQuantity = ($cart->cartItems[$request->product_id]->quantity ?? 0 ) + 1;
+            // dd($requestedQuantity);
 
-            if ($product->stockable == true && $product->quantity < 1) {
-                throw new \Exception("Product out of stock");
+            if ($product->stockable == true && ($product->quantity < 1 || $product->quantity < $requestedQuantity)) {
+                return response()->json(['errors' => ['quantity' => ["Product {$product->name} has only {$product->quantity} in stock"]]], 422);
             }
 
             $cartItem = new CartItem(
@@ -49,6 +51,7 @@ class CartController extends Controller
         CartService::addCartItem($cart->customer , $cart->order, [$cartItem]);
 
         if ($request->wantsJson()) {
+            // dd(CartService::getCart());
             return response()->json(CartService::getCart());
         }
 

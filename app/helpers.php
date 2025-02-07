@@ -7,5 +7,5 @@ if (!function_exists('activeSegment')) {
 }
 
 function formateCurrency($currencyValue) {
-    return number_format($currencyValue,2,'.',',');
+    return number_format($currencyValue,2,'.','');
 }
