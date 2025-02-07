@@ -466,6 +466,7 @@
             $('.payment-option').click(function() {
                 let paymentMethod = $(this).data('method');
                 let amountPaid = $('#amountPaid').val();
+                let discountAmount = $('#discountAmount').val();
                 
                 $.ajax({
                     url: '{{ route('pos.processPayment') }}',
@@ -473,7 +474,8 @@
                     data: {
                         _token: "{{ csrf_token() }}",
                         payment_method: paymentMethod,
-                        amount_paid: amountPaid
+                        amount_paid: amountPaid,
+                        discount_amount: discountAmount
                     },
                     dataType: 'json',
                     success: function(response) {

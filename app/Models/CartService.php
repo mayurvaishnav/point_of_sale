@@ -30,6 +30,12 @@ class CartService {
         session()->put('cart', $cart);
     }
 
+    public static function updateDiscount($discount) {
+        $cart = self::getCart();
+        $cart->discount = $discount;
+        session()->put('cart', $cart);
+    }
+
     public static function updateQuantity($itemId, $quantity) {
         $cart = self::getCart();
         if (isset($cart[$itemId])) {
@@ -42,14 +48,6 @@ class CartService {
         $cart = self::getCart();
         if (isset($cart[$itemId])) {
             $cart[$itemId]->price = $price;
-            session()->put('cart', $cart);
-        }
-    }
-
-    public function updateDiscount($itemId, $discount) {
-        $cart = $this->getCart();
-        if (isset($cart[$itemId])) {
-            $cart[$itemId]['discount'] = $discount;
             session()->put('cart', $cart);
         }
     }

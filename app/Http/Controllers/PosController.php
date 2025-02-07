@@ -13,7 +13,6 @@ use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Carbon\Carbon;
-use Faker\Provider\ar_EG\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -38,10 +37,13 @@ class PosController extends Controller
 
         $rules = [
             'payment_method' => 'required|string|in:CASH,CREDIT_CARD,CUSTOMER_ACCOUNT',
-            'amount_paid' => 'required|numeric'
+            'amount_paid' => 'required|numeric',
+            'discount_amount'=> 'nullable|numeric',
         ];
 
         $validator = Validator::make($request->all(), $rules);
+
+        CartService::updateDiscount($request->discount_amount ?? 0);
 
         $cart = CartService::getCart();
         $customer_id = $cart->customer->id ?? null;
@@ -78,10 +80,10 @@ class PosController extends Controller
             $orderData = [
                 'customer_id' => $customer_id,
                 'user_id' => Auth::user()->id,
-                'status' => $this->getOrderStatus($request->amount_paid, $cart->getTotalCart()->total),
+                'status' => $this->getOrderStatus($request->amount_paid, $cart->getTotalCart()->totalAfterDiscount),
                 'order_date' => now()->toDateString(),
                 'quantity'=> $cart->getTotalCart()->quantity,
-                'discount' => 0,
+                'discount' => $cart->getTotalCart()->discount,
                 'tax' => $cart->getTotalCart()->tax,
                 'total_before_tax'=> $cart->getTotalCart()->subTotal,
                 'total' => $cart->getTotalCart()->total,
@@ -130,8 +132,8 @@ class PosController extends Controller
             $order->orderPayments()->create([
                 'payment_method' => $request->payment_method,
                 'amount_paid' => $request->amount_paid,
-                'amount_due' => $cart->getTotalCart()->total - $request->amount_paid,
-                'payment_status' => $this->getPaymentStatus($request->amount_paid, $cart->getTotalCart()->total)
+                'amount_due' => $cart->getTotalCart()->totalAfterDiscount - $request->amount_paid,
+                'payment_status' => $this->getPaymentStatus($request->amount_paid, $cart->getTotalCart()->totalAfterDiscount)
             ]);
             
 
@@ -156,8 +158,8 @@ class PosController extends Controller
                     'customer_id' => $customer_id,
                     'order_id' => $order->id,
                     'note' => 'Order payment for ' . $order->invoice_number,
-                    'credit_amount' => $order->total,
-                    'balance' => $previousBalance - $order->total
+                    'credit_amount' => $order->total_after_discount,
+                    'balance' => $previousBalance - $order->total_after_discount
                 ]);
 
             }

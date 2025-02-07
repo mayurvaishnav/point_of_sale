@@ -67,7 +67,7 @@ class OrderController extends Controller
             $cartItems[$item->id] = $item;
         }
 
-        $cart = new Cart($order->customer, $order, $cartItems);
+        $cart = new Cart($order->customer, $order, $cartItems, 0);
 
         session()->put("cart", $cart);
 

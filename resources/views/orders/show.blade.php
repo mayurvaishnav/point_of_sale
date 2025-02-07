@@ -75,11 +75,15 @@
                             <td>{{ $order->tax }}</td>
                         </tr>
                         <tr>
+                            <td><strong>Total:</strong></td>
+                            <td>{{ $order->total }}</td>
+                        </tr>
+                        <tr>
                             <td><strong>Discount:</strong></td>
                             <td>{{ $order->discount }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Total:</strong></td>
+                            <td><strong>Total After Discount:</strong></td>
                             <td>{{ $order->total_after_discount }}</td>
                         </tr>
                     </table>
