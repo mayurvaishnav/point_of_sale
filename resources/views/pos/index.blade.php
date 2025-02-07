@@ -411,6 +411,8 @@
                             success: function (response) {
                                 // Re-render the cart
                                 reRenderCart(response);
+                                // Re-load the page
+                                location.reload();
                             },
                             error: function (xhr) {
                                 Swal.fire({

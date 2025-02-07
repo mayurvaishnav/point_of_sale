@@ -8,9 +8,24 @@
                 <h1>Invoice No: {{ $order->invoice_number }}</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{{route('products.create')}}" class="btn btn-primary"><i class="fa fa-envolop"></i> Send email</a>
-                <a href="{{route('products.create')}}" class="btn btn-primary"><i class="fa fa-print"></i> Print</a>
-                <a href="{{route('products.create')}}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+                @if (!$order->customer)
+                    <button class="btn btn-success" data-toggle="modal" data-target="#emailInvoiceModal">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </button>
+                    @include('orders.customer-email-modal')
+                @else
+                    <form action="{{ route('orders.emailInvoice', $order) }}" method="POST" style="display:inline" id="emailInvoiceForm" onsubmit="startLoadingEmail()">
+                        @csrf
+                        <button type="submit" class="btn btn-success" id="sendEmailButton">
+                            <span id="buttonText"><i class="fa fa-envelope"></i> Send Email</span>
+                            <span id="loadingSpinner" style="display: none;"><i class="fa fa-spinner fa-spin"></i> Sending...</span>
+                        </button>
+                    </form>
+                @endif
+                <a href="" class="btn btn-primary"><i class="fa fa-print"></i> Print</a>
+                <a href="{{route('orders.downloadInvoice', $order)}}" class="btn btn-info" id="downloadButton">
+                    <i class="fa fa-download"></i> Download
+                </a>
             </div>
         </div>
     </div>
@@ -27,8 +42,8 @@
     <div class="row">
 
         <!-- Order Information -->
-        <div class="col-md-8">
-            <div class="card mb-4">
+        <div class="col-md-6">
+            <div class="card mb-4 table-responsive">
                 <div class="card-header">
                     <h4>Order Information</h4>
                 </div>
@@ -73,7 +88,7 @@
         </div>
 
         <!-- Customer Details -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4>Customer Details</h4>
@@ -82,7 +97,7 @@
                     </button>
                     @include('orders.edit-customer-modal')
                 </div>
-                <div class="card-body">
+                <div class="card-body table-responsive">
                     @if ($order->customer == null)
                         <p>Customer not found.</p>
                     @else
@@ -137,7 +152,7 @@
                         <th>Qty</th>
                         <th>Vat (included)</th>
                         <th>tax rate(%)</th>
-                        <th>Total</th>
+                        <th>Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -207,6 +222,25 @@
                 dropdownParent: $('#editCustomerModal')
             });
         });
+
+        
+        // // Disable download button on click
+        // $('#downloadButton').on('click', function(event) {
+        //     var button = $(this);
+        //     button.prop('disabled', true);
+        //     button.html('<i class="fa fa-spinner fa-spin"></i> Downloading...');
+        // });
     });
+
+    function startLoadingEmail() {
+        let button = document.getElementById('sendEmailButton');
+        let buttonText = document.getElementById('buttonText');
+        let loadingSpinner = document.getElementById('loadingSpinner');
+
+        // Disable button and change text
+        button.disabled = true;
+        buttonText.style.display = 'none'; 
+        loadingSpinner.style.display = 'inline-block';
+    }
 </script>
 @stop

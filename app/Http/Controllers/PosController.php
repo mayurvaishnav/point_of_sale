@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethods;
 use App\Enums\PaymentStatus;
 use App\Models\CartService;
 use App\Models\Customer;
@@ -12,6 +13,7 @@ use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Carbon\Carbon;
+use Faker\Provider\ar_EG\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -59,8 +61,8 @@ class PosController extends Controller
                 }
             }
 
-            // Check if customer is present for customer_account payment method
-            if ($request->payment_method == 'customer_account' && !$customer_id) {
+            // Check if customer is present for CUSTOMER_ACCONT payment method
+            if ($request->payment_method == PaymentMethods::CUSTOMER_ACCONT->value && !$customer_id) {
                 $validator->errors()->add('customer', 'Customer must be selected for customer account payment method.');
             }
         });
@@ -121,6 +123,9 @@ class PosController extends Controller
                 }
             }
 
+            // Delete existing order payments if any
+            $order->orderPayments()->delete();
+
             // Save the payment
             $order->orderPayments()->create([
                 'payment_method' => $request->payment_method,
@@ -130,8 +135,11 @@ class PosController extends Controller
             ]);
             
 
+            // Delete existing customer account transaction if any
+            $order->customerAccountTransactions()->delete();
+
             // Deduct the amount from the customer's credit
-            if ($request->payment_method == 'customer_account') {
+            if ($request->payment_method == PaymentMethods::CUSTOMER_ACCONT->value) {
                 $customer = Customer::find($customer_id);
 
                 if($customer->customerAccounts()->count() == 0) {
@@ -172,7 +180,7 @@ class PosController extends Controller
             DB::rollBack();
             if ($request->wantsJson()) {
                 return response()->json([
-                    'error' => 'Something went wrong. Please try again. '
+                    'error' => 'Something went wrong. Please try again. ' . $e->getMessage()
                 ], 500);
             }
             return redirect()->route('pos.index')->with('error', 'Failed to place order. Please try again.');

@@ -51,7 +51,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // ORDERS
     Route::resource('orders', OrderController::class);
-    Route::post('/orders/update-customer/{order}', [OrderController::class, 'updateCustomer'])->name('orders.updateCustomer');
+    Route::post('/orders/{order}/update-customer', [OrderController::class, 'updateCustomer'])->name('orders.updateCustomer');
+    Route::get('/orders/{order}/download-invoice', [OrderController::class, 'downloadInvoice'])->name('orders.downloadInvoice');
+    Route::post('/orders/{order}/email-invoice', [OrderController::class, 'emailInvoice'])->name('orders.emailInvoice');
 
     // CUSTOMER CREDITS
     Route::get('/customer-accounts', [CustomerAccountController::class, 'index'])->name('customer-accounts.index');

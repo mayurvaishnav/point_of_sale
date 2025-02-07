@@ -73,4 +73,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderPayment::class);
     }
+
+    public function customerAccountTransactions() 
+    {
+        return $this->hasMany(CustomerAccountTransaction::class);
+    }
 }

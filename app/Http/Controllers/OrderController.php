@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderInvoiceMail;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Customer;
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Pest\ArchPresets\Custom;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -84,6 +86,52 @@ class OrderController extends Controller
         $order->save();
 
         return redirect()->route("orders.show", $order);
+    }
+
+    /**
+     * Download invoice.
+     */
+    public function downloadInvoice(Order $order)
+    {
+        $order->load(['customer', 'orderDetails', 'orderpayments']);$customerAccountBalance = 0;
+
+        if ($order->customer) {
+            $customerAccountBalance = $order->customer->customerAccountTransactions->last()->balance ?? 0;
+        }
+
+
+        // return view('orders.invoice', compact('order', 'customerAccountBalance'));
+
+        $pdf = Pdf::loadView('orders.invoice', compact('order', 'customerAccountBalance'));
+        return $pdf->download($order->invoice_number .'.pdf');
+    }
+
+    /**
+     * Email invoice.
+     */
+    public function emailInvoice(Request $request, Order $order)
+    {
+        $request->validate([
+            'email'=> 'nullable|email',
+        ]);
+
+        $order->load(['customer', 'orderDetails', 'orderpayments']);
+        
+        $customerAccountBalance = 0;
+        $customerEmail = $request->email;
+
+        if ($order->customer) {
+            $customerAccountBalance = $order->customer->customerAccountTransactions->last()->balance ?? 0;
+            $customerEmail = $order->customer->email;
+        }
+
+        if($customerEmail == null) {
+            return redirect()->back()->with('error', 'Customer email is required');
+        }
+
+        Mail::to([$customerEmail, env('MAIL_CC_ADDRESS')])->send(new OrderInvoiceMail($order, $customerAccountBalance));
+
+        return redirect()->back()->with('success', 'Invoice sent successfully');
     }
 
     /**
