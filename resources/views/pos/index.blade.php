@@ -55,6 +55,9 @@
     } */
 
     /* POS cart table */
+    .cart-item {
+        cursor: pointer;
+    }
     .name-column {
         width: 45%;
         word-wrap: break-word;
@@ -121,21 +124,27 @@
                                     <th class="qty-column">Qty</th>
                                     <th class="price-column">Price</th>
                                     <th class="total-column">Total</th>
-                                    <th class="delete-column"></th>
+                                    {{-- <th class="delete-column"></th> --}}
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($cart->cartItems as $item)
-                                    <tr>
+                                    <tr class="cart-item" 
+                                        data-id="{{ $item->id }}"
+                                        data-name="{{ $item->name }}"
+                                        data-quantity="{{ $item->quantity }}"
+                                        data-price="{{ $item->price }}"
+                                        data-total="{{ $item->total }}"
+                                    >
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->quantity }}</td>
                                         <td>{{ $item->price }}</td>
                                         <td>{{ $item->total }}</td>
-                                        <td class="delete-column pl-0 pr-0">
-                                            <button class="btn btn-danger btn-sm deleteFromCart" data-id="{{ $item->id }}">
+                                        {{-- <td class="delete-column pl-0 pr-0"> --}}
+                                            {{-- <button class="btn btn-danger btn-sm deleteFromCart" data-id="{{ $item->id }}">
                                                 <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
+                                            </button> --}}
+                                        {{-- </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -171,10 +180,10 @@
                                 <button class="btn btn-default btn-block" id="cancle-button">Cancel</button>
                             </div>
                             <div class="col-md-4">
-                                <button class="btn btn-info btn-block" id="layaway-button">Layaway</button>
+                                <button class="btn btn-info btn-block" id="layaway-button" {{ empty($cart->cartItems) ? 'disabled' : '' }}>Layaway</button>
                             </div>
                             <div class="col-md-4">
-                                <button class="btn btn-success btn-block" id="settle-button" data-toggle="modal" data-target="#paymentModal">Settle</button>
+                                <button class="btn btn-success btn-block" id="settle-button" data-toggle="modal" data-target="#paymentModal" {{ empty($cart->cartItems) ? 'disabled' : '' }}>Settle</button>
                             </div>
                         </div>
                     </div>
@@ -269,6 +278,7 @@
 
 @include('pos.miscProduct-modal')
 @include('pos.payment-modal')
+@include('pos.itemUpdate-modal')
 
 @endsection
 
@@ -280,6 +290,70 @@
 
             // // Initialize Select2 for customers
             $('#customerSelect').select2();
+
+            // Update the total amount in the payment modal
+            $('#paymentModal').on('shown.bs.modal', function () {
+                calculateTotalPrice();
+            });
+
+            // Open modal when clicking on a cart row
+            $(document).on("click", ".cart-item", function() {
+                let itemId = $(this).data("id");
+                let itemName = $(this).data("name");
+                let itemQuantity = $(this).data("quantity");
+                let itemPrice = $(this).data("price");
+                let itemTotal = $(this).data("total");
+
+                $("#editItemId").val(itemId);
+                $("#editItemName").val(itemName);
+                $("#editItemQuantity").val(itemQuantity);
+                $("#editItemPrice").val(itemPrice);
+                $("#editTotalPrice").val(itemTotal);
+
+                $("#deleteFromCart").attr("data-id", itemId);
+
+                if (itemId > 0) {
+                    $("#editItemName").attr("readonly", true);
+                } else {
+                    $("#editItemName").attr("readonly", false);
+                }
+
+                $("#editItemModal").modal("show");
+            });
+
+            // Handle update button click
+            $("#updateItem").on("click", function () {
+                let itemId = $("#editItemId").val();
+                let newQuantity = $("#editItemQuantity").val();
+                let newPrice = $("#editItemPrice").val();
+                let newName = $("#editItemName").val();
+
+                $.ajax({
+                    url: "{{ route('cart.update') }}",
+                    type: "POST",
+                    data: {
+                        _token: $("meta[name='csrf-token']").attr("content"),
+                        item_id: itemId,
+                        quantity: newQuantity,
+                        price: newPrice,
+                        name: newName,
+                    },
+                    success: function (response) {
+                        // Close the modal
+                        $('#editItemModal').modal('hide');
+
+                        // Re-render the cart
+                        reRenderCart(response);
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please refresh and try again.',
+                        });
+                    }
+                });
+            });
 
             // Search funcationality
             $('#searchInput').on('keyup', function() {
@@ -323,7 +397,7 @@
             });
 
             // Delete from card
-            $(document).on('click', '.deleteFromCart', function() {
+            $(document).on('click', '#deleteFromCart', function() {
                 const cartItemId = $(this).data('id');
 
                 // Add your AJAX request or other logic here to handle the deletion
@@ -336,6 +410,9 @@
                     },
                     dataType: 'json',
                     success: function (response) {
+                        // Close the modal
+                        $('#editItemModal').modal('hide');
+
                         // Re-render the cart
                         reRenderCart(response);
                     },
@@ -351,6 +428,11 @@
 
             // Update Customer selection
             $('#customerSelect').on('change', function() {
+                if ($(this).val()) {
+                    $('#customerAccountPay').show();
+                } else {
+                    $('#customerAccountPay').hide();
+                }
                 const customerId = $(this).val();
 
                 // Add your AJAX request or other logic here to handle the customer change
@@ -558,9 +640,11 @@
 
             // Update the customer select
             if (response.customer) {
-                $('#customerSelect').val(response.customer.id).trigger('change');
+                $('#customerSelect').val(response.customer.id);
+                $('#customerAccountPay').show();
             } else {
-                $('#customerSelect').val('').trigger('change');
+                $('#customerSelect').val('');
+                $('#customerAccountPay').hide();
             }
 
             // Clear the cart table
@@ -571,77 +655,53 @@
             // Iterate over the cart items and create new rows
             cartItems.forEach(cartItem => {
                 const newRow = `
-                    <tr>
+                    <tr class="cart-item" 
+                        data-id="${cartItem.id}"
+                        data-name="${cartItem.name}"
+                        data-quantity="${cartItem.quantity}"
+                        data-price="${cartItem.price}"
+                        data-total="${cartItem.total}"
+                    >
                         <td>${cartItem.name}</td>
                         <td>${cartItem.quantity}</td>
                         <td>${cartItem.price}</td>
                         <td>${cartItem.total}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm deleteFromCart" data-id="${cartItem.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
                     </tr>
                 `;
+
+                // <button class="btn btn-danger btn-sm deleteFromCart" data-id="${cartItem.id}">
+                //                 <i class="fas fa-trash"></i>
+                //             </button>
+
                 // Append the new row to the cart table
                 $('#cart-table tbody').append(newRow);
             });
-            console.log("Now updating ..............");
+            // Update cart values and buttons
             updateCartValues(response);
-            console.log("Now updating Done ..............");
         }
 
         // Update cart values
         function updateCartValues(cart) {
-            console.log(cart);
             $('#subTotal').text(cart.total.subTotal);
             $('#vat').text(cart.total.tax);
             if (cart.discount > 0) {
                 $('#discount').text('- ' + cart.total.discount);
             }
             $('#balance').text(cart.total.totalAfterDiscount);
+
+            // Disable buttons if cart is empty
+            if(cart.total.subTotal == 0){
+                $('#layaway-button').attr('disabled', true);
+                $('#settle-button').attr('disabled', true);
+            } else {
+                $('#layaway-button').attr('disabled', false);
+                $('#settle-button').attr('disabled', false);
+            }
+
+            // Update the total amount in the payment modal
+            $('#totalAmount').val(cart.total.total).trigger('change');
+            calculateTotalPrice();
         }
-
-
-        // Handle click event on quantity cell
-        // $(document).on('click', '.quantity-cell', function () {
-        //     const cell = $(this);
-        //     const currentQuantity = cell.text();
-        //     const cartItemId = cell.data('id');
-
-        //     // Replace cell content with an input field
-        //     cell.html(`<input type="number" class="form-control quantity-input input-number" value="${currentQuantity}" data-id="${cartItemId}">`);
-        // });
-
-
-
-        // Handle change event on quantity input field
-        // $(document).on('blur', '.quantity-input', function () {
-        //     const input = $(this);
-        //     const newQuantity = input.val();
-        //     const cartItemId = input.data('id');
-
-        //     // Update the quantity in the cart (you can add an AJAX request here to update the server)
-        //     // For now, just update the cell content
-        //     input.parent().text(newQuantity);
-
-        //     // Optionally, you can send an AJAX request to update the quantity on the server
-        //     // $.ajax({
-        //     //     url: "{{ route('cart.updateQuantity') }}",
-        //     //     method: "POST",
-        //     //     data: {
-        //     //         cart_item_id: cartItemId,
-        //     //         quantity: newQuantity,
-        //     //         _token: $('meta[name="csrf-token"]').attr('content')
-        //     //     },
-        //     //     success: function (response) {
-        //     //         // Handle success response
-        //     //     },
-        //     //     error: function (xhr) {
-        //     //         // Handle error response
-        //     //     }
-        //     // });
-        // });
     </script>
 @stop
 

@@ -69,22 +69,20 @@ class CartController extends Controller
         return response()->json(CartService::getCart());
     }
 
-    public function updateQuantity(Request $request)
+    public function update(Request $request, $itemId)
     {
-        $id = $request->cart_item_id;
+        $request->validate([
+            'item_id' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
+            'price'=> 'required|numeric|min:0',
+            'name'=> 'required|string',
+        ]);
+        $id = $request->item_id;
         $quantity = $request->quantity;
-
-        CartService::updateQuantity($id, $quantity);
-
-        return response()->json(CartService::getCart());
-    }
-
-    public function updatePrice(Request $request)
-    {
-        $id = $request->cart_item_id;
         $price = $request->price;
+        $name = $request->name;
 
-        CartService::updatePrice($id, $price);
+        CartService::update($id, $name, $quantity, $price);
 
         return response()->json(CartService::getCart());
     }

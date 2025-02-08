@@ -20,7 +20,7 @@ class OrderController extends Controller
          $this->middleware('permission:order-show', ['only' => ['show', 'downloadInvoice', 'emailInvoice']]);
          $this->middleware('permission:order-edit', ['only' => ['edit','updateCustomer']]);
          $this->middleware('permission:order-delete', ['only' => ['destroy']]);
-         $this->middleware('pos:take-order', ['only' => ['layaway']]);
+         $this->middleware('permission:pos-take-order', ['only' => ['layaway']]);
     }
     
     /**

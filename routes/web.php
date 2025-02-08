@@ -53,7 +53,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/index', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/layaway', [OrderController::class,'layaway'])->name('orders.layaway');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::put('/orders/{order}', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
     Route::post('/orders/{order}/update-customer', [OrderController::class, 'updateCustomer'])->name('orders.updateCustomer');
     Route::get('/orders/{order}/download-invoice', [OrderController::class, 'downloadInvoice'])->name('orders.downloadInvoice');
     Route::post('/orders/{order}/email-invoice', [OrderController::class, 'emailInvoice'])->name('orders.emailInvoice');
@@ -79,7 +79,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     // POS CART
     Route::post('/cart/add-to-cart', [CartController::class, 'addToCart'])->name('cart.addToCart');
     Route::post('/cart/remove-from-cart', [CartController::class, 'removeFromCart'])->name('cart.removeFromCart');
-    Route::post('/cart/updateQuantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/updateCustomer', [CartController::class, 'updateCustomer'])->name('cart.updateCustomer');
     Route::post('/cart/empty', [CartController::class, 'empty'])->name('cart.empty');
 
