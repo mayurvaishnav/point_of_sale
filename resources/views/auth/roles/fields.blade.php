@@ -21,12 +21,14 @@
         @foreach($groupedPermissions as $groupName => $permissions)
             <p><strong>{{ $groupName }}</strong><br/>
             @foreach($permissions as $permission)
-                <input type="checkbox" name="permission[]" 
-                    value="{{$permission->id}}" 
-                    {{ in_array($permission->id, $rolePermissions ?? []) ? 'checked' : ''}}
-                    class="{{ $errors->has('permission') ? 'is-invalid' : '' }}"
-                >
-                {{ $permission->name }}
+                <label class="form-check-label">
+                    <input type="checkbox" name="permission[]" 
+                        value="{{$permission->id}}" 
+                        {{ in_array($permission->id, $rolePermissions ?? []) ? 'checked' : ''}}
+                        class="{{ $errors->has('permission') ? 'is-invalid' : '' }}"
+                    >
+                    {{ $permission->name }}
+                </label>
                 <br/>
             @endforeach
             </p>
