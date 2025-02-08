@@ -5,7 +5,18 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Orders</h1>
+                <h1>{{ $pageTitle }}</h1>
+            </div>
+            <div class="col-sm-6">
+                @if ($pageTitle == 'All Orders')
+                    <form id="dateFilterForm" method="GET" action="{{ route('orders.index') }}" class="form-inline float-right">
+                        <div class="form-group">
+                            <label for="orderDate" class="mr-2">Select Date:</label>
+                            <input type="date" name="order_date" id="orderDate" class="form-control" value="{{ request('order_date') }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary ml-2">Filter</button>
+                    </form>
+                @endif
             </div>
         </div>
     </div>
@@ -45,9 +56,8 @@
                     <td class="text-right">{{$order->total}}</td>
                     <td>
                         <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">Details</a>
-                        <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                        
                         @if($order->canBeDeleted())
+                            <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
                             <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline">
                                 @method('delete')
                                 @csrf

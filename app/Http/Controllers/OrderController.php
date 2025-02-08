@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Mail\OrderInvoiceMail;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -28,10 +29,28 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with(['orderPayments', 'customerAccountTransactions', 'customer.customerAccountTransactions'])->latest()->get();
-        return view("orders.index", compact("orders"));
+        $request->validate([
+            'order_date'=> 'nullable|date',
+        ]);
+        $date = now()->toDateString();
+        if ($request->has('order_date')) {
+            $date = $request->order_date;
+        }
+        $pageTitle = "All Orders";
+        $orders = Order::where('order_date', $date)->with(['orderPayments', 'customerAccountTransactions', 'customer.customerAccountTransactions'])->latest()->get();
+        return view("orders.index", compact("orders", "pageTitle"));
+    }
+    
+    /**
+     * Display a listing of the resource.
+     */
+    public function layaway()
+    {
+        $orders = Order::where('status', OrderStatus::LAYAWAY)->with(['orderPayments', 'customerAccountTransactions', 'customer.customerAccountTransactions'])->latest()->get();
+        $pageTitle = "Layaway Orders";
+        return view("orders.index", compact("orders", "pageTitle"));
     }
 
     /**

@@ -157,7 +157,7 @@ return [
     'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
-    'layout_dark_mode' => false,
+    'layout_dark_mode' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -325,144 +325,153 @@ return [
         [
             'text' => 'Dashboard',
             'url' => 'admin/dashboard',
-            'icon' => 'far fa fa-cube',
-            // 'can'=> 'sales-dashboard',
+            'icon' => 'fas fa-tachometer-alt', // Better dashboard icon
         ],
+        ['header' => ''],
+        ['header' => 'Sales & Transactions'],
         [
             'text' => 'Point of Sale',
             'route' => 'pos.index',
-            'icon' => 'far fa fa-cart-plus',
+            'icon' => 'fas fa-cash-register', // POS-specific icon
             'active' => ['admin/pos*'],
-            // 'can' => 'pos-take-orders',
         ],
         [
             'text' => 'Orders',
-            'route' => 'orders.index',
-            'icon' => 'far fa fa-money-bill-alt',
+            'icon' => 'fas fa-receipt',
             'active' => ['admin/orders*'],
-            'can' => 'order-list',
-        ],
-        [
-            'text' => 'Customers',
-            'route' => 'customers.index',
-            'icon' => 'far fa fa-address-book',
-            'active' => ['admin/customers/*'],
-            'can' => 'customer-list',
-        ],
-        [
-            'text' => 'Suppliers',
-            'route' => 'suppliers.index',
-            'icon' => 'far fa-solid fa-circle',
-            'active' => ['admin/suppliers*'],
-            'can' => 'supplier-list',
-        ],
-        [
-            'text' => 'Categories',
-            'route' => 'categories.index',
-            'icon' => 'far fa-solid fa-circle',
-            'active' => ['admin/categories*'],
-            'can' => 'category-list',
-        ],
-        [
-            'text' => 'Products',
-            'route' => 'products.index',
-            'icon' => 'far fa-solid fa-circle',
-            'active' => ['admin/products*'],
-            'can' => 'product-list',
-        ],
-        [
-            'text' => 'Stock Management',
-            'route' => 'stocks.index',
-            'icon' => 'far fa-solid fa-circle',
-            'active' => ['admin/stock-management*'],
-            'can' => 'stock-management-list',
-        ],
-        [
-            'header'=> ' ',
+            'submenu' => [
+                [
+                    'text' => 'Layaway Orders',
+                    'route' => 'orders.layaway',
+                    'icon' => 'fas fa-hourglass-half',
+                    'active' => ['admin/orders/layaway*'],
+                    'can' => 'order-list',
+                    'classes' => 'nav-item py-1 pl-5',
+                ],
+                [
+                    'text' => 'All Orders',
+                    'route' => 'orders.index',
+                    'icon' => 'fas fa-list',
+                    'active' => ['admin/orders/index*'],
+                    'can' => 'order-list',
+                    'classes' => 'nav-item py-1 pl-5',
+                ],
+            ],
         ],
         [
             'text' => 'Customer Accounts',
             'route' => 'customer-accounts.index',
-            'icon' => 'far fa fa-university',
+            'icon' => 'fas fa-user-tag',
             'active' => ['admin/customer-accounts*'],
             'can' => 'customer-account-list',
         ],
-        // [
-        //     'text' => 'pages',
-        //     'url' => 'admin/pages',
-        //     'icon' => 'far fa-fw fa-file',
-        //     'label' => 4,
-        //     'label_color' => 'success',
-        // ],
-        ['header' => 'account_settings'],
+        ['header' => ''],
+        ['header' => 'Inventory Management'],
+        [
+            'text' => 'Products',
+            'route' => 'products.index',
+            'icon' => 'fas fa-box', // Box icon for products
+            'active' => ['admin/products*'],
+            'can' => 'product-list',
+        ],
+        [
+            'text' => 'Categories',
+            'route' => 'categories.index',
+            'icon' => 'fas fa-tags', // Better category icon
+            'active' => ['admin/categories*'],
+            'can' => 'category-list',
+        ],
+        [
+            'text' => 'Stock Management',
+            'route' => 'stocks.index',
+            'icon' => 'fas fa-warehouse', // Warehouse for stock management
+            'active' => ['admin/stock-management*'],
+            'can' => 'stock-management-list',
+        ],
+        [
+            'text' => 'Suppliers',
+            'route' => 'suppliers.index',
+            'icon' => 'fas fa-truck', // Truck icon for suppliers
+            'active' => ['admin/suppliers*'],
+            'can' => 'supplier-list',
+        ],
+        ['header' => ''],
+        ['header' => 'Customers & Users'],
+        [
+            'text' => 'Customers',
+            'route' => 'customers.index',
+            'icon' => 'fas fa-users', // User group icon
+            'active' => ['admin/customers/*'],
+            'can' => 'customer-list',
+        ],
         [
             'text' => 'Users',
             'route' => 'users.index',
-            'icon' => 'fas fa-fw fa-user',
-            'active'=> ['admin/users*'],
+            'icon' => 'fas fa-user', // Single user icon
+            'active' => ['admin/users*'],
             'can' => 'user-list',
         ],
         [
-            'text' => 'Roles',
+            'text' => 'Roles & Permissions',
             'route' => 'roles.index',
-            'icon' => 'fas fa-fw fa-lock',
-            'active'=> ['admin/roles*'],
+            'icon' => 'fas fa-user-shield', // Shield for security/roles
+            'active' => ['admin/roles*'],
             'can' => 'role-list',
         ],
-        // [
-        //     'text' => 'multilevel',
-        //     'icon' => 'fas fa-fw fa-share',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //         ],
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //             'submenu' => [
-        //                 [
-        //                     'text' => 'level_two',
-        //                     'url' => '#',
-        //                 ],
-        //                 [
-        //                     'text' => 'level_two',
-        //                     'url' => '#',
-        //                     'submenu' => [
-        //                         [
-        //                             'text' => 'level_three',
-        //                             'url' => '#',
-        //                         ],
-        //                         [
-        //                             'text' => 'level_three',
-        //                             'url' => '#',
-        //                         ],
-        //                     ],
-        //                 ],
-        //             ],
-        //         ],
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //         ],
-        //     ],
-        // ],
-        // ['header' => 'labels'],
-        // [
-        //     'text' => 'important',
-        //     'icon_color' => 'red',
-        //     'url' => '#',
-        // ],
-        // [
-        //     'text' => 'warning',
-        //     'icon_color' => 'yellow',
-        //     'url' => '#',
-        // ],
-        // [
-        //     'text' => 'information',
-        //     'icon_color' => 'cyan',
-        //     'url' => '#',
-        // ],
+        [
+            'text' => 'multilevel',
+            'icon' => 'fas fa-fw fa-share',
+            'submenu' => [
+                [
+                    'text' => 'level_one',
+                    'url' => '#',
+                ],
+                [
+                    'text' => 'level_one',
+                    'url' => '#',
+                    'submenu' => [
+                        [
+                            'text' => 'level_two',
+                            'url' => '#',
+                        ],
+                        [
+                            'text' => 'level_two',
+                            'url' => '#',
+                            'submenu' => [
+                                [
+                                    'text' => 'level_three',
+                                    'url' => '#',
+                                ],
+                                [
+                                    'text' => 'level_three',
+                                    'url' => '#',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'level_one',
+                    'url' => '#',
+                ],
+            ],
+        ],
+        ['header' => 'labels'],
+        [
+            'text' => 'important',
+            'icon_color' => 'red',
+            'url' => '#',
+        ],
+        [
+            'text' => 'warning',
+            'icon_color' => 'yellow',
+            'url' => '#',
+        ],
+        [
+            'text' => 'information',
+            'icon_color' => 'cyan',
+            'url' => '#',
+        ],
     ],
 
     /*

@@ -50,7 +50,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
 
     // ORDERS
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/index', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/layaway', [OrderController::class,'layaway'])->name('orders.layaway');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{order}', [OrderController::class, 'edit'])->name('orders.edit');
     Route::post('/orders/{order}/update-customer', [OrderController::class, 'updateCustomer'])->name('orders.updateCustomer');
