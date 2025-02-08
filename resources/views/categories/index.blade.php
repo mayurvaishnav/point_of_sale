@@ -25,7 +25,7 @@
 
 <div class="card">
     <div class="card-body table-responsive">
-        <table class="table table-bordered" id="categories-table">
+        <table class="table table-bordered datatable">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -67,12 +67,6 @@
 
 @section('js')
     <script>
-        $(document).ready(function() {
-            $('#categories-table').DataTable({
-                "pageLength": 50,
-            });
-        });
-
         $(".btn-delete").click(function(e){
             e.preventDefault();
             var form = $(this).parents("form");

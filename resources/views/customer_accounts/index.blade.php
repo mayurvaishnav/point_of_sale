@@ -20,7 +20,7 @@
 
 <div class="card">
     <div class="card-body table-responsive">
-        <table class="table table-bordered" id="orders-table">
+        <table class="table table-bordered datatable">
             <thead>
                 <tr>
                     <th>Account Id</th>
@@ -50,13 +50,7 @@
 
 @section('js')
     <script>
-        $(document).ready(function() {
-            $('#orders-table').DataTable({
-                order: [],
-                pageLength: 50,
-            });
-        });
-
+        
     </script>
 @stop
 

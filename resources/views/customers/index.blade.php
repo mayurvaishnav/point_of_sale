@@ -25,7 +25,7 @@
 
 <div class="card">
     <div class="card-body table-responsive">
-        <table class="table table-bordered" id="customers-table">
+        <table class="table table-bordered datatable">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -68,15 +68,6 @@
 
 @section('js')
     <script>
-        $(document).ready(function() {
-            $('#customers-table').DataTable(
-                {
-                    "order": [[ 0, "asc" ]],
-                    "pageLength": 50
-                }
-            );
-        });
-
         $(".btn-delete").click(function(e){
             e.preventDefault();
             var form = $(this).parents("form");

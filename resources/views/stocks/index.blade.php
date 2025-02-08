@@ -20,7 +20,7 @@
 
 <div class="card">
     <div class="card-body table-responsive">
-        <table class="table table-bordered" id="products-table">
+        <table class="table table-bordered datatable">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -69,12 +69,6 @@
 
 @section('js')
     <script>
-        $(document).ready(function() {
-            $('#products-table').DataTable({
-                pageLength: 50,
-            });
-        });
-
         document.querySelectorAll('.add-stock-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const productId = this.getAttribute('data-product-id');

@@ -23,7 +23,7 @@
 
 <div class="card">
     <div class="card-body table-responsive">
-        <table class="table table-bordered" id="users-table">
+        <table class="table table-bordered datatable">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -73,10 +73,6 @@
 
 @section('js')
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#users-table').DataTable();
-        });
-
         $(".btn-delete").click(function(e){
             e.preventDefault();
             var form = $(this).parents("form");
