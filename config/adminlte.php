@@ -375,11 +375,11 @@ return [
             // 'can' => 'report-sales',
         ],
         [
-            'text' => 'Stock Report',
+            'text' => 'Customer Report',
             'route' => 'reports.customer',
             'icon' => 'fas fa-boxes', 
-            'active' => ['admin/reports/stock*'],
-            // 'can' => 'report-stock',
+            'active' => ['admin/reports/customer*'],
+            // 'can' => 'report-customer',
         ],
         
         ['header' => ''],
