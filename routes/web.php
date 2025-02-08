@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StockManagementController;
 use App\Http\Controllers\SupplierController;
 
@@ -40,10 +41,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 
-
-//     Route::get('/', [HomeController::class, 'index'])->name('home');
-    // Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    // Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
     Route::resource('products', ProductController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('suppliers', SupplierController::class);
@@ -84,20 +81,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/cart/empty', [CartController::class, 'empty'])->name('cart.empty');
 
 
-
-    // Route::resource('orders', OrderController::class);
-
-    // Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    // Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
-    // Route::post('/cart/change-qty', [CartController::class, 'changeQty']);
-    // Route::delete('/cart/delete', [CartController::class, 'delete']);
-    // Route::delete('/cart/empty', [CartController::class, 'empty']);
-
-    // Transaltions route for React component
-    // Route::get('/locale/{type}', function ($type) {
-    //     $translations = trans($type);
-    //     return response()->json($translations);
-    // });
+    // REPORTS
+    Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('/reports/customer', [ReportController::class, 'customer'])->name('reports.customer');
 });
 
 require __DIR__.'/auth.php';
@@ -106,10 +92,3 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

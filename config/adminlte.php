@@ -157,7 +157,7 @@ return [
     'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
-    'layout_dark_mode' => true,
+    'layout_dark_mode' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -214,10 +214,10 @@ return [
     |
     */
 
-    'sidebar_mini' => 'sm',
-    'sidebar_collapse' => false,
+    'sidebar_mini' => 'xs',
+    'sidebar_collapse' => true,
     'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
+    'sidebar_collapse_remember' => true,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
@@ -325,14 +325,14 @@ return [
         [
             'text' => 'Dashboard',
             'url' => 'admin/dashboard',
-            'icon' => 'fas fa-tachometer-alt', // Better dashboard icon
+            'icon' => 'fas fa-tachometer-alt',
         ],
         ['header' => ''],
         ['header' => 'Sales & Transactions'],
         [
             'text' => 'Point of Sale',
             'route' => 'pos.index',
-            'icon' => 'fas fa-cash-register', // POS-specific icon
+            'icon' => 'fas fa-cash-register', 
             'active' => ['admin/pos*'],
         ],
         [
@@ -369,52 +369,46 @@ return [
         ['header' => 'Reports'],
         [
             'text' => 'Sales Report',
-            'route' => 'products.index',
-            'icon' => 'fas fa-chart-line', // Line chart icon for sales
+            'route' => 'reports.sales',
+            'icon' => 'fas fa-chart-line', 
             'active' => ['admin/reports/sales*'],
             // 'can' => 'report-sales',
         ],
         [
             'text' => 'Stock Report',
-            'route' => 'products.index',
-            'icon' => 'fas fa-boxes', // Boxes icon for stock
+            'route' => 'reports.customer',
+            'icon' => 'fas fa-boxes', 
             'active' => ['admin/reports/stock*'],
             // 'can' => 'report-stock',
         ],
-        [
-            'text' => 'Products',
-            'route' => 'products.index',
-            'icon' => 'fas fa-box', // Box icon for products
-            'active' => ['admin/products*'],
-            'can' => 'product-list',
-        ],
+        
         ['header' => ''],
         ['header' => 'Inventory Management'],
         [
             'text' => 'Products',
             'route' => 'products.index',
-            'icon' => 'fas fa-box', // Box icon for products
+            'icon' => 'fas fa-box', 
             'active' => ['admin/products*'],
             'can' => 'product-list',
         ],
         [
             'text' => 'Categories',
             'route' => 'categories.index',
-            'icon' => 'fas fa-tags', // Better category icon
+            'icon' => 'fas fa-tags', 
             'active' => ['admin/categories*'],
             'can' => 'category-list',
         ],
         [
             'text' => 'Stock Management',
             'route' => 'stocks.index',
-            'icon' => 'fas fa-warehouse', // Warehouse for stock management
+            'icon' => 'fas fa-warehouse', 
             'active' => ['admin/stock-management*'],
             'can' => 'stock-management-list',
         ],
         [
             'text' => 'Suppliers',
             'route' => 'suppliers.index',
-            'icon' => 'fas fa-truck', // Truck icon for suppliers
+            'icon' => 'fas fa-truck', 
             'active' => ['admin/suppliers*'],
             'can' => 'supplier-list',
         ],
@@ -423,21 +417,21 @@ return [
         [
             'text' => 'Customers',
             'route' => 'customers.index',
-            'icon' => 'fas fa-users', // User group icon
+            'icon' => 'fas fa-users', 
             'active' => ['admin/customers/*'],
             'can' => 'customer-list',
         ],
         [
             'text' => 'Users',
             'route' => 'users.index',
-            'icon' => 'fas fa-user', // Single user icon
+            'icon' => 'fas fa-user', 
             'active' => ['admin/users*'],
             'can' => 'user-list',
         ],
         [
             'text' => 'Roles & Permissions',
             'route' => 'roles.index',
-            'icon' => 'fas fa-user-shield', // Shield for security/roles
+            'icon' => 'fas fa-user-shield', 
             'active' => ['admin/roles*'],
             'can' => 'role-list',
         ],
@@ -606,9 +600,14 @@ return [
             'active' => true,
             'files'  => [
                 [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'css/adminlte-custom.css',
+                ],
+                [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'js/adminlte-custom.js', // Use relative path, NOT public_path()
+                    'location' => 'js/adminlte-custom.js',
                 ],
             ],
         ],
