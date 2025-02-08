@@ -53,7 +53,7 @@
                     <td>{{$order->order_date }}</td>
                     <td>{!! $order->getStatusBadge() !!}</td>
                     <td>{{ $order->orderPayments->first()->payment_method ?? '' }}</td>
-                    <td class="text-right">{{$order->total}}</td>
+                    <td class="text-right">{{$order->total_after_discount}}</td>
                     <td>
                         <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">Details</a>
                         @if($order->canBeDeleted())

@@ -327,13 +327,22 @@ return [
             'url' => 'admin/dashboard',
             'icon' => 'fas fa-tachometer-alt',
         ],
-        ['header' => ''],
-        ['header' => 'Sales & Transactions'],
+
+        // Sales & Transactions
+        [
+            'header' => '',
+            'can' => ['pos-take-order', 'order-list', 'customer-account-list'],
+        ],
+        [
+            'header' => 'Sales & Transactions',
+            'can' => ['pos-take-order', 'order-list', 'customer-account-list'],
+        ],
         [
             'text' => 'Point of Sale',
             'route' => 'pos.index',
             'icon' => 'fas fa-cash-register', 
             'active' => ['admin/pos*'],
+            'can' => 'pos-take-order',
         ],
         [
             'text' => 'Orders',
@@ -345,7 +354,7 @@ return [
                     'route' => 'orders.layaway',
                     'icon' => 'fas fa-hourglass-half',
                     'active' => ['admin/orders/layaway*'],
-                    'can' => 'order-list',
+                    'can' => 'pos-take-order',
                     'classes' => 'nav-item py-1 pl-5',
                 ],
                 [
@@ -365,25 +374,40 @@ return [
             'active' => ['admin/customer-accounts*'],
             'can' => 'customer-account-list',
         ],
-        ['header' => ''],
-        ['header' => 'Reports'],
+
+        //Reports
+        [
+            'header' => '',
+            'can' => ['report-sales', 'report-customer'],
+        ],
+        [
+            'header' => 'Reports',
+            'can' => ['report-sales', 'report-customer'],
+        ],
         [
             'text' => 'Sales Report',
             'route' => 'reports.sales',
             'icon' => 'fas fa-chart-line', 
             'active' => ['admin/reports/sales*'],
-            // 'can' => 'report-sales',
+            'can' => 'report-sales',
         ],
         [
             'text' => 'Customer Report',
             'route' => 'reports.customer',
-            'icon' => 'fas fa-boxes', 
+            'icon' => 'fas fa-user-friends', 
             'active' => ['admin/reports/customer*'],
-            // 'can' => 'report-customer',
+            'can' => 'report-customer',
         ],
         
-        ['header' => ''],
-        ['header' => 'Inventory Management'],
+        // Inventory Management
+        [
+            'header' => '',
+            'can' => ['product-list', 'category-list', 'stock-management-list', 'supplier-list'],
+        ],
+        [
+            'header' => 'Inventory Management',
+            'can' => ['product-list', 'category-list', 'stock-management-list', 'supplier-list'],
+        ],
         [
             'text' => 'Products',
             'route' => 'products.index',
@@ -412,8 +436,16 @@ return [
             'active' => ['admin/suppliers*'],
             'can' => 'supplier-list',
         ],
-        ['header' => ''],
-        ['header' => 'Customers & Users'],
+
+        // Customers & Users
+        [
+            'header' => '',
+            'can' => ['customer-list', 'user-list', 'role-list'],
+        ],
+        [
+            'header' => 'Customers & Users',
+            'can' => ['customer-list', 'user-list', 'role-list'],
+        ],
         [
             'text' => 'Customers',
             'route' => 'customers.index',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\CustomerAccountTransaction;
 use App\Models\Order;
 use Carbon\Carbon;
@@ -9,6 +10,11 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('permission:report-sales', ['only' => ['sales']]);
+         $this->middleware('permission:report-customer', ['only' => ['customer']]);
+    }
     public function sales(Request $request)
     {
         $startDate = now()->toDateString();
@@ -32,17 +38,17 @@ class ReportController extends Controller
             ->with(['orderPayments', 'orderDetails.product.category'])->get();
 
         $total = [
-            "total_before_tax" => $orders->sum('total_before_tax'),
-            "total" => $orders->sum('total_after_discount'),
-            "discount" => $orders->sum('discount'),
-            "tax" => $orders->sum('tax'),
+            "total_before_tax" => formateCurrency($orders->sum('total_before_tax')),
+            "total" => formateCurrency($orders->sum('total_after_discount')),
+            "discount" => formateCurrency($orders->sum('discount')),
+            "tax" => formateCurrency($orders->sum('tax')),
             "order_count" => $orders->count(),
         ];
 
         $paymentSummary = $orders->flatMap->orderPayments->groupBy('payment_method')->map(function($paymentsByMethod) {
             return [
                 'payment_method'=> $paymentsByMethod->first()->payment_method,
-                "total" => $paymentsByMethod->sum('amount_paid'),
+                "total" => formateCurrency($paymentsByMethod->sum('amount_paid')),
                 "count" => $paymentsByMethod->count(),
             ];
         });
@@ -51,8 +57,8 @@ class ReportController extends Controller
             return [
                 'name'=> $productByName->first()->product_name,
                 'quantity' => $productByName->sum('quantity'),
-                'tax' => $productByName->sum('tax'),
-                'total' => $productByName->sum('total_after_discount'),
+                'tax' => formateCurrency($productByName->sum('tax')),
+                'total' => formateCurrency($productByName->sum('total_after_discount')),
             ];
         });
 
@@ -60,7 +66,7 @@ class ReportController extends Controller
             return [
                 'tax_rate'=> $productByTax->first()->tax_rate . '% VAT',
                 'quantity' => $productByTax->sum('quantity'),
-                'total' => $productByTax->sum('total_after_discount'),
+                'total' => formateCurrency($productByTax->sum('total_after_discount')),
             ];
         });
 
@@ -84,13 +90,13 @@ class ReportController extends Controller
             return [
                 'name' => $categoryName,
                 'quantity' => $orderDetailsByProductId->sum('quantity'),
-                'total' => $orderDetailsByProductId->sum('total_after_discount'),
+                'total' => formateCurrency($orderDetailsByProductId->sum('total_after_discount')),
             ];
         })->values()->groupBy('name')->map(function($categoryGroup) {
             return [
                 'name' => $categoryGroup->first()['name'],
                 'quantity' => $categoryGroup->sum('quantity'),
-                'total' => $categoryGroup->sum('total'),
+                'total' => formateCurrency($categoryGroup->sum('total')),
             ];
         })->values();
 
@@ -104,8 +110,27 @@ class ReportController extends Controller
         ));
     }
     
-    public function customer()
+    public function customer(Request $request)
     {
-        return view('reports.customer');
+        $request->validate([
+            "start_date"=> "nullable|date",
+            "end_date"=> "nullable|date",
+            "customer_id"=> "nullable|exists:customers,id",
+        ]);
+
+        $customers = Customer::all();
+        
+        if(!$request->has(['start_date', 'end_date', 'customer_id'])) {
+            return view('reports.customer', ['orders' => [], 'customers' => $customers]);
+        }
+        
+        $currentCustomer = $customers->find($request->customer_id);
+
+        $orders = Order::whereBetween('order_date', [$request->start_date, $request->end_date])
+            ->where('customer_id', $request->customer_id)
+            ->with(['customer'])
+            ->get();
+        
+        return view('reports.customer', compact('orders', 'customers', 'currentCustomer'));
     }
 }

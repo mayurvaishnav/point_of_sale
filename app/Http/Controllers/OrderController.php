@@ -14,16 +14,13 @@ use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     function __construct()
     {
          $this->middleware('permission:order-list', ['only' => ['index']]);
+         $this->middleware('permission:order-show', ['only' => ['show', 'downloadInvoice', 'emailInvoice']]);
          $this->middleware('permission:order-edit', ['only' => ['edit','updateCustomer']]);
          $this->middleware('permission:order-delete', ['only' => ['destroy']]);
+         $this->middleware('pos:take-order', ['only' => ['layaway']]);
     }
     
     /**
