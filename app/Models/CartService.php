@@ -13,7 +13,6 @@ class CartService {
         if ($cart == null) {
             return new Cart();
         }
-        // dd($cart);
         $cart->refreshTotals();
         return $cart;
     }
@@ -40,10 +39,9 @@ class CartService {
 
     public static function update($itemId, $name, $quantity, $price) {
         $cart = self::getCart();
-        if (isset($cart[$itemId])) {
-            $cart[$itemId]->quantity = $quantity;
-            session()->put('cart', $cart);
-        }
+        $cartItem = new CartItem($itemId, $name, $quantity, $price);
+        $cart->updateItem($itemId, $cartItem);
+        session()->put('cart', $cart);
     }
 
     public static function updatePrice($itemId, $price) {

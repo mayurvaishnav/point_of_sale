@@ -42,6 +42,17 @@ class Cart extends Facade {
 
     }
 
+    public function updateItem($id, CartItem $cartItem)
+    {
+        if (isset($this->cartItems[$id])) {
+            $this->cartItems[$id]->name = $cartItem->name;
+            $this->cartItems[$id]->quantity = $cartItem->quantity;
+            $this->cartItems[$id]->price = $cartItem->price;
+            $this->cartItems[$id]->discount = $cartItem->discount;
+            $this->cartItems[$id]->refreshTotals();
+        }
+    }
+
     public function getTotalCart(): CartItem
     {
         $quantity = 0;

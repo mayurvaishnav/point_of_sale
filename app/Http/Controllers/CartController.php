@@ -69,7 +69,7 @@ class CartController extends Controller
         return response()->json(CartService::getCart());
     }
 
-    public function update(Request $request, $itemId)
+    public function update(Request $request)
     {
         $request->validate([
             'item_id' => 'required|integer',

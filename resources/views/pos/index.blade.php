@@ -124,7 +124,6 @@
                                     <th class="qty-column">Qty</th>
                                     <th class="price-column">Price</th>
                                     <th class="total-column">Total</th>
-                                    {{-- <th class="delete-column"></th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -140,11 +139,6 @@
                                         <td>{{ $item->quantity }}</td>
                                         <td>{{ $item->price }}</td>
                                         <td>{{ $item->total }}</td>
-                                        {{-- <td class="delete-column pl-0 pr-0"> --}}
-                                            {{-- <button class="btn btn-danger btn-sm deleteFromCart" data-id="{{ $item->id }}">
-                                                <i class="fas fa-trash"></i>
-                                            </button> --}}
-                                        {{-- </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -310,6 +304,7 @@
                 $("#editItemPrice").val(itemPrice);
                 $("#editTotalPrice").val(itemTotal);
 
+                // Select the delete button *inside the modal* and set its data-id correctly
                 $("#deleteFromCart").attr("data-id", itemId);
 
                 if (itemId > 0) {
@@ -338,6 +333,36 @@
                         price: newPrice,
                         name: newName,
                     },
+                    success: function (response) {
+                        // Close the modal
+                        $('#editItemModal').modal('hide');
+
+                        // Re-render the cart
+                        reRenderCart(response);
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please refresh and try again.',
+                        });
+                    }
+                });
+            });
+
+            // Delete from cart
+            $('#deleteFromCart').on('click', function() {
+                const cartItemId = $(this).attr('data-id');
+
+                // Add your AJAX request or other logic here to handle the deletion
+                $.ajax({
+                    url: "{{ route('cart.removeFromCart') }}",
+                    method: "POST",
+                    data: {
+                        cart_item_id: cartItemId,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
                     success: function (response) {
                         // Close the modal
                         $('#editItemModal').modal('hide');
@@ -394,36 +419,6 @@
                 };
 
                 addToCart(null, formData.product_name, formData.customer_price, formData.tax_rate);
-            });
-
-            // Delete from card
-            $(document).on('click', '#deleteFromCart', function() {
-                const cartItemId = $(this).data('id');
-
-                // Add your AJAX request or other logic here to handle the deletion
-                $.ajax({
-                    url: "{{ route('cart.removeFromCart') }}",
-                    method: "POST",
-                    data: {
-                        cart_item_id: cartItemId,
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        // Close the modal
-                        $('#editItemModal').modal('hide');
-
-                        // Re-render the cart
-                        reRenderCart(response);
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Something went wrong, Please refresh and try again.',
-                        });
-                    }
-                });
             });
 
             // Update Customer selection
@@ -668,10 +663,6 @@
                         <td>${cartItem.total}</td>
                     </tr>
                 `;
-
-                // <button class="btn btn-danger btn-sm deleteFromCart" data-id="${cartItem.id}">
-                //                 <i class="fas fa-trash"></i>
-                //             </button>
 
                 // Append the new row to the cart table
                 $('#cart-table tbody').append(newRow);
