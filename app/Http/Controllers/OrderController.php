@@ -107,7 +107,7 @@ class OrderController extends Controller
     /**
      * Download invoice.
      */
-    public function downloadInvoice(Order $order)
+    public function downloadInvoice(Request $request, Order $order)
     {
         $order->load(['customer', 'orderDetails', 'orderpayments']);
         $customerAccountBalance = 0;
@@ -120,6 +120,15 @@ class OrderController extends Controller
         // return view('orders.receipt', compact('order', 'customerAccountBalance'));
 
         $pdf = Pdf::loadView('orders.invoice', compact('order', 'customerAccountBalance'));
+
+        if ($request->wantsJson) {
+            return response($pdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="invoice.pdf"',
+            ]);
+        }
+
+        
         return $pdf->download($order->invoice_number .'.pdf');
     }
 

@@ -28,7 +28,7 @@
                     </button>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="{{ route('print.receipt', $order->id) }}" id="printReceipt">Receipt</a>
-                        <a class="dropdown-item" href="{{ route('print.invoice', $order->id) }}" id="printA4">A4 Invoice</a>
+                        <button class="dropdown-item" id="printA4" data-order-id={{ $order->id }}>A4 Invoice</button>
                     </div>
                 </div>
                 <a href="{{route('orders.downloadInvoice', $order)}}" class="btn btn-info" id="downloadButton">
@@ -226,6 +226,7 @@
     </div>
     </div>
 </div>
+<iframe id="pdf-frame" style="display:none;" width="100%" height="600"></iframe>
 @endsection
 
 @section('js')
@@ -244,6 +245,39 @@
         //     button.prop('disabled', true);
         //     button.html('<i class="fa fa-spinner fa-spin"></i> Downloading...');
         // });
+    });
+
+    $('#printA4').click(function () {
+        var orderId = $(this).data('order-id'); 
+
+        const url = `{{ route('orders.downloadInvoice', ':orderId') }}`;
+        
+        $.ajax({
+            url: url.replace(':orderId', orderId),
+            method: 'GET',
+            data: { 
+                _token: "{{ csrf_token() }}",
+            },
+            success: function (response) {
+
+                console.log('response', response);
+
+                // If you want to display the PDF directly in an iframe and auto-print
+                var iframe = document.getElementById('pdf-frame');
+                var pdfBlob = new Blob([response], { type: 'application/pdf' });
+                var pdfUrl = URL.createObjectURL(pdfBlob);
+                iframe.src = pdfUrl;
+                iframe.style.display = 'block';
+
+                // Wait for the PDF to load, then print automatically
+                iframe.onload = function () {
+                    iframe.contentWindow.print();
+                };
+            },
+            error: function (error) {
+                console.error('Error generating invoice PDF:', error);
+            }
+        });
     });
 
     function startLoadingEmail() {
