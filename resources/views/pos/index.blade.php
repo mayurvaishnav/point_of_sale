@@ -93,6 +93,23 @@
         overflow: auto; /* Allow scrolling within the card if needed */
     }
 
+    .receipt-modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .receipt-modal-content {
+        height: 100vh;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
 </style>
 @endsection
 
@@ -273,6 +290,7 @@
 @include('pos.miscProduct-modal')
 @include('pos.payment-modal')
 @include('pos.itemUpdate-modal')
+@include('pos.paymentReceipt-modal')
 
 @endsection
 
@@ -545,8 +563,28 @@
                     success: function(response) {
                         $('#paymentModal').modal('hide');
 
+                        console.log(response);
+                        const orderId = response.order_id;
+                        console.log(orderId);
+
+                        // Update data-od of all buttons
+                        $("#printReceipt").attr("data-id", orderId);
+                        $("#printA4").attr("data-id", orderId);
+                        $("#downloadInvoice").attr("data-id", orderId);
+                        
+
+                        if (response.customer_id) {
+                            $("#emailInvoice").attr("data-id", orderId);
+                            $("#emailInvoice").show();
+                        } else {
+                            $("#emailInvoice").hide();
+                        }
+
+                        // Show the payment receipt modal
+                        $('#paymentReceiptModal').modal('show');
+
                         // refresh the page
-                        location.reload();
+                        // location.reload();
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
@@ -575,8 +613,56 @@
                     }
                 });
             });
-        });
 
+            // Print receipt
+            $('#printReceipt').click(function() {
+                const orderId = $(this).data('id');
+            });
+
+            // Print A4
+            $('#printA4').click(function() {
+                const orderId = $(this).data('id');
+            });
+
+            // Download invoice
+            $('#downloadInvoice').click(function() {
+                const orderId = $(this).data('id');
+                const url = `{{ route('orders.downloadInvoice', ':orderId') }}`;
+                window.open(url.replace(':orderId', orderId), '_blank');
+
+                // reload the page
+                location.reload();
+            });
+
+            // Email invoice
+            $('#emailInvoice').click(function() {
+                const orderId = $(this).data('id');
+                const url = `{{ route('orders.emailInvoice', ':orderId') }}`;
+
+                // disable the button
+                $(this).attr('disabled', true);
+
+                $.ajax({
+                    url: url.replace(':orderId', orderId),
+                    method: "POST",
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        // Re-load the page
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please try agai sending the email from orders page.',
+                        });
+                    }
+                });
+            });
+        });
 
 
         // Store to Cart

@@ -20,7 +20,7 @@ class OrderController extends Controller
          $this->middleware('permission:order-show', ['only' => ['show', 'downloadInvoice', 'emailInvoice']]);
          $this->middleware('permission:order-edit', ['only' => ['edit','updateCustomer']]);
          $this->middleware('permission:order-delete', ['only' => ['destroy']]);
-         $this->middleware('permission:pos-take-order', ['only' => ['layaway']]);
+         $this->middleware('permission:pos-take-order', ['only' => ['layaway', 'emailInvoice']]);
     }
     
     /**
@@ -146,6 +146,10 @@ class OrderController extends Controller
         }
 
         Mail::to([$customerEmail, env('MAIL_CC_ADDRESS')])->send(new OrderInvoiceMail($order, $customerAccountBalance));
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Invoice sent successfully']);
+        }
 
         return redirect()->back()->with('success', 'Invoice sent successfully');
     }

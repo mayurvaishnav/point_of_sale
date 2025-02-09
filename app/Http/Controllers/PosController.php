@@ -172,7 +172,10 @@ class PosController extends Controller
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => 'Order has been placed successfully.',
-                    'payment_method' => $request->payment_method
+                    'payment_method' => $request->payment_method,
+                    'cart' => CartService::getCart(),
+                    'order_id' => $order->id,
+                    'customer_id' => $customer_id
                 ]);
             }
 
