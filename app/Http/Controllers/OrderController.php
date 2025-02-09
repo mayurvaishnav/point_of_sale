@@ -109,14 +109,15 @@ class OrderController extends Controller
      */
     public function downloadInvoice(Order $order)
     {
-        $order->load(['customer', 'orderDetails', 'orderpayments']);$customerAccountBalance = 0;
+        $order->load(['customer', 'orderDetails', 'orderpayments']);
+        $customerAccountBalance = 0;
 
         if ($order->customer) {
             $customerAccountBalance = $order->customer->customerAccountTransactions->last()->balance ?? 0;
         }
 
 
-        return view('orders.receipt', compact('order', 'customerAccountBalance'));
+        // return view('orders.receipt', compact('order', 'customerAccountBalance'));
 
         $pdf = Pdf::loadView('orders.invoice', compact('order', 'customerAccountBalance'));
         return $pdf->download($order->invoice_number .'.pdf');

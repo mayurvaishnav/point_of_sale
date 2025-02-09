@@ -39,6 +39,7 @@ class PosController extends Controller
             'payment_method' => 'required|string|in:CASH,CREDIT_CARD,CUSTOMER_ACCOUNT',
             'amount_paid' => 'required|numeric',
             'discount_amount'=> 'nullable|numeric',
+            'note'=> 'nullable|string|max:10000',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -88,6 +89,7 @@ class PosController extends Controller
                 'total_before_tax'=> $cart->getTotalCart()->subTotal,
                 'total' => $cart->getTotalCart()->total,
                 'total_after_discount'=> $cart->getTotalCart()->totalAfterDiscount,
+                // 'note'=> $request->note,
             ];
 
             $order = Order::updateOrCreate(

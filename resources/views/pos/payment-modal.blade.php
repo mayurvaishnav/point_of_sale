@@ -23,6 +23,10 @@
                         <label for="totalAmount">Total Amount</label>
                         <input type="number" class="form-control" id="amountPaid" name="amount_paid" value="{{ $cart->getTotalCart()->total }}" readonly>
                     </div>
+                    <div class="form-group">
+                        <label for="orderNote">Note</label>
+                        <textarea class="form-control" id="orderNote" name="order_note" rows="3"></textarea>
+                    </div>
 
                     <!-- Payment Method Buttons -->
                     <div class="d-flex justify-content-between">

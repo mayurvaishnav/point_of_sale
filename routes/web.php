@@ -12,6 +12,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StockManagementController;
@@ -58,6 +59,10 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/{order}/download-invoice', [OrderController::class, 'downloadInvoice'])->name('orders.downloadInvoice');
     Route::post('/orders/{order}/email-invoice', [OrderController::class, 'emailInvoice'])->name('orders.emailInvoice');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
+    // PRINT
+    Route::get('/print/receipt/{orderId}', [PrintController::class, 'receipt'])->name('print.receipt');
+    Route::get('/print/invoice/{orderId}', [PrintController::class, 'invoice'])->name('print.invoice');
 
     // CUSTOMER CREDITS
     Route::get('/customer-accounts', [CustomerAccountController::class, 'index'])->name('customer-accounts.index');

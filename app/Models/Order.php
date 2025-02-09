@@ -23,6 +23,7 @@ class Order extends Model
         'tax',
         'total',
         'total_after_discount',
+        'note',
     ];
 
     protected $casts = [

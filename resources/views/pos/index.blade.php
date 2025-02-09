@@ -546,9 +546,10 @@
 
             // Settle button
             $('.payment-option').click(function() {
-                let paymentMethod = $(this).data('method');
-                let amountPaid = $('#amountPaid').val();
-                let discountAmount = $('#discountAmount').val();
+                const paymentMethod = $(this).data('method');
+                const amountPaid = $('#amountPaid').val();
+                const discountAmount = $('#discountAmount').val();
+                const note = $('#orderNote').val();
                 
                 $.ajax({
                     url: '{{ route('pos.processPayment') }}',
@@ -557,7 +558,8 @@
                         _token: "{{ csrf_token() }}",
                         payment_method: paymentMethod,
                         amount_paid: amountPaid,
-                        discount_amount: discountAmount
+                        discount_amount: discountAmount,
+                        note: note
                     },
                     dataType: 'json',
                     success: function(response) {

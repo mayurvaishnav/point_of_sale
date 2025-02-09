@@ -22,7 +22,15 @@
                         </button>
                     </form>
                 @endif
-                <a href="" class="btn btn-primary"><i class="fa fa-print"></i> Print</a>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-print"></i> Print
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ route('print.receipt', $order->id) }}" id="printReceipt">Receipt</a>
+                        <a class="dropdown-item" href="{{ route('print.invoice', $order->id) }}" id="printA4">A4 Invoice</a>
+                    </div>
+                </div>
                 <a href="{{route('orders.downloadInvoice', $order)}}" class="btn btn-info" id="downloadButton">
                     <i class="fa fa-download"></i> Download
                 </a>
