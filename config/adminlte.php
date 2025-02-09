@@ -355,7 +355,7 @@ return [
                     'icon' => 'fas fa-hourglass-half',
                     'active' => ['admin/orders/layaway*'],
                     'can' => 'pos-take-order',
-                    'classes' => 'nav-item py-1 pl-5',
+                    'classes' => 'nav-item pl-4',
                 ],
                 [
                     'text' => 'All Orders',
@@ -363,7 +363,7 @@ return [
                     'icon' => 'fas fa-list',
                     'active' => ['admin/orders/index*'],
                     'can' => 'order-list',
-                    'classes' => 'nav-item py-1 pl-5',
+                    'classes' => 'nav-item pl-4',
                 ],
             ],
         ],

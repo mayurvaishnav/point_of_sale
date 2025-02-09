@@ -12,7 +12,7 @@
                     <form id="dateFilterForm" method="GET" action="{{ route('orders.index') }}" class="form-inline float-right">
                         <div class="form-group">
                             <label for="orderDate" class="mr-2">Select Date:</label>
-                            <input type="date" name="order_date" id="orderDate" class="form-control" value="{{ request('order_date') }}">
+                            <input type="date" name="order_date" id="orderDate" class="form-control" value="{{ $date }}">
                         </div>
                         <button type="submit" class="btn btn-primary ml-2">Filter</button>
                     </form>

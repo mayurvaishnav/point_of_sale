@@ -37,7 +37,7 @@ class OrderController extends Controller
         }
         $pageTitle = "All Orders";
         $orders = Order::where('order_date', $date)->with(['orderPayments', 'customerAccountTransactions', 'customer.customerAccountTransactions'])->latest()->get();
-        return view("orders.index", compact("orders", "pageTitle"));
+        return view("orders.index", compact("orders", "pageTitle", "date"));
     }
     
     /**
