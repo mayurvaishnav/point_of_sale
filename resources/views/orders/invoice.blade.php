@@ -30,6 +30,7 @@
                 <td class="text-right no-border">
                     <h4 style="margin: 0;">Invoice No: {{ $order->invoice_number }}</h4>
                     <p style="margin: 0;">{{ $order->created_at->format('d-m-Y h:i A') }}</p>
+                    <p style="">Status: <strong>{{ $order->status }}</strong></p>
                 </td>
             </tr>
             <tr>
@@ -98,7 +99,7 @@
                 </tr>
             </tbody>
         </table>
-        <br
+        <br>
 
         <div>
             <h3>Terms and Conditions</h3>

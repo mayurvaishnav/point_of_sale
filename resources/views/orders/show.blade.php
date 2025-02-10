@@ -94,6 +94,10 @@
                             <td><strong>Total After Discount:</strong></td>
                             <td>{{ $order->total_after_discount }}</td>
                         </tr>
+                        <tr>
+                            <td><strong>Note:</strong></td>
+                            <td>{{ $order->note }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

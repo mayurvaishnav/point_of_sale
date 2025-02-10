@@ -28,6 +28,9 @@
 
         <table>
             <tr>
+                <td class="text-left"><strong>Status:</strong> {{ $order->status }}</td>
+            </tr>
+            <tr>
                 <td class="text-left"><strong>Receipt No:</strong> {{ $order->invoice_number }}</td>
             </tr>
             <tr>

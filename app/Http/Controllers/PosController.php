@@ -89,7 +89,7 @@ class PosController extends Controller
                 'total_before_tax'=> $cart->getTotalCart()->subTotal,
                 'total' => $cart->getTotalCart()->total,
                 'total_after_discount'=> $cart->getTotalCart()->totalAfterDiscount,
-                // 'note'=> $request->note,
+                'note'=> $request->note,
             ];
 
             $order = Order::updateOrCreate(

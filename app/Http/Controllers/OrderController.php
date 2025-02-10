@@ -117,7 +117,7 @@ class OrderController extends Controller
         }
 
 
-        // return view('orders.receipt', compact('order', 'customerAccountBalance'));
+        // return view('orders.invoice', compact('order', 'customerAccountBalance'));
 
         $pdf = Pdf::loadView('orders.invoice', compact('order', 'customerAccountBalance'));
 

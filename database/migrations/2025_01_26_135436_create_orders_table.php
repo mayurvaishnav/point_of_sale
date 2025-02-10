@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('set null');
             $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
             $table->string('status')->index();
-            $table->date('order_date')->default(now())->index();
+            $table->date('order_date')->index();
             $table->string('invoice_number')->nullable();
             $table->integer('quantity');
             $table->decimal('total_before_tax', 8, 2)->nullable();
