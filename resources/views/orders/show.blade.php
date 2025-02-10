@@ -230,7 +230,7 @@
     </div>
     </div>
 </div>
-<iframe id="pdf-frame" style="display:none;" width="100%" height="600"></iframe>
+<iframe id="pdf-frame" style="display:none;" width="100%" height="6"></iframe>
 @endsection
 
 @section('custom_js')
@@ -254,28 +254,30 @@
     $('#printA4').click(function () {
         var orderId = $(this).data('order-id'); 
 
-        const url = `{{ route('orders.downloadInvoice', ':orderId') }}`;
-        
+        const url = `{{ route('orders.downloadInvoice', ':orderId') }}`.replace(':orderId', orderId);
+
         $.ajax({
-            url: url.replace(':orderId', orderId),
+            url: url,
             method: 'GET',
-            data: { 
-                _token: "{{ csrf_token() }}",
-            },
+            data: { _token: "{{ csrf_token() }}" },
+            xhrFields: { responseType: 'blob' }, // Ensure the response is treated as a binary blob
             success: function (response) {
-
-                console.log('response', response);
-
-                // If you want to display the PDF directly in an iframe and auto-print
-                var iframe = document.getElementById('pdf-frame');
+                // Convert the response into a Blob
                 var pdfBlob = new Blob([response], { type: 'application/pdf' });
                 var pdfUrl = URL.createObjectURL(pdfBlob);
+
+                // Set the PDF URL to the iframe
+                var iframe = document.getElementById('pdf-frame');
                 iframe.src = pdfUrl;
                 iframe.style.display = 'block';
 
-                // Wait for the PDF to load, then print automatically
+                // Print automatically once loaded
                 iframe.onload = function () {
                     iframe.contentWindow.print();
+
+                    setTimeout(function () {
+                        iframe.style.display = 'none';
+                    }, 1000);
                 };
             },
             error: function (error) {

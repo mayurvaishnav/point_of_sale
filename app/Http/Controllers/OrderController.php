@@ -124,7 +124,7 @@ class OrderController extends Controller
         if ($request->wantsJson) {
             return response($pdf->output(), 200, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="invoice.pdf"',
+                'Content-Disposition' => 'inline; filename="' . $order->invoice_number . '.pdf"',
             ]);
         }
 

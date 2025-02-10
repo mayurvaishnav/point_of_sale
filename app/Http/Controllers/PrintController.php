@@ -45,20 +45,6 @@ class PrintController extends Controller
         return view('orders.receipt', compact('order'));
     }
 
-    public function invoice($orderId)
-    {
-        $order = Order::find($orderId)->load(['customer', 'orderDetails', 'orderpayments']);
-
-        $customerAccountBalance = 0;
-
-        if ($order->customer) {
-            $customerAccountBalance = $order->customer->customerAccountTransactions->last()->balance ?? 0;
-        }
-
-        $pdf = Pdf::loadView('orders.invoice', compact('order', 'customerAccountBalance'));
-        return $pdf->download($order->invoice_number .'.pdf');
-    }
-
     private function formatReceiptText($order)
     {
         $receiptText = "";

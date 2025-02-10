@@ -62,7 +62,6 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
 
     // PRINT
     Route::get('/print/receipt/{orderId}', [PrintController::class, 'receipt'])->name('print.receipt');
-    Route::get('/print/invoice/{orderId}', [PrintController::class, 'invoice'])->name('print.invoice');
 
     // CUSTOMER CREDITS
     Route::get('/customer-accounts', [CustomerAccountController::class, 'index'])->name('customer-accounts.index');
