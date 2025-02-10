@@ -1,7 +1,10 @@
 @extends('adminlte::page')
 
+@section('adminlte_css_pre')
+    @laravelPWA
+@endsection
+
 @section('content_header')
-<h1>Testing......</h1>
     @yield('custom_content_header')
 @stop
 

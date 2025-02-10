@@ -19,7 +19,7 @@ use App\Http\Controllers\StockManagementController;
 use App\Http\Controllers\SupplierController;
 
 Route::get('/', function () {
-    return redirect('dashboard.index');
+    return redirect()->route('dashboard.index');
 });
 
 // Route::get('/dashboard', function () {
