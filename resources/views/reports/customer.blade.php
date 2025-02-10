@@ -1,7 +1,7 @@
-@extends('adminlte::page')
+@extends('layouts.adminlte-app')
 
 @section('title', 'Customer Report')
-@section('content_header')
+@section('custom_content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-4">
@@ -36,12 +36,10 @@
     </div>
 @endsection
 
-@section('css')
+@section('custom_css')
 @endsection
 
-@section('content')
-
-@include('layouts.alerts')
+@section('custom_content')
 
 <div class="row">
     <div class="col-md-12">
@@ -83,7 +81,7 @@
 
 @endsection
 
-@section('js')
+@section('custom_js')
     <script>
         $(document).ready(function() {
             // // Initialize Select2 for customers

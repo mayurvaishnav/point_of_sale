@@ -1,15 +1,15 @@
-@extends('adminlte::page')
+@extends('layouts.adminlte-app')
 
 @section('title', 'Dashboard')
 
-@section('content_header')
+@section('custom_content_header')
     <h1>Welcome back, {{ Auth::user()->name }}</h1>
 @stop
 
-@section('css')
+@section('custom_css')
 @stop
 
-@section('content')
+@section('custom_content')
 @can('report-sales')
     
     <p><strong>This week</strong> vs <strong>Last week</strong></p>
@@ -121,7 +121,7 @@
 
 
 
-@section('js')
+@section('custom_js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 

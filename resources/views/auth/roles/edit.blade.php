@@ -1,11 +1,11 @@
-@extends('adminlte::page')
+@extends('layouts.adminlte-app')
 
 @section('title', 'Update Role')
-@section('content_header')
+@section('custom_content_header')
     <h1>Update Role</h1>
 @stop
 
-@section('content')
+@section('custom_content')
 
     <div class="card">
         <div class="card-body">

@@ -1,7 +1,7 @@
-@extends('adminlte::page')
+@extends('layouts.adminlte-app')
 
 @section('title', '')
-@section('content_header')
+@section('custom_content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
@@ -22,12 +22,10 @@
     </div>
 @endsection
 
-@section('css')
+@section('custom_css')
 @endsection
 
-@section('content')
-
-@include('layouts.alerts')
+@section('custom_content')
 
 <div class="row">
     <!-- Revenue Summary -->
@@ -205,7 +203,7 @@
 
 @endsection
 
-@section('js')
+@section('custom_js')
     <script>
         $('.datatable-sales').each(function() {
             let columnCount = $(this).find('th').length;

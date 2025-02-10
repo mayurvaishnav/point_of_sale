@@ -1,7 +1,7 @@
-@extends('adminlte::page')
+@extends('layouts.adminlte-app')
 
 @section('title', 'Orders')
-@section('content_header')
+@section('custom_content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
@@ -22,12 +22,10 @@
     </div>
 @endsection
 
-@section('css')
+@section('custom_css')
 @endsection
 
-@section('content')
-
-@include('layouts.alerts')
+@section('custom_content')
 
 <div class="card">
     <div class="card-body table-responsive">
@@ -75,7 +73,7 @@
 </div>
 @endsection
 
-@section('js')
+@section('custom_js')
     <script>
         $(".btn-delete").click(function(e){
             e.preventDefault();

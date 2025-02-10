@@ -1,7 +1,7 @@
-@extends('adminlte::page')
+@extends('layouts.adminlte-app')
 
 @section('title', 'Order Details')
-@section('content_header')
+@section('custom_content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
@@ -39,11 +39,11 @@
     </div>
 @stop
 
-@section('css')
+@section('custom_css')
 
 @stop
 
-@section('content')
+@section('custom_content')
 
 <div class="card">
     <div class="card-body">
@@ -233,7 +233,7 @@
 <iframe id="pdf-frame" style="display:none;" width="100%" height="600"></iframe>
 @endsection
 
-@section('js')
+@section('custom_js')
 <script>
     $(document).ready(function() {
         $('#editCustomerModal').on('shown.bs.modal', function () {

@@ -1,11 +1,11 @@
-@extends('adminlte::page')
+@extends('layouts.adminlte-app')
 
 @section('title', 'Create Product')
-@section('content_header')
+@section('custom_content_header')
     <h1>Create New Product</h1>
 @stop
 
-@section('css')
+@section('custom_css')
 <style>
     .card {
         border: 1px solid #e0e0e0;
@@ -19,7 +19,7 @@
 </style>
 @endsection
 
-@section('content')
+@section('custom_content')
     <div class="card">
         <div class="card-body">
 
@@ -32,7 +32,7 @@
     </div>
 @endsection
 
-@section('js')
+@section('custom_js')
 
     @include('products.js')
 
