@@ -628,21 +628,6 @@ return [
                 ],
             ],
         ],
-        'custom-js' => [
-            'active' => true,
-            'files'  => [
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => 'css/adminlte-custom.css',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'js/adminlte-custom.js',
-                ],
-            ],
-        ],
     ],
 
     /*
