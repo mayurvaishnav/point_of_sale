@@ -11,7 +11,7 @@
                     <button type="button" class="btn btn-secondary btn-lg mb-3 w-100" id="noReceipt" onclick="location.reload();">No Receipt</button>
                     <button type="button" class="btn btn-primary btn-lg mb-3 w-100" id="printReceipt">Print Receipt</button>
                     <button type="button" class="btn btn-info btn-lg mb-3 w-100" id="printA4">Print A4</button>
-                    <button type="button" class="btn btn-success btn-lg mb-3 w-100" id="downloadInvoice">Download Invoice</button>
+                    {{-- <button type="button" class="btn btn-success btn-lg mb-3 w-100" id="downloadInvoice">Download Invoice</button> --}}
                     <button type="button" class="btn btn-warning btn-lg mb-3 w-100" id="emailInvoice" style="display: none;">Email Invoice</button>
                 </div>
             </div>

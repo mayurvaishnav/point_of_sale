@@ -478,9 +478,7 @@
                     confirmButtonText: 'Yes',
                     cancelButtonText: 'No',
                 }).then((result) => {
-                    console.log(result);
                     if (result.value) {
-                        console.log('cancled');
                         $.ajax({
                             url: "{{ route('cart.empty') }}",
                             method: "POST",
@@ -526,7 +524,6 @@
                             },
                             dataType: 'json',
                             success: function (response) {
-                                console.log(response);
                                 // Reload the page
                                 location.reload();
                             },
@@ -563,9 +560,7 @@
                     success: function(response) {
                         $('#paymentModal').modal('hide');
 
-                        console.log(response);
                         const orderId = response.order_id;
-                        console.log(orderId);
 
                         // Update data-od of all buttons
                         $("#printReceipt").attr("data-id", orderId);

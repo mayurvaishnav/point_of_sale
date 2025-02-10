@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ScheduledJobController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RoleController;
@@ -91,6 +92,9 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     // REPORTS
     Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
     Route::get('/reports/customer', [ReportController::class, 'customer'])->name('reports.customer');
+
+    //JOBS
+    Route::resource('jobs', ScheduledJobController::class);
 });
 
 require __DIR__.'/auth.php';

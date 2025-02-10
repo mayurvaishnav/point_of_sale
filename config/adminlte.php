@@ -467,6 +467,23 @@ return [
             'active' => ['admin/roles*'],
             'can' => 'role-list',
         ],
+        
+        // Admin Task
+        [
+            'header' => '',
+            // 'can' => ['jobs-list'],
+        ],
+        [
+            'header' => 'Jobs',
+            // 'can' => ['jobs-list'],
+        ],
+        [
+            'text' => 'Jobs',
+            'route' => 'jobs.index',
+            'icon' => 'fas fa-tasks', 
+            'active' => ['admin/jobs*'],
+            // 'can' => 'jobs-list',
+        ],
         // [
         //     'text' => 'multilevel',
         //     'icon' => 'fas fa-fw fa-share',
