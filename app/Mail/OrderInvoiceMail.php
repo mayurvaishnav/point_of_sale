@@ -30,6 +30,7 @@ class OrderInvoiceMail extends Mailable
     {
         return new Envelope(
             subject: 'Invoice From Bowes Tyres',
+            cc: [env('MAIL_CC_ADDRESS')]
         );
     }
 

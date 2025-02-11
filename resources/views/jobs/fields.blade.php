@@ -75,3 +75,7 @@
 <button class="btn btn-primary" type="submit">Save</button>
 <a class="btn btn-default" href="{{ route('jobs.index') }}">Cancel</a>
 
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('email_body');
+</script>

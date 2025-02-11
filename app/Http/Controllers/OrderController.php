@@ -155,7 +155,8 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Customer email is required');
         }
 
-        Mail::to([$customerEmail, env('MAIL_CC_ADDRESS')])->send(new OrderInvoiceMail($order, $customerAccountBalance));
+        Mail::to($customerEmail)
+            ->send(new OrderInvoiceMail($order, $customerAccountBalance));
 
         if ($request->wantsJson()) {
             return response()->json(['message' => 'Invoice sent successfully']);

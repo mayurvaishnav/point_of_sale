@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('job_name');
             $table->string('email_subject');
-            $table->text('email_body');
+            $table->longText('email_body');
             $table->time('execution_time');
             $table->enum('frequency', ['daily', 'weekly', 'monthly']);
             $table->boolean('is_active')->default(false);

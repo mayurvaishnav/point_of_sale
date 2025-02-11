@@ -48,7 +48,7 @@ class ScheduledJobController extends Controller
     public function update(Request $request, ScheduledJob $job)
     {
         $job->update($request->validate([
-            // 'job_name' => 'required|string',
+            'job_name' => 'required|string',
             'email_subject' => 'required|string',
             'email_body' => 'required|string',
             'execution_time' => 'required|date_format:H:i',
