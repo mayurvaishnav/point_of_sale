@@ -68,6 +68,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/customer-accounts', [CustomerAccountController::class, 'index'])->name('customer-accounts.index');
     Route::get('/customer-accounts/{customerAccount}', [CustomerAccountController::class, 'details'])->name('customer-accounts.details');
     Route::post('/customer-accounts/payment/{customerAccount}', [CustomerAccountController::class, 'addPayment'])->name('customer-accounts.addPayment');
+    Route::post('/customer-accounts/send-account-email/{customerAccount}', [CustomerAccountController::class, 'sendEmail'])->name('customer-accounts.sendEmail');
     Route::delete('/customer-accounts/payment/{customerAccount}/{customerAccountTransaction}', [CustomerAccountController::class, 'deletePayment'])->name('customer-accounts.deletePayment');
 
     // STOCK MANAGEMENT

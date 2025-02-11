@@ -15,9 +15,9 @@
 
     <p>If you have any questions regarding this invoice, feel free to contact us.</p>
 
-    <p>Best regards,</p>
-    <p><strong>Bowes Tyres and Auto Centre</strong></p>
-    <p>Timahoe Road, Portlaoise, Co. Laois</p>
-    <p>Phone: 057-8665075 | Email: info@bowestyres.com</p>
+    <p>Best regards,<br>
+    <strong>Bowes Tyres and Auto Centre</strong><br>
+    Timahoe Road, Portlaoise, Co. Laois<br>
+    Phone: 057-8665075 | Email: info@bowestyres.com</p>
 </body>
 </html>

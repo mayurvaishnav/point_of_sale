@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CustomerAccountStatementMail;
 use App\Models\CustomerAccount;
 use App\Models\CustomerAccountTransaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 
 class CustomerAccountController extends Controller
@@ -64,6 +67,34 @@ class CustomerAccountController extends Controller
             'note' => $request->note,
             'balance' => $previousBalance + $request->amount,
         ]);
+
+        return Redirect::back()->with('success', 'Paymnet added successfully!');
+    }
+
+    /**
+     * Store a newly created payment in storage.
+     */
+    public function sendEmail(Request $request, CustomerAccount $customerAccount)
+    {
+        $request->validate([
+            // 'from_last_payment' => 'nullable|boolean',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+        ]);
+
+        $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+        $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+
+        $customerAccount->load(['customer', 'transactions' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+                $query->orderBy('created_at', 'asc');
+        }]);
+
+        Mail::to($customerAccount->customer->email)
+            ->send(new CustomerAccountStatementMail($customerAccount));
+
+        // return view('customer_accounts.account-statement', compact('customerAccount'));
+
 
         return Redirect::back()->with('success', 'Paymnet added successfully!');
     }

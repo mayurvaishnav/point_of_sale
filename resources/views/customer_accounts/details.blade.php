@@ -13,6 +13,7 @@
                 </p>
             </div>
             <div class="col-sm-6 text-right">
+                <button class="btn btn-success" id="sendEmail">Email</button>
                 @can('customer-account-add-payment')
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -52,7 +53,7 @@
             <tbody>
                 @foreach ($customerAccount->transactions as $transaction)
                 <tr>
-                    <td>{{$transaction->created_at->format('Y-m-d') }}</td>
+                    <td>{{$transaction->created_at->format('d-m-Y') }}</td>
                     <td>
                         @if ($transaction->order)
                             <a href="{{ route('orders.show', $transaction->order) }}">
@@ -105,6 +106,36 @@
                             <div class="form-group">
                                 <label for="amount">Payment amount:</label>
                                 <input type="number" id="amount" name="amount" class="form-control" required>
+                            </div>
+                        </form>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                    preConfirm: () => {
+                        document.getElementById('add-payment-form').submit();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('#sendEmail').forEach(button => {
+            button.addEventListener('click', function() {
+                const customerAccountId = @json($customerAccount->id);
+                const customerName = @json($customerAccount->customer->name);
+                const customerId = @json($customerAccount->customer->id);
+                const paymentMethod = this.dataset.paymentMethod;
+                Swal.fire({
+                    title: `Enter date range to send statement to ${customerName}`,
+                    html: `
+                        <form id="add-payment-form" action="{{ route('customer-accounts.sendEmail', '') }}/${customerAccountId}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label for="start_date">Start date:</label>
+                                <input type="date" id="start_date" name="start_date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="end_date">End date:</label>
+                                <input type="date" id="end_date" name="end_date" class="form-control" required>
                             </div>
                         </form>
                     `,

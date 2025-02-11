@@ -159,7 +159,7 @@ class PosController extends Controller
                     'customer_account_id'=> $customer->customerAccounts()->first()->id,
                     'customer_id' => $customer_id,
                     'order_id' => $order->id,
-                    'note' => 'Order payment for ' . $order->invoice_number,
+                    'note' => 'Purchage - ' . $order->invoice_number,
                     'credit_amount' => $order->total_after_discount,
                     'balance' => $previousBalance - $order->total_after_discount
                 ]);
