@@ -34,27 +34,25 @@ class DashboardController extends Controller
             ->orderBy('date')
             ->get();
 
-        // dd($salesData, $startOfWeek, $endOfWeek, $startOfLastWeek, $endOfLastWeek);
 
-        $salesDataThisWeek = $salesData->whereBetween('date', [$startOfWeek, $endOfWeek]);
-        $salesDataLastWeek = $salesData->whereBetween('date', [$startOfLastWeek, $endOfLastWeek]);
+        $salesDataThisWeek = $salesData->whereBetween('date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()]);
+        $salesDataLastWeek = $salesData->whereBetween('date', [$startOfLastWeek->toDateString(), $endOfLastWeek->toDateString()]);
 
-        $salesThisWeek = $salesData->whereBetween('date', [$startOfWeek, $endOfWeek])->pluck('total', 'date')->toArray();
+
+        $salesThisWeek = $salesData->whereBetween('date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])->pluck('total', 'date')->toArray();
         $totalsThisWeek = $datesThisWeek->map(fn($date) => $salesThisWeek[$date] ?? 0)->toArray();
         $totalsThisWeekOrderCount = $salesDataThisWeek->pluck('order_count')->sum();
         $totalsThisWeekDiscount = $salesDataThisWeek->pluck('discount')->sum();
         $totalsThisWeekSales = $salesDataThisWeek->pluck('total')->sum();
         $totalsThisWeekTax = $salesDataThisWeek->pluck('tax')->sum();
 
-        $salesLastWeek = $salesData->whereBetween('date', [$startOfLastWeek, $endOfLastWeek])->pluck('total', 'date')->toArray();
+        $salesLastWeek = $salesData->whereBetween('date', [$startOfLastWeek->toDateString(), $endOfLastWeek->toDateString()])->pluck('total', 'date')->toArray();
         $totalsLastWeek = $datesLastWeek->map(fn($date) => $salesLastWeek[$date] ?? 0)->toArray();
         $totalsLastWeekOrderCount = $salesDataLastWeek->pluck('order_count')->sum();
         $totalsLastWeekDiscount = $salesDataLastWeek->pluck('discount')->sum();
         $totalsLastWeekSales = $salesDataLastWeek->pluck('total')->sum();
         $totalsLastWeekTax = $salesDataLastWeek->pluck('tax')->sum();
 
-        // dd($datesThisWeek, $totalsThisWeek, $datesLastWeek, $totalsLastWeek);
-    
         return view('dashboard', compact(
             'datesThisWeek',
             'totalsThisWeek',

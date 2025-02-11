@@ -26,6 +26,6 @@
         "bootstrap": "^5.3.3",
         "datatables": "^1.10.18",
         "jquery": "^3.7.1",
-        "sweetalert2": "^11.15.10"
+        "sweetalert2": "^11.6.13"
     }
 }

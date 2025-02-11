@@ -47,6 +47,14 @@
 
     <script>
         $(document).ready(function() {
+
+            // Cashdrawer open button
+            $('#openCashDrawer').on('click', function(e) {
+                e.preventDefault();
+                
+            })
+
+            // Reload page button
             $('#reloadPageButton').on('click', function(e) {
                 e.preventDefault();
                 location.reload();

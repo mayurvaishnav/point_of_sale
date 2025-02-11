@@ -306,11 +306,18 @@ return [
         //     'topnav_right' => false,
         // ],
         [
+            'text' => 'Open Cashdrawer',
+            'topnav_right' => true,
+            'icon' => 'fas fa-cash-register',
+            'url' => '#',
+            'id' => 'openCashDrawer',
+        ],
+        [
             'text' => '',
             'topnav_right' => true,
             'icon' => 'fas fa-sync-alt',
             'url' => '#',
-            'id' => 'reloadPageButton', // Add an ID for JavaScript reference
+            'id' => 'reloadPageButton',
         ],
         [
             'type' => 'fullscreen-widget',

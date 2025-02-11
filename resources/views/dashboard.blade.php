@@ -7,6 +7,26 @@
 @stop
 
 @section('custom_css')
+<style>
+    .small-box .inner {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .small-box h3 {
+        font-size: 1.5em; /* Adjust font size as needed */
+    }
+    .small-box p {
+        margin: 0;
+    }
+    .d-flex {
+        display: flex;
+        align-items: center;
+    }
+    .justify-content-between {
+        justify-content: space-between;
+    }
+</style>
 @stop
 
 @section('custom_content')
@@ -27,13 +47,13 @@
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between">
                                 <h3>
-                                    {{ $totalsLastWeekOrderCount }} 
+                                    {{ $totalsLastWeekOrderCount }} <br>
                                     <span style="font-size: 0.8em; vertical-align: bottom;">
                                         @php
                                             $percentageChange = $totalsLastWeekOrderCount != 0 ? (($totalsThisWeekOrderCount - $totalsLastWeekOrderCount) / $totalsLastWeekOrderCount) * 100 : 0;
                                         @endphp
                                         <span style="font-size: 0.8em; vertical-align: bottom; color: {{ $percentageChange >= 0 ? 'green' : 'red' }};">
-                                            {{ number_format($percentageChange, 2) }}%
+                                            {{ number_format($percentageChange, 0) }}%
                                             <i class="fas fa-arrow-{{ $percentageChange >= 0 ? 'up' : 'down' }}"></i>
                                         </span>
                                     </span>
@@ -59,13 +79,13 @@
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between">
                                 <h3>
-                                    {{ config('app.currency_symbol') }} {{ $totalsLastWeekSales }} 
+                                    {{ config('app.currency_symbol') }} {{ $totalsLastWeekSales }} <br>
                                     <span style="font-size: 0.8em; vertical-align: bottom;">
                                         @php
                                             $percentageChange = $totalsLastWeekSales != 0 ? (($totalsThisWeekSales - $totalsLastWeekSales) / $totalsLastWeekSales) * 100 : 0;
                                         @endphp
                                         <span style="font-size: 0.8em; vertical-align: bottom; color: {{ $percentageChange >= 0 ? 'green' : 'red' }};">
-                                            {{ number_format($percentageChange, 2) }}%
+                                            {{ number_format($percentageChange, 0) }}%
                                             <i class="fas fa-arrow-{{ $percentageChange >= 0 ? 'up' : 'down' }}"></i>
                                         </span>
                                     </span>
@@ -91,13 +111,13 @@
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between">
                                 <h3>
-                                    {{ config('app.currency_symbol') }} {{ $totalsLastWeekDiscount }} 
+                                    {{ config('app.currency_symbol') }} {{ $totalsLastWeekDiscount }} <br>
                                     <span style="font-size: 0.8em; vertical-align: bottom;">
                                         @php
                                             $percentageChange = $totalsLastWeekDiscount != 0 ? (($totalsThisWeekDiscount - $totalsLastWeekDiscount) / $totalsLastWeekDiscount) * 100 : 0;
                                         @endphp
                                         <span style="font-size: 0.8em; vertical-align: bottom; color: {{ $percentageChange <= 0 ? 'green' : 'red' }};">
-                                            {{ number_format($percentageChange, 2) }}%
+                                            {{ number_format($percentageChange, 0) }}%
                                             <i class="fas fa-arrow-{{ $percentageChange < 0 ? 'up' : 'down' }}"></i>
                                         </span>
                                     </span>
