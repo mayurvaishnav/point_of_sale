@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerAccountController;
+use App\Http\Controllers\LogViewerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\PrintController;
@@ -20,6 +21,10 @@ use App\Http\Controllers\StockManagementController;
 use App\Http\Controllers\SupplierController;
 
 Route::get('/', function () {
+    return redirect()->route('dashboard.index');
+});
+
+Route::get('home', function () {
     return redirect()->route('dashboard.index');
 });
 
@@ -40,6 +45,8 @@ Route::middleware('auth')->group(function () {
 // Auth::routes();
 
 Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('/logs', [LogViewerController::class, 'index'])->name('logs.index');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
@@ -102,5 +109,5 @@ require __DIR__.'/auth.php';
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
