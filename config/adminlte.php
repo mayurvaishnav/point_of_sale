@@ -64,7 +64,7 @@ return [
     */
 
     'logo' => 'Bowes Auto Center',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo_img' => 'images/Bowes_icon.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -86,7 +86,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'images/Bowes_icon.png',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -260,7 +260,7 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => 'register',
+    'register_url' => null,
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
     'profile_url' => false,
@@ -308,7 +308,7 @@ return [
         [
             'text' => 'Open Cashdrawer',
             'topnav_right' => true,
-            'icon' => 'fas fa-cash-register',
+            // 'icon' => 'fas fa-cash-register',
             'url' => '#',
             'id' => 'openCashDrawer',
         ],
