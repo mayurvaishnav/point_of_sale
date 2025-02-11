@@ -15,3 +15,5 @@ Schedule::call(function () {
     $scheduler = new JobScheduler();
     $scheduler->scheduleJobs();
 })->everyMinute();
+
+Schedule::command('backup:run')->dailyAt('00:00');
