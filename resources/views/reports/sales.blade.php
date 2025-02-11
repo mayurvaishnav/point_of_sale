@@ -10,10 +10,10 @@
             <div class="col-sm-6">
                 <form id="dateFilterForm" method="GET" action="{{ route('reports.sales') }}" class="form-inline float-right">
                     <div class="form-group">
-                        <input type="date" name="start_date" id="orderDate" class="form-control" value="{{ request('start_date') }}">
+                        <input type="date" name="start_date" id="orderDate" class="form-control" value="{{ $startDate->format('Y-m-d') ?? request('start_date') }}">
                     </div>
                     <div class="form-group ml-2">
-                        <input type="date" name="end_date" id="orderDate" class="form-control" value="{{ request('end_date') }}">
+                        <input type="date" name="end_date" id="orderDate" class="form-control" value="{{ $endDate->format('Y-m-d') ?? request('end_date') }}">
                     </div>
                     <button type="submit" class="btn btn-primary ml-2">Filter</button>
                 </form>

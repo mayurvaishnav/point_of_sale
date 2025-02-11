@@ -106,7 +106,9 @@ class ReportController extends Controller
             'productSummary',
             'customerAccountSummary',
             'taxSummary',
-            'categorySummary'
+            'categorySummary',
+            'startDate',
+            'endDate',
         ));
     }
     
