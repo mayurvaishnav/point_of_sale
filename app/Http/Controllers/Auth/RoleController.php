@@ -9,8 +9,10 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-    
+use Illuminate\Support\Facades\Log;
+
 class RoleController extends Controller
 {
     /**
@@ -33,6 +35,7 @@ class RoleController extends Controller
      */
     public function index(Request $request): View
     {
+        Log::info("RoleController index method called by user: ". Auth::id());
         $roles = Role::with('permissions')->get();
         return view('auth.roles.index',compact('roles'));
     }
@@ -44,6 +47,7 @@ class RoleController extends Controller
      */
     public function create(): View
     {
+        Log::info("RoleController create method called by user: ". Auth::id());
         $permissions = Permission::all();
         $groupedPermissions = $permissions->groupBy('group_name');
         return view('auth.roles.create',compact('groupedPermissions'));
@@ -61,6 +65,8 @@ class RoleController extends Controller
             'name' => 'required|unique:roles,name',
             'permission' => 'required',
         ]);
+
+        Log::info("RoleController store method called by user: ". Auth::id() . " with parameters:" . json_encode($request->all()));
 
         $permissionsID = array_map(
             function($value) { return (int)$value; },
@@ -81,6 +87,7 @@ class RoleController extends Controller
      */
     public function show($id): View
     {
+        Log::info("RoleController show method called by user: ". Auth::id() . " for role Id:" . $id);
         $role = Role::find($id);
         $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",$id)
@@ -97,6 +104,7 @@ class RoleController extends Controller
      */
     public function edit($id): View
     {
+        Log::info("RoleController edit method called by user: ". Auth::id() . " for role Id:" . $id);
         $role = Role::find($id);
         $permissions = Permission::get();
         $groupedPermissions = $permissions->groupBy('group_name');
@@ -120,6 +128,8 @@ class RoleController extends Controller
             'name' => 'required',
             'permission' => 'required',
         ]);
+
+        Log::info("RoleController update method called by user: ". Auth::id() . " for role Id:" . $id . " with parameters:" . json_encode($request->all()));
     
         $role = Role::find($id);
         $role->name = $request->input('name');
@@ -143,6 +153,7 @@ class RoleController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
+        Log::info("RoleController destroy method called by user: ". Auth::id() . " for role Id:" . $id);
         DB::table("roles")->where('id',$id)->delete();
         return redirect()->route('roles.index')
                         ->with('success','Role deleted successfully');

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SupplierController extends Controller
 {
@@ -25,6 +27,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
+        Log::info('SupplierController index method called by user: ' . Auth::id());
         return view("suppliers.index", [
             "suppliers" => Supplier::all()
         ]);
@@ -35,6 +38,7 @@ class SupplierController extends Controller
      */
     public function create()
     {
+        Log::info('SupplierController create method called by user: ' . Auth::id());
         return view('suppliers.create');
     }
 
@@ -53,6 +57,8 @@ class SupplierController extends Controller
         ];
 
         $validatedData = $request->validate($rules);
+
+        Log::info('SupplierController store method called by user: ' . Auth::id() . ' with parameters: ' . json_encode($validatedData));
 
         $supplier = Supplier::create($validatedData);
 
@@ -75,6 +81,7 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
+        Log::info('SupplierController edit method called by user: ' . Auth::id() . ' for supplier ID: ' . $supplier->id);
         return view('suppliers.edit', compact('supplier'));
     }
 
@@ -94,6 +101,9 @@ class SupplierController extends Controller
 
         $validatedData = $request->validate($rules);
 
+        Log::info('SupplierController update method called by user: ' . Auth::id() . 
+            ' for supplier ID: ' . $supplier->id . 'with parameters: ' . json_encode($validatedData));
+
         Supplier::where('id', $supplier->id)->update($validatedData);
 
         return redirect()->route('suppliers.index')->with('success', 'Supplier have been updated!');
@@ -104,6 +114,7 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
+        Log::info('SupplierController delete method called by user: ' . Auth::id() . ' for supplier ID: ' . $supplier->id);
         Supplier::destroy($supplier->id);
 
         return redirect()->route('suppliers.index')->with('success', 'Supplier have been deleted!');

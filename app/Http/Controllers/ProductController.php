@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\TaxRate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -28,6 +30,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        Log::info('ProductController index method called by user: ' . Auth::id());
         return view("products.index", [
             "products" => Product::with(['category', 'supplier'])->get()
         ]);
@@ -38,6 +41,7 @@ class ProductController extends Controller
      */
     public function create()
     {
+        Log::info('ProductController create method called by user: ' . Auth::id());
         $categories = Category::all();
         $suppliers = Supplier::all();
         $taxRates = TaxRate::all();
@@ -72,11 +76,9 @@ class ProductController extends Controller
             'low_stock_threshold'=> 'nullable|integer|min:0',
         ];
 
-        // dd($request->validate($rules));
-
         $validatedData = $request->validate($rules);
 
-        // dd($validatedData);
+        Log::info('ProductController store method called by user: ' . Auth::id() . ' with parameters: ' . json_encode($validatedData));
 
         $product = Product::create($validatedData);
 
@@ -99,6 +101,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        Log::info('ProductController edit method called by user: ' . Auth::id() . ' for product ID: ' . $product->id);
         $categories = Category::all();
         $suppliers = Supplier::all();
         $taxRates = TaxRate::all();
@@ -134,6 +137,8 @@ class ProductController extends Controller
 
         $validatedData = $request->validate($rules);
 
+        Log::info('ProductController update method called by user: ' . Auth::id() . ' for product ID: ' . $product->id . ' with parameters: ' . json_encode($validatedData));
+
         Product::where('id', $product->id)->update($validatedData);
 
         return redirect()->route('products.index')->with('success', 'Product have been updated!');
@@ -144,6 +149,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        Log::info('ProductController destroy method called by user: ' . Auth::id() . ' for product ID: ' . $product->id);
         Product::destroy($product->id);
 
         return redirect()->route('products.index')->with('success', 'Product have been deleted!');

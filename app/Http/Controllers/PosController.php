@@ -15,6 +15,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PosController extends Controller
@@ -73,6 +74,8 @@ class PosController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+
+        Log::info('PosController processPayment method called by user: ' . Auth::id() . ' with parameters: ' . json_encode($request->all()));
 
         DB::beginTransaction();
 
@@ -219,6 +222,8 @@ class PosController extends Controller
 
         $cart = CartService::getCart();
         $customer_id = $cart->customer->id ?? null;
+
+        Log::info('PosController save method called by user: ' . Auth::id());
 
         DB::beginTransaction();
         try {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
@@ -25,6 +27,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
+        Log::info("CustomerController index method called by user: ". Auth::id());
         return view("customers.index", [
             "customers" => Customer::all()
         ]);
@@ -35,6 +38,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
+        Log::info("CustomerController create method called by user: ". Auth::id());
         return view('customers.create');
     }
 
@@ -57,6 +61,8 @@ class CustomerController extends Controller
 
         $validatedData = $request->validate($rules);
 
+        Log::info("CustomerController store method called by user: ". Auth::id() . " with parameters:" . json_encode( $request->all()));
+
         $customer = Customer::create($validatedData);
 
         if (!$customer) {
@@ -78,6 +84,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
+        Log::info("CustomerController edit method called by user: ". Auth::id() . " for customer Id:" . $customer->id);
         return view('customers.edit', compact('customer'));
     }
 
@@ -100,6 +107,8 @@ class CustomerController extends Controller
 
         $validatedData = $request->validate($rules);
 
+        Log::info("CustomerController update method called by user: ". Auth::id() . " for customer Id:" . $customer->id . " with parameters:" . json_encode( $request->all()));
+
         Customer::where('id', $customer->id)->update($validatedData);
 
         return redirect()->route('customers.index')->with('success', 'Customer have been updated!');
@@ -110,6 +119,7 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
+        Log::info("CustomerController destroy method called by user: ". Auth::id() . " for customer Id:" . $customer->id);
         Customer::destroy($customer->id);
 
         return redirect()->route('customers.index')->with('success', 'Customer have been deleted!');

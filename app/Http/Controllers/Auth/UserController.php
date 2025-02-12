@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-    
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class UserController extends Controller
 {
     /**
@@ -33,6 +35,7 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
+        Log::info("UserController index method called by user: ". Auth::id());
         $users = User::with('roles')->get();
   
         return view('auth.users.index',compact('users'));
@@ -45,6 +48,7 @@ class UserController extends Controller
      */
     public function create(): View
     {
+        Log::info("UserController create method called by user: ". Auth::id());
         $roles = Role::pluck('name','name')->all();
 
         return view('auth.users.create',compact('roles'));
@@ -65,6 +69,8 @@ class UserController extends Controller
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
+
+        Log::info("UserController store method called by user: ". Auth::id() . " with parameters: " . json_encode($request->all()));
     
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
@@ -84,6 +90,8 @@ class UserController extends Controller
      */
     public function show($id): View
     {
+
+        Log::info("UserController show method called by user: ". Auth::id() . " for user ID: " . $id);
         $user = User::find($id);
 
         return view('auth.users.show',compact('user'));
@@ -97,6 +105,8 @@ class UserController extends Controller
      */
     public function edit($id): View
     {
+
+        Log::info("UserController edit method called by user: ". Auth::id() . " for user ID: " . $id);
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
@@ -119,6 +129,8 @@ class UserController extends Controller
             'password' => 'same:confirm-password',
             'roles' => 'required'
         ]);
+
+        Log::info("UserController update method called by user: ". Auth::id() . " for user ID: " . $id . " with parameters: " . json_encode($request->all()));
     
         $input = $request->all();
         if(!empty($input['password'])){ 
@@ -145,6 +157,7 @@ class UserController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
+        Log::info("UserController delete method called by user: ". Auth::id() . " for user ID: " . $id);
         User::find($id)->delete();
         return redirect()->route('users.index')
                         ->with('success','User deleted successfully');

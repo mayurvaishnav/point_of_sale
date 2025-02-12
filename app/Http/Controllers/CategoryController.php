@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -25,6 +27,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        Log::info("CategoryController index method called by user: ". Auth::id());
         return view("categories.index", [
             "categories" => Category::all()
         ]);
@@ -35,6 +38,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        Log::info("CategoryController create method called by user: ". Auth::id());
         return view('categories.create');
     }
 
@@ -50,6 +54,8 @@ class CategoryController extends Controller
         ];
 
         $validatedData = $request->validate($rules);
+
+        Log::info("CategoryController store method called by user: ". Auth::id() . "with parameters:" . json_encode($request->all()));
 
         $categotry = Category::create($validatedData);
 
@@ -72,6 +78,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        Log::info("CategoryController edit method called by user: ". Auth::id() . " for category Id:" . $category->id);
         return view('categories.edit', compact('category'));
     }
 
@@ -88,6 +95,8 @@ class CategoryController extends Controller
 
         $validatedData = $request->validate($rules);
 
+        Log::info("CategoryController update method called by user: ". Auth::id() . " for category Id:" . $category->id . "with parameters:" . json_encode($request->all()));
+
         Category::where('id', $category->id)->update($validatedData);
 
         return redirect()->route('categories.index')->with('success', 'Category have been updated!');
@@ -98,6 +107,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        Log::info("CategoryController destroy method called by user: ". Auth::id() . " for category Id:" . $category->id);
         Category::destroy($category->id);
 
         return redirect()->route('categories.index')->with('success', 'Category have been deleted!');

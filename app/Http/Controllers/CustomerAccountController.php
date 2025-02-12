@@ -7,6 +7,8 @@ use App\Models\CustomerAccount;
 use App\Models\CustomerAccountTransaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 
@@ -30,6 +32,7 @@ class CustomerAccountController extends Controller
      */
     public function index()
     {
+        Log::info("CustomerAccountController index method called by user: ". Auth::id());
         $customerAccounts = CustomerAccount::with(['customer', 'transactions' => function ($query) {
             $query->latest()->limit(1);
         }])->get();
@@ -42,6 +45,7 @@ class CustomerAccountController extends Controller
      */
     public function details(CustomerAccount $customerAccount)
     {
+        Log::info("CustomerAccountController details method called by user: ". Auth::id() . " for customerAccount Id:" . $customerAccount->id);
         $customerAccount->load(['customer', 'transactions' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }]);
@@ -58,6 +62,8 @@ class CustomerAccountController extends Controller
             'amount' => 'required|numeric',
             'note' => 'nullable|string',
         ]);
+
+        Log::info("CustomerAccountController addPayment method called by user: ". Auth::id() . " for customerAccount Id:" . $customerAccount->id . " with parameters:" . json_encode($request->all()));
 
         $previousBalance = $customerAccount->transactions()->latest()->first()->balance ?? 0;
 
@@ -82,6 +88,8 @@ class CustomerAccountController extends Controller
             'end_date' => 'required|date',
         ]);
 
+        Log::info("CustomerAccountController sendEmail method called by user: ". Auth::id() . " for customerAccount Id:" . $customerAccount->id . " with parameters:" . json_encode($request->all()));
+
         $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
         $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
 
@@ -104,6 +112,7 @@ class CustomerAccountController extends Controller
      */
     public function deletePayment(CustomerAccount $customerAccount, CustomerAccountTransaction $customerAccountTransaction)
     {
+        Log::info("CustomerAccountController deletePayment method called by user: ". Auth::id() . " for customerAccount Id:" . $customerAccount->id);
         if ($customerAccountTransaction->paid_amount != null && $customerAccount->transactions()->latest()->first() != $customerAccountTransaction) {
             return redirect()
                 ->route('customer-accounts.details', $customerAccount)

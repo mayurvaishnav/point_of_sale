@@ -10,6 +10,8 @@ use App\Models\Customer;
 use App\Models\Order;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
@@ -31,6 +33,8 @@ class OrderController extends Controller
         $request->validate([
             'order_date'=> 'nullable|date',
         ]);
+
+        Log::info('OrderController index method called by user: ' . Auth::id() . ' with parameters: ' . json_encode($request->all()));
         $date = now()->toDateString();
         if ($request->has('order_date')) {
             $date = $request->order_date;
@@ -45,6 +49,7 @@ class OrderController extends Controller
      */
     public function layaway()
     {
+        Log::info('OrderController layaway method called by user: ' . Auth::id());
         $orders = Order::where('status', OrderStatus::LAYAWAY)->with(['orderPayments', 'customerAccountTransactions', 'customer.customerAccountTransactions'])->latest()->get();
         $pageTitle = "Layaway Orders";
         return view("orders.index", compact("orders", "pageTitle"));
@@ -55,6 +60,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
+        Log::info("OrderController show method called by user: ". Auth::id() . " for order Id:" . $order->id);
         $customers = Customer::all();
         $order->load(['customer', 'orderDetails', 'orderpayments']);
 
@@ -66,6 +72,7 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
+        Log::info("OrderController edit method called by user: ". Auth::id() . " for order Id:" . $order->id);
         $cartItems = [];
 
         $idForNull = -1;
@@ -98,6 +105,8 @@ class OrderController extends Controller
         $request->validate([
             "customer_id" => "nullable|exists:customers,id",
         ]);
+
+        Log::info("OrderController updateCustomer method called by user: ". Auth::id() . " for order Id:" . $order->id . " with parameters:" . json_encode( $request->all()));
         $order->customer_id = $request->customer_id;
         $order->save();
 
@@ -109,6 +118,7 @@ class OrderController extends Controller
      */
     public function downloadInvoice(Request $request, Order $order)
     {
+        Log::info("OrderController downloadInvoice method called by user: ". Auth::id() . " for order Id:" . $order->id . " with parameters:" . json_encode( $request->all()));
         $order->load(['customer', 'orderDetails', 'orderpayments']);
         $customerAccountBalance = 0;
 
@@ -141,6 +151,8 @@ class OrderController extends Controller
             'email'=> 'nullable|email',
         ]);
 
+        Log::info("OrderController emailInvoice method called by user: ". Auth::id() . " for order Id:" . $order->id . " with parameters:" . json_encode( $request->all()));
+
         $order->load(['customer', 'orderDetails', 'orderpayments']);
         
         $customerAccountBalance = 0;
@@ -170,6 +182,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
+        Log::info("OrderController destory method called by user: ". Auth::id() . " for order Id:" . $order->id);
         if (!$order->canBeDeleted()) {
             return redirect()->back()->with('error', 'This order cannot be deleted');
         }

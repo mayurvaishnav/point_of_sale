@@ -6,6 +6,8 @@ use App\Models\Order;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Mike42\Escpos\PrintConnectors\DummyPrintConnector;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -19,6 +21,7 @@ class PrintController extends Controller
 {
     public function receipt($orderId)
     {
+        Log::info("PrintController receipt method called by user: " . Auth::id() . " for order ID: " . $orderId);
         $order = Order::with(['customer', 'orderDetails', 'orderpayments'])->find($orderId);
 
         // return view('orders.receipt', compact('order'));

@@ -7,6 +7,8 @@ use App\Models\CustomerAccountTransaction;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ReportController extends Controller
 {
@@ -24,6 +26,8 @@ class ReportController extends Controller
             "start_date"=> "nullable|date",
             "end_date"=> "nullable|date",
         ]);
+        
+        Log::info('ReportController sales method called by userId: ' . Auth::id() . ' with parameters: ' . json_encode($request->all()));
         
         if($request->has('start_date') && $request->has('end_date')) {
             $startDate = $request->start_date;
@@ -119,6 +123,8 @@ class ReportController extends Controller
             "end_date"=> "nullable|date",
             "customer_id"=> "nullable|exists:customers,id",
         ]);
+        
+        Log::info('ReportController customer method called by userId: ' . Auth::id() . ' with parameters: ' . json_encode($request->all()));
 
         $customers = Customer::all();
         
