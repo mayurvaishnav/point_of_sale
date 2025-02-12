@@ -55,7 +55,7 @@ class CategoryController extends Controller
 
         $validatedData = $request->validate($rules);
 
-        Log::info("CategoryController store method called by user: ". Auth::id() . "with parameters:" . json_encode($request->all()));
+        Log::info("CategoryController store method called by user: ". Auth::id() . " with parameters:" . json_encode($request->all()));
 
         $categotry = Category::create($validatedData);
 

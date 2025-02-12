@@ -102,7 +102,7 @@ class SupplierController extends Controller
         $validatedData = $request->validate($rules);
 
         Log::info('SupplierController update method called by user: ' . Auth::id() . 
-            ' for supplier ID: ' . $supplier->id . 'with parameters: ' . json_encode($validatedData));
+            ' for supplier ID: ' . $supplier->id . ' with parameters: ' . json_encode($validatedData));
 
         Supplier::where('id', $supplier->id)->update($validatedData);
 
