@@ -38,7 +38,7 @@
                 <table class="table table-borderedless table-striped">
                     <tbody>
                         <tr>
-                            <td>Net Sales</td>
+                            <td>Sales (before tax)</td>
                             <td class="text-right">{{ config('app.currency_symbol') }} {{ $total['total_before_tax']}}</td>
                         </tr>
                         <tr>
@@ -50,7 +50,7 @@
                             <td class="text-right">- {{ config('app.currency_symbol') }} {{ $total['discount']}}</td>
                         </tr>
                         <tr>
-                            <td>Net Sales</td>
+                            <td>Total</td>
                             <td class="text-right">{{ config('app.currency_symbol') }} {{ $total['total']}}</td>
                         </tr>
                     </tbody>

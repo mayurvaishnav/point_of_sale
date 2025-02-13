@@ -95,7 +95,7 @@ class CategoryController extends Controller
 
         $validatedData = $request->validate($rules);
 
-        Log::info("CategoryController update method called by user: ". Auth::id() . " for category Id:" . $category->id . "with parameters:" . json_encode($request->all()));
+        Log::info("CategoryController update method called by user: ". Auth::id() . " for category Id:" . $category->id . " with parameters:" . json_encode($request->all()));
 
         Category::where('id', $category->id)->update($validatedData);
 

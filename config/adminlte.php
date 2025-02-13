@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Bowes Auto Center',
+    'title' => 'Bowes Auto Centre',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => 'Bowes Auto Center',
+    'logo' => 'Bowes Auto Centre',
     'logo_img' => 'images/Bowes_icon.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,

@@ -44,6 +44,7 @@
     const slug = document.querySelector("#slug");
     title.addEventListener("keyup", function() {
         let preslug = title.value;
+        preslug = preslug.replace(/[^a-zA-Z0-9-_ ]/g, '');
         preslug = preslug.replace(/ /g,"-");
         slug.value = preslug.toLowerCase();
     });

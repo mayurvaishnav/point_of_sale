@@ -48,18 +48,19 @@
         });
 
         // Select2 for the categories dropdown
-        $('#categories').select2({
-            placeholder: 'Select categories'
-        });
+        // $('#categories').select2({
+        //     placeholder: 'Select categories'
+        // });
         
         // Select2 for the tax_rate dropdown
-        $('#tax_rate').select2({
-            placeholder: 'Select tax rate'
-        });
+        // $('#tax_rate').select2({
+        //     placeholder: 'Select tax rate'
+        // });
         
         // Select2 for the suppliers dropdown
-        $('#suppliers').select2({
-            placeholder: 'Select suppliers'
-        });
+        // $('#suppliers').select2({
+        //     placeholder: 'Select suppliers',
+        //     allowClear: true
+        // });
     });
 </script>

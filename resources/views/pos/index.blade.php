@@ -289,6 +289,7 @@
 @include('pos.payment-modal')
 @include('pos.itemUpdate-modal')
 @include('pos.paymentReceipt-modal')
+<iframe id="pdf-frame" style="display:none;" width="100%" height="1"></iframe>
 
 @endsection
 
@@ -617,6 +618,42 @@
             // Print A4
             $('#printA4').click(function() {
                 const orderId = $(this).data('id');
+                const url = `{{ route('orders.downloadInvoice', ':orderId') }}`.replace(':orderId', orderId);
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data: { _token: "{{ csrf_token() }}" },
+                    xhrFields: { responseType: 'blob' },
+                    success: function (response) {
+                        // Convert the response into a Blob
+                        var pdfBlob = new Blob([response], { type: 'application/pdf' });
+                        var pdfUrl = URL.createObjectURL(pdfBlob);
+
+                        // Set the PDF URL to the iframe
+                        var iframe = document.getElementById('pdf-frame');
+                        iframe.src = pdfUrl;
+                        iframe.style.display = 'block';
+
+                        // Print automatically once loaded
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+
+                            setTimeout(function () {
+                                iframe.style.display = 'none';
+                            }, 1000);
+                        };
+
+                        // Re-load the page
+                        // location.reload();
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please try again printing from orders page.',
+                        });
+                    }
+                });
             });
 
             // Download invoice
@@ -652,7 +689,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Something went wrong, Please try agai sending the email from orders page.',
+                            text: 'Something went wrong, Please try again sending the email from orders page.',
                         });
                     }
                 });
