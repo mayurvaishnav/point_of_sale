@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('brand')->nullable();
             $table->boolean('auto_order_at_low_stock')->default(false);
             $table->integer('low_stock_threshold')->nullable();
+            $table->integer('new_order_quantity')->nullable();
             $table->timestamps();
         });
     }

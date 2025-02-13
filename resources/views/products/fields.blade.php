@@ -245,11 +245,22 @@
                 @enderror
             </div>
 
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label for="low_stock_threshold">Low stock threshold</label>
                 <input type="number" name="low_stock_threshold" class="form-control @error('low_stock_threshold') is-invalid @enderror" id="low_stock_threshold"
                     placeholder="Low stock threshold" value="{{ old('low_stock_threshold', $product->low_stock_threshold ?? '') }}">
                 @error('low_stock_threshold')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="new_order_quantity">New quantity to order</label>
+                <input type="number" name="new_order_quantity" class="form-control @error('new_order_quantity') is-invalid @enderror" id="new_order_quantity"
+                    placeholder="Low stock threshold" value="{{ old('new_order_quantity', $product->new_order_quantity ?? '') }}">
+                @error('new_order_quantity')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>

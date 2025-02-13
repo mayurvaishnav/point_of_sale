@@ -69,11 +69,12 @@ class ProductController extends Controller
             'store'=> 'nullable|string|max:255',
             'buying_price' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'quantity' => 'nullable|integer|min:0',
+            'quantity' => 'nullable|integer|min:0|required_if:stockable,true',
             'brand'=> 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
             'auto_order_at_low_stock'=> 'nullable|boolean',
-            'low_stock_threshold'=> 'nullable|integer|min:0',
+            'low_stock_threshold'=> 'nullable|integer|min:0|required_if:auto_order_at_low_stock,true',
+            'new_order_quantity'=> 'nullable|integer|min:1|required_if:auto_order_at_low_stock,true',
         ];
 
         $validatedData = $request->validate($rules);
@@ -128,11 +129,12 @@ class ProductController extends Controller
             'store'=> 'nullable|string|max:255',
             'buying_price' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'quantity' => 'nullable|integer|min:0',
+            'quantity' => 'nullable|integer|min:0|required_if:stockable,true',
             'brand'=> 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
             'auto_order_at_low_stock'=> 'nullable|boolean',
-            'low_stock_threshold'=> 'nullable|integer|min:0',
+            'low_stock_threshold'=> 'nullable|integer|min:0|required_if:auto_order_at_low_stock,true',
+            'new_order_quantity'=> 'nullable|integer|min:1|required_if:auto_order_at_low_stock,true',
         ];
 
         $validatedData = $request->validate($rules);

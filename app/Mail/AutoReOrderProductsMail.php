@@ -53,7 +53,7 @@ class AutoReOrderProductsMail extends Mailable
         $supplier = $this->products->first()->supplier;
         $productList = '<ul>';
         foreach ($this->products as $product) {
-            $productList .= "<li>{$product->name} (Quantity: {$product->quantity})</li>";
+            $productList .= "<li>{$product->name} (Quantity: {$product->new_order_quantity})</li>";
         }
         $productList .= '</ul>';
 
