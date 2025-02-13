@@ -23,7 +23,7 @@ class AutoOrderEmailJob implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 2;
+    public $tries = 1;
 
     public ScheduledJob $scheduledJob;
 
@@ -32,7 +32,6 @@ class AutoOrderEmailJob implements ShouldQueue
      */
     public function __construct(ScheduledJob $scheduledJob)
     {
-        // dd($scheduledJob);
         $this->scheduledJob = $scheduledJob;
     }
 
@@ -51,7 +50,11 @@ class AutoOrderEmailJob implements ShouldQueue
 
         foreach ($goupedBySupplier as $supplierId => $products) {
             $supplierEmail = $products->first()->supplier->email;
-            Log::info("Sending auto reorder email to supplier: $supplierEmail with Products: $products");
+
+            $productNames = $products->map(function($product) {
+                return $product->name;
+            })->toArray();
+            Log::info("Sending auto reorder email to supplier: $supplierEmail with Products: " . implode(', ', $productNames));
             Mail::to($supplierEmail)
                 ->send(new AutoReOrderProductsMail($this->scheduledJob, $products));
         }
