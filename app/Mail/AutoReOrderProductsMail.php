@@ -42,8 +42,9 @@ class AutoReOrderProductsMail extends Mailable
      */
     public function content(): Content
     {
+        // dd($this->replacePlaceholders($this->scheduledJob->email_body));
         return new Content(
-            html: $this->replacePlaceholders($this->scheduledJob->email_body),
+            htmlString: $this->replacePlaceholders($this->scheduledJob->email_body),
         );
     }
 
@@ -52,12 +53,12 @@ class AutoReOrderProductsMail extends Mailable
         $supplier = $this->products->first()->supplier;
         $productList = '<ul>';
         foreach ($this->products as $product) {
-            $productList .= "<li>{$product->name} (Stock: {$product->stock})</li>";
+            $productList .= "<li>{$product->name} (Quantity: {$product->quantity})</li>";
         }
         $productList .= '</ul>';
 
         return str_replace(
-            ['#SupplierName#', '#Products#'],
+            ['#supplierName#', '#productList#'],
             [$supplier->name, $productList],
             $html
         );

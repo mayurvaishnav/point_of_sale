@@ -4,6 +4,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ScheduledJobController;
+use App\Mail\AutoReOrderProductsMail;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RoleController;
@@ -19,6 +21,17 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StockManagementController;
 use App\Http\Controllers\SupplierController;
+use App\Jobs\AutoOrderEmailJob;
+use App\Models\ScheduledJob;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/test-auto-order-email-job', function () {
+    $job = ScheduledJob::first();
+    // // dd($job);
+    AutoOrderEmailJob::dispatch($job);
+    return 'AutoOrderEmailJob dispatched!';
+});
 
 Route::get('/', function () {
     return redirect()->route('dashboard.index');
