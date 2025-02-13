@@ -32,7 +32,7 @@
                     <th>Supplier</th>
                     <th>Price</th>
                     <th>Quantity</th>
-                    <th>Threshold</th>
+                    <th>Is Active</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -45,7 +45,7 @@
                     <td>{{$product->supplier->name ?? ''}}</td>
                     <td class="text-right">€ {{$product->selling_price}}</td>
                     <td class="text-right">{{$product->quantity}}</td>
-                    <td class="text-right">{{$product->low_stock_threshold}}</td>
+                    <td class="text-right">{{ $product->is_active ? 'Active' : 'Inactive' }}</td>
                     <td>
                         <span class="d-none">{{$product->description}}</span>
                         @can('product-edit')

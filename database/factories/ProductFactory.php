@@ -23,6 +23,7 @@ class ProductFactory extends Factory
             'category_id' => fake()->numberBetween(1,10),
             'supplier_id' => fake()->numberBetween(1,10),
             'tax_rate_id' => fake()->randomElement([1,2,3]),
+            'is_active' => fake()->boolean(),
             'code' => fake()->word(),
             'garage' => fake()->word(),
             'store' => fake()->numberBetween(1,10),

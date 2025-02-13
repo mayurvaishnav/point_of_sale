@@ -26,6 +26,17 @@
         @enderror
     </div>
 
+    <div class="form-group">
+        <label for="is_active">Active: </label>
+        <input type="hidden" name="is_active" value="0">
+        <input type="checkbox" name="is_active" id='is_active' value="1" {{ isset($product) && $product->is_active ? 'checked' : '' }}
+            class="@error('is_active') is-invalid @enderror">
+        @error('is_active')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
+    </div>
 
     <div class="form-group col-md-12">
         <label for="description">Description</label>

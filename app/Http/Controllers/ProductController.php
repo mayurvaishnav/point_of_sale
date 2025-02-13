@@ -32,7 +32,7 @@ class ProductController extends Controller
     {
         Log::info('ProductController index method called by user: ' . Auth::id());
         return view("products.index", [
-            "products" => Product::with(['category', 'supplier'])->get()
+            "products" => Product::with(['category', 'supplier'])->latest()->get()
         ]);
     }
 
@@ -57,6 +57,7 @@ class ProductController extends Controller
         // dd($request->all());
         $rules = [
             'name' => 'required|string|max:255',
+            'is_active' => 'required|boolean',
             'category_id' => 'required|exists:categories,id',
             'tax_rate_id' => 'required|exists:tax_rates,id',
             'price'=> 'required|numeric|min:0',
@@ -117,6 +118,7 @@ class ProductController extends Controller
     {
         $rules = [
             'name' => 'required|string|max:255',
+            'is_active' => 'required|boolean',
             'category_id' => 'required|exists:categories,id',
             'tax_rate_id' => 'required|exists:tax_rates,id',
             'price'=> 'required|numeric|min:0',

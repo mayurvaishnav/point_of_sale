@@ -25,7 +25,7 @@ class PosController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->get();
+        $products = Product::where('is_active', true)->with('category')->get();
         $cart = CartService::getCart();
         $customers = Customer::all();
 

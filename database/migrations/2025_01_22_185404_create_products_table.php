@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('set null');
             $table->foreignId('tax_rate_id')->constrained('tax_rates')->onDelete('restrict');
+            $table->boolean('is_active');
             $table->string('code')->nullable();
             $table->string('garage')->nullable();
             $table->string('image')->nullable();
