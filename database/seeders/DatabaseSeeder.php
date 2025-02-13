@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call([
             PermissionsSeeder::class,
-            // Add other seeders here
+            TaxRateSeeder::class,
         ]);
 
         $admin = User::factory()->create([
@@ -37,20 +37,9 @@ class DatabaseSeeder extends Seeder
         $role->syncPermissions($permissions);
         $admin->assignRole([$role->id]);
 
-        // Tax rates
-        TaxRate::create(['name' => '0% Vat', 'value' => 0]);
-        TaxRate::create(['name' => '13.5% Vat', 'value' => 13.5]);
-        TaxRate::create(['name' => '23% Vat', 'value' => 23]);
-
-        Customer::factory(10)->create();
-        Supplier::factory(10)->create();
-        
-        // Create parent categories
-        Category::factory(10)->create();
-
-        // Create child categories
-        // Category::factory(20)->create();
-        
-        Product::factory(10)->create();
+        // Customer::factory(10)->create();
+        // Supplier::factory(10)->create();
+        // Category::factory(10)->create();
+        // Product::factory(10)->create();
     }
 }
