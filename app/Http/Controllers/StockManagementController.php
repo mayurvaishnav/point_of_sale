@@ -18,7 +18,7 @@ class StockManagementController extends Controller
     {
          $this->middleware('permission:stock-management-list', ['only' => ['index']]);
          $this->middleware('permission:stock-management-add-sctock', ['only' => ['add']]);
-         $this->middleware('permission:stock-management-adject', ['only' => ['adject']]);
+         $this->middleware('permission:stock-management-adjust', ['only' => ['adjust']]);
     }
     
     /**
@@ -55,7 +55,7 @@ class StockManagementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function adject(Request $request, $productId)
+    public function adjust(Request $request, $productId)
     {
         $rules = [
             'quantity' => 'integer|min:0',
@@ -63,13 +63,13 @@ class StockManagementController extends Controller
 
         $validatedData = $request->validate($rules);
 
-        Log::info('StockManagementController adject method called by user: ' . Auth::id() . 
+        Log::info('StockManagementController adjust method called by user: ' . Auth::id() . 
             ' for product ID: ' . $productId . ' with paramaters: ' . json_encode($validatedData));
 
         $product = Product::find($productId);
         $product->quantity = $validatedData['quantity'];
         $product->save();
         
-        return redirect()->route('stocks.index')->with('success', 'Stock succesfully adjected for Product: ' . $product->name);
+        return redirect()->route('stocks.index')->with('success', 'Stock succesfully adjusted for Product: ' . $product->name);
     }
 }

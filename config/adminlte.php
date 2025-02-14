@@ -214,8 +214,8 @@ return [
     |
     */
 
-    'sidebar_mini' => 'xs',
-    'sidebar_collapse' => true,
+    'sidebar_mini' => 'm',
+    'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => true,
     'sidebar_collapse_remember_no_transition' => true,

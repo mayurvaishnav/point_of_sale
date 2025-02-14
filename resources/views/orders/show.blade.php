@@ -8,7 +8,7 @@
                 <h1>Invoice No: {{ $order->invoice_number }}</h1>
             </div>
             <div class="col-sm-6 text-right">
-                @if (!$order->customer)
+                @if (!($order->customer && $order->customer->email))
                     <button class="btn btn-success" data-toggle="modal" data-target="#emailInvoiceModal">
                         <i class="fas fa-envelope"></i> Send Email
                     </button>

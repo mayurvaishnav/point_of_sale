@@ -28,9 +28,8 @@
                 <tr>
                     <th>Id</th>
                     <th>Name</th>
-                    <th>Email</th>
                     <th>Phone</th>
-                    <th>Address</th>
+                    <th>Registration No</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -39,9 +38,8 @@
                 <tr>
                     <td>{{$customer->id}}</td>
                     <td>{{$customer->name}}</td>
-                    <td>{{$customer->email}}</td>
                     <td>{{$customer->phone}}</td>
-                    <td>{{$customer->address}}</td>
+                    <td>{{$customer->registration_no}}</td>
                     <td>
                         @can('customer-edit')
                             <a href="{{ route('customers.edit', $customer) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>

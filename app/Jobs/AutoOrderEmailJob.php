@@ -63,7 +63,8 @@ class AutoOrderEmailJob implements ShouldQueue
 
     private function findProductsToReorder()
     {
-        return Product::where('auto_order_at_low_stock', true)
+        return Product::where('is_active', true)
+            ->where('auto_order_at_low_stock', true)
             ->whereRaw('CAST(quantity AS UNSIGNED) < CAST(low_stock_threshold AS UNSIGNED)')
             ->with('supplier')
             ->get();

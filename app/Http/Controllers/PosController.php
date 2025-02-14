@@ -180,7 +180,8 @@ class PosController extends Controller
                     'payment_method' => $request->payment_method,
                     'cart' => CartService::getCart(),
                     'order_id' => $order->id,
-                    'customer_id' => $customer_id
+                    'customer_id' => $customer_id,
+                    'customer_email' => $customer_id ? Customer::find($customer_id)->email : null,
                 ]);
             }
 

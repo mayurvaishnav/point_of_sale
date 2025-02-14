@@ -14,6 +14,7 @@
         .text-right { text-align: right; }
         .total-row td { font-weight: bold; }
         .no-border { border: none !important;}
+        .small-font { font-size: 12px; }
     </style>
 </head>
 <body>
@@ -55,7 +56,7 @@
     
         <br>
 
-        <table>
+        <table class="small-font">
             <thead>
                 <tr>
                     <th class="text-left">Product</th>

@@ -49,8 +49,8 @@ class CustomerController extends Controller
     {
         $rules = [
             'name' => 'required|string|max:50',
-            'email' => 'required|email|max:50|unique:customers,email',
-            'phone' => 'required|string|max:20|unique:customers,phone',
+            'email' => 'nullable|email|max:50',
+            'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:100',
             'company' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:1000',
@@ -95,8 +95,8 @@ class CustomerController extends Controller
     {
         $rules = [
             'name' => 'required|string|max:50',
-            'email' => 'required|email|max:50|unique:customers,email,'.$customer->id,
-            'phone' => 'required|string|max:20|unique:customers,phone,'.$customer->id,
+            'email' => 'nullable|email|max:50',
+            'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:100',
             'company' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:100',

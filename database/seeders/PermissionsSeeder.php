@@ -47,7 +47,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'customer-account-delete-payment', 'group_name' => 'Customer Account'],
             ['name' => 'stock-management-list', 'group_name' => 'Stock Management'],
             ['name' => 'stock-management-add-sctock', 'group_name' => 'Stock Management'],
-            ['name' => 'stock-management-adject', 'group_name' => 'Stock Management'],
+            ['name' => 'stock-management-adjust', 'group_name' => 'Stock Management'],
             ['name' => 'order-list', 'group_name' => 'Order'],
             ['name' => 'order-show', 'group_name' => 'Order'],
             ['name' => 'order-edit', 'group_name' => 'Order'],

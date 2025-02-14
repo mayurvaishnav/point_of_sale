@@ -49,12 +49,12 @@
                             >Add Stock</button>
                         @endcan
 
-                        @can('stock-management-adject')
-                            <button class="btn btn-warning btn-sm adject-stock-btn"
+                        @can('stock-management-adjust')
+                            <button class="btn btn-warning btn-sm adjust-stock-btn"
                                 data-product-id="{{ $product->id }}"  
                                 data-product-quantity="{{ $product->quantity }}"
                                 data-product-name="{{ $product->name }}"
-                            >Adject</button>
+                            >Adjust</button>
                         @endcan
                     </td>
                 </tr>
@@ -110,7 +110,7 @@
             });
         });
 
-        document.querySelectorAll('.adject-stock-btn').forEach(button => {
+        document.querySelectorAll('.adjust-stock-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const productId = this.getAttribute('data-product-id');
                 const productQuantity = this.getAttribute('data-product-quantity');
@@ -118,7 +118,7 @@
                 Swal.fire({
                     title: `Add Stock for ${productName}`,
                     html: `
-                        <form id="add-stock-form" action="{{ route('stocks.adject', '') }}/${productId}" method="POST">
+                        <form id="add-stock-form" action="{{ route('stocks.adjust', '') }}/${productId}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label for="quantity">New Quantity:</label>

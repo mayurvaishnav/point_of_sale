@@ -569,7 +569,8 @@
                         $("#downloadInvoice").attr("data-id", orderId);
                         
 
-                        if (response.customer_id) {
+                        console.log(response);
+                        if (response.customer_email) {
                             $("#emailInvoice").attr("data-id", orderId);
                             $("#emailInvoice").show();
                         } else {

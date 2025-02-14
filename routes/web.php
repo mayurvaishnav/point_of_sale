@@ -94,7 +94,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     // STOCK MANAGEMENT
     Route::get('/stock-management', [StockManagementController::class, 'index'])->name('stocks.index');
     Route::post('/stock-management/add/{productId}', [StockManagementController::class, 'add'])->name('stocks.add');
-    Route::post('/stock-management/adject/{productId}', [StockManagementController::class, 'adject'])->name('stocks.adject');
+    Route::post('/stock-management/adjust/{productId}', [StockManagementController::class, 'adjust'])->name('stocks.adjust');
 
 
     // POS
