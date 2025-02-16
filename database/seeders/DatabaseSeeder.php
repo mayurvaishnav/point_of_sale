@@ -37,9 +37,9 @@ class DatabaseSeeder extends Seeder
         $role->syncPermissions($permissions);
         $admin->assignRole([$role->id]);
 
-        // Customer::factory(10)->create();
-        // Supplier::factory(10)->create();
-        // Category::factory(10)->create();
-        // Product::factory(10)->create();
+        Customer::factory(5)->create();
+        Supplier::factory(2)->create();
+        Category::factory(2)->create();
+        Product::factory(10)->create();
     }
 }

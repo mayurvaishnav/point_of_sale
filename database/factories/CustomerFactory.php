@@ -22,7 +22,7 @@ class CustomerFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->safeEmail(),
             'phone' => fake()->phoneNumber(),
-            'description' => fake()->sentence(),
+            'description' => fake()->word(),
             'address' => fake()->address(),
             'company' => fake()->company(),
             'created_at' => now(),

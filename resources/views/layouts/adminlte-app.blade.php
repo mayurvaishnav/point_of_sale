@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('adminlte_css_pre')
-    @laravelPWA
+    {{-- @laravelPWA --}}
 @endsection
 
 @section('content_header')

@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Supplier;
+use App\Models\TaxRate;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,9 +23,9 @@ class ProductFactory extends Factory
     {
         return [
             'name' => fake()->word(),
-            'category_id' => fake()->numberBetween(1,10),
-            'supplier_id' => fake()->numberBetween(1,10),
-            'tax_rate_id' => fake()->randomElement([1,2,3]),
+            'category_id' => Category::inRandomOrder()->first()->id,
+            'supplier_id' => Supplier::inRandomOrder()->first()->id,
+            'tax_rate_id' => TaxRate::inRandomOrder()->first()->id,
             'is_active' => fake()->boolean(),
             'code' => fake()->word(),
             'garage' => fake()->word(),
