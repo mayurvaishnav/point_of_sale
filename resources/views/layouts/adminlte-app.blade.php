@@ -49,7 +49,7 @@
 
 @section('js')
     
-    <script src="https://qz.io/download/qz-tray.js"></script>
+    <script src="{{ asset('js/qz-tray.js') }}"></script>
 
     <script>
         $(document).ready(function() {
