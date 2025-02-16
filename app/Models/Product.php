@@ -14,6 +14,7 @@ class Product extends Model
         'category_id',
         'supplier_id',
         'tax_rate_id',
+        'is_active',
         'code',
         'garage',
         'image',

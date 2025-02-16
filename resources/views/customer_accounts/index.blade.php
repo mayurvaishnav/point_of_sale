@@ -32,7 +32,7 @@
                 <tr>
                     <td class="text-right">{{$account->id}}</td>
                     <td>{{$account->customer->name}}</td>
-                    <td class="text-right">{{$account->transactions->first()->balance}}</td>
+                    <td class="text-right">{{$account->transactions->first()->balance ?? 0}}</td>
                     <td>
                         @can('customer-account-details')
                             <a href="{{ route('customer-accounts.details', $account) }}" class="btn btn-success btn-sm">Show Details</i></a>
