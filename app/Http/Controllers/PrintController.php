@@ -3,19 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Mike42\Escpos\PrintConnectors\DummyPrintConnector;
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
-use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
-use Mike42\Escpos\PrintConnectors\UsbPrintConnector;
-use Mike42\Escpos\PrintConnectors\SerialPrintConnector;
-use Mike42\Escpos\PrintConnectors\BluetoothPrintConnector;
-use Mike42\Escpos\Printer;
-use Mike42\Escpos\EscposImage;
 
 class PrintController extends Controller
 {
@@ -24,28 +13,13 @@ class PrintController extends Controller
         Log::info("PrintController receipt method called by user: " . Auth::id() . " for order ID: " . $orderId);
         $order = Order::with(['customer', 'orderDetails', 'orderpayments'])->find($orderId);
 
-        // return view('orders.receipt', compact('order'));
-
-        dd($this->formatReceiptText($order));
-
-        try {
-            $connector = new DummyPrintConnector();
-            // $connector = new WindowsPrintConnector("POS-80");
-            // $connector = new NetworkPrintConnector("192.168.1.100", 9100);
-            $printer = new Printer($connector);
-
-            $printer->text($this->formatReceiptText($order));
-
-            $printer->cut();
-            $printer->close();
-
-        } catch (Exception $e) {
-
-            // if
-            return response()->json(['error' => 'Printing failed: ' . $e->getMessage()]);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
         }
-
-        return view('orders.receipt', compact('order'));
+    
+        $formattedReceipt = $this->formatReceiptText($order);
+    
+        return response()->json(['receipt' => $formattedReceipt]);
     }
 
     private function formatReceiptText($order)
@@ -105,22 +79,4 @@ class PrintController extends Controller
 
         return $receiptText;
     }
-
-    // switch ($connectionType) {
-    //     case 'usb':
-    //         $connector = new UsbPrintConnector(0x1234, 0x5678);  // Vendor ID and Product ID for USB
-    //         break;
-    //     case 'network':
-    //         $connector = new NetworkPrintConnector("192.168.1.100", 9100);  // IP and port for network
-    //         break;
-    //     case 'serial':
-    //         $connector = new SerialPrintConnector("/dev/ttyS0");  // Serial port
-    //         break;
-    //     case 'bluetooth':
-    //         $connector = new BluetoothPrintConnector("00:11:22:33:44:55");  // Bluetooth MAC address
-    //         break;
-    //     default:
-    //         $connector = new DummyPrintConnector();  // For testing or placeholder
-    //         break;
-    // }
 }

@@ -27,7 +27,7 @@
                         <i class="fa fa-print"></i> Print
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{ route('print.receipt', $order->id) }}" id="printReceipt">Receipt</a>
+                        <button class="dropdown-item" id="printReceipt">Receipt</button>
                         <button class="dropdown-item" id="printA4" data-order-id={{ $order->id }}>A4 Invoice</button>
                     </div>
                 </div>
@@ -251,39 +251,14 @@
         // });
     });
 
-    $('#printA4').click(function () {
+    $('#printReceipt').click(function () {
         var orderId = $(this).data('order-id'); 
+        printReceiptByOrderId(orderId);
+    });
 
-        const url = `{{ route('orders.downloadInvoice', ':orderId') }}`.replace(':orderId', orderId);
-
-        $.ajax({
-            url: url,
-            method: 'GET',
-            data: { _token: "{{ csrf_token() }}" },
-            xhrFields: { responseType: 'blob' }, // Ensure the response is treated as a binary blob
-            success: function (response) {
-                // Convert the response into a Blob
-                var pdfBlob = new Blob([response], { type: 'application/pdf' });
-                var pdfUrl = URL.createObjectURL(pdfBlob);
-
-                // Set the PDF URL to the iframe
-                var iframe = document.getElementById('pdf-frame');
-                iframe.src = pdfUrl;
-                iframe.style.display = 'block';
-
-                // Print automatically once loaded
-                iframe.onload = function () {
-                    iframe.contentWindow.print();
-
-                    setTimeout(function () {
-                        iframe.style.display = 'none';
-                    }, 1000);
-                };
-            },
-            error: function (error) {
-                console.error('Error generating invoice PDF:', error);
-            }
-        });
+    $('#printA4').click(function () {
+        var orderId = $(this).data('order-id');
+        printA4ByOrderId(orderId);
     });
 
     function startLoadingEmail() {

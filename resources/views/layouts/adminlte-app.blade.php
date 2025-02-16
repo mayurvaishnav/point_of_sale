@@ -34,6 +34,11 @@
             width: 100% !important;
         }
     </style>
+
+    <script>
+
+    
+    </script>
 @stop
 
 @section('content')
@@ -43,16 +48,110 @@
 @endsection
 
 @section('js')
-    @yield('custom_js')
+    
+    <script src="https://qz.io/download/qz-tray.js"></script>
 
     <script>
         $(document).ready(function() {
 
+            // QZ Tray setup and Print
+            async function completePrintJob(printerName, printData) {
+                try {
+                    // Ensure QZ Tray is connected
+                    if (!qz.websocket.isActive()) {
+                        console.log("QZ Tray is not connected. Connecting...");
+                        await qz.websocket.connect();
+                        console.log("QZ Tray connected.");
+                    }
+
+                    // localhost:8181 QZ interface
+                    // let config = qz.configs.create("SLK-T32EB");
+                    let config = qz.configs.create("THERMAL Receipt Printer"); // Printer name
+
+                    await qz.print(config, printData);
+                    console.log("Data printed successfully!");
+                } catch (err) {
+                    console.error("Error printing data:", err);
+                }
+            }
+
+            // Print receipt data
+            function completeReciptPrintJob(data) {
+                let printerName = "THERMAL Receipt Printer"; // Printer name
+                completePrintJob(printerName, data);
+            }
+
+            // Print A4: Invoice
+            function completeA4PrintJob(data) {
+                let printerName = "A4 Printer"; // Printer name
+                completePrintJob(printerName, data);
+            }
+
             // Cashdrawer open button
-            $('#openCashDrawer').on('click', function(e) {
-                e.preventDefault();
-                
-            })
+            $('#openCashDrawer').on('click', function (e) { 
+                e.preventDefault(); 
+                console.log("Inside function open cash drawer...");
+                let data = [
+                    "\x1B\x40",  // Initialize printer
+                    "\x1B\x70\x00\x19\xFA" // ESC/POS: Open cash drawer
+                ];
+                completeReciptPrintJob(data);
+            });
+
+            // Print Receipt
+            function printReceiptByOrderId(orderId) {
+
+                $.ajax({
+                    url: "{{ route('print.receipt', '') }}/" + orderId,
+                    method: "GET",
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        let receiptData = data.receipt.split("\n"); // Split by newline for line-by-line printing
+                        receiptData.unshift("\x1B\x40", "\x1B\x70\x00\x19\xFA"); // Initialize & Open Cash Drawer
+                        completeReciptPrintJob(receiptData);
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please refresh and try again from orders page.',
+                        });
+                    }
+                });
+            }
+
+
+
+            // Print A4 invoice
+            function printA4ByOrderId(orderId) {
+                const url = `{{ route('orders.downloadInvoice', ':orderId') }}`.replace(':orderId', orderId);
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data: { _token: "{{ csrf_token() }}" },
+                    xhrFields: { responseType: 'blob' },
+                    success: function (response) {
+                        // Convert the response into a Blob
+                        var pdfBlob = new Blob([response], { type: 'application/pdf' });
+                        // Send the PDF blob to the QZ Tray printer
+                        completeA4PrintJob(pdfBlob);
+                        console.log('PDF sent to printer successfully!');
+
+                        // reload the page
+                        // location.reload();
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please try again printing from orders page.',
+                        });
+                    }
+                });
+            }
 
             // Reload page button
             $('#reloadPageButton').on('click', function(e) {
@@ -88,5 +187,5 @@
             });
         });
     </script>
-
+    @yield('custom_js')
 @endsection
