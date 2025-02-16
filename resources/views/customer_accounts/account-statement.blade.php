@@ -78,7 +78,7 @@
                 <tr class="total-row">
                     <td colspan="3" class="no-border"></td>
                     <td class="text-right"><strong>Balance:</strong></td>
-                    <td><strong>{{ config( 'app.currency_symbol') }} {{ $customerAccount->transactions->last()->balance }}</strong></td>
+                    <td><strong>{{ config( 'app.currency_symbol') }} {{ $customerAccount->transactions->last()->balance ?? 0 }}</strong></td>
                 </tr>
             </tbody>
         </table>
