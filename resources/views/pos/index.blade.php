@@ -603,9 +603,12 @@
 
                         if (response.customer_email) {
                             $("#emailInvoice").attr("data-id", orderId);
+                            $("#printA4_and_email").attr("data-id", orderId);
                             $("#emailInvoice").show();
+                            $("#printA4_and_email").show();
                         } else {
                             $("#emailInvoice").hide();
+                            $("#printA4_and_email").hide();
                         }
 
                         // Show the payment receipt modal
@@ -667,32 +670,45 @@
             // Email invoice
             $('#emailInvoice').click(function() {
                 const orderId = $(this).data('id');
-                const url = `{{ route('orders.emailInvoice', ':orderId') }}`;
-
                 // disable the button
                 $(this).attr('disabled', true);
+                emailInvoice(orderId);
+            });
 
-                $.ajax({
-                    url: url.replace(':orderId', orderId),
-                    method: "POST",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        // Re-load the page
-                        location.reload();
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Something went wrong, Please try again sending the email from orders page.',
-                        });
-                    }
-                });
+            // Print A4 and email invoice
+            $('#printA4_and_email').click(function() {
+                const orderId = $(this).data('id');
+                // disable the button
+                $(this).attr('disabled', true);
+                emailInvoice(orderId);
+                printA4ByOrderId(orderId);
             });
         });
+
+        // Email invoice
+        function emailInvoice(orderId) {
+            const url = `{{ route('orders.emailInvoice', ':orderId') }}`;
+
+            $.ajax({
+                url: url.replace(':orderId', orderId),
+                method: "POST",
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+                success: function (response) {
+                    // Re-load the page
+                    location.reload();
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong, Please try again sending the email from orders page.',
+                    });
+                }
+            });
+        }
 
 
         // Store to Cart

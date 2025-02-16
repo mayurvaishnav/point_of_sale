@@ -13,6 +13,7 @@
                     <button type="button" class="btn btn-info btn-lg mb-3 w-100" id="printA4">Print A4</button>
                     {{-- <button type="button" class="btn btn-success btn-lg mb-3 w-100" id="downloadInvoice">Download Invoice</button> --}}
                     <button type="button" class="btn btn-warning btn-lg mb-3 w-100" id="emailInvoice" style="display: none;">Email Invoice</button>
+                    <button type="button" class="btn btn-success btn-lg mb-3 w-100" id="printA4_and_email" style="display: none;"> Print A4 & Email</button>
                 </div>
             </div>
         </div>
