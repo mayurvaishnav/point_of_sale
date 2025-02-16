@@ -110,8 +110,7 @@
                 }
 
                 // localhost:8181 QZ interface
-                // let config = qz.configs.create("SLK-T32EB");
-                let config = qz.configs.create("THERMAL Receipt Printer"); // Printer name
+                let config = qz.configs.create(printerName);
 
                 await qz.print(config, printData);
                 console.log("Data printed successfully!");
@@ -122,13 +121,14 @@
 
         // Print receipt data
         function completeReciptPrintJob(data) {
-            let printerName = "THERMAL Receipt Printer"; // Printer name
+            // "SLK-T32EB"
+            let printerName = "{{ env('THERMAL_PRINTER_NAME') }}"; // Printer name
             completePrintJob(printerName, data);
         }
 
         // Print A4: Invoice
         function completeA4PrintJob(data) {
-            let printerName = "A4 Printer"; // Printer name
+            let printerName = "{{ env('A4_PRINTER_NAME') }}"; // Printer name
             completePrintJob(printerName, data);
         }
 
