@@ -27,7 +27,7 @@
                         <i class="fa fa-print"></i> Print
                     </button>
                     <div class="dropdown-menu">
-                        <button class="dropdown-item" id="printReceipt">Receipt</button>
+                        <button class="dropdown-item" id="printReceipt" data-order-id={{ $order->id }}>Receipt</button>
                         <button class="dropdown-item" id="printA4" data-order-id={{ $order->id }}>A4 Invoice</button>
                     </div>
                 </div>
