@@ -57,7 +57,6 @@
             // Cashdrawer open button
             $('#openCashDrawer').on('click', function (e) { 
                 e.preventDefault(); 
-                console.log("Inside function open cash drawer...");
                 let data = [
                     "\x1B\x40",  // Initialize printer
                     "\x1B\x70\x00\x19\xFA" // ESC/POS: Open cash drawer
@@ -100,36 +99,30 @@
         });
 
         // QZ Tray setup and Print
-        async function completePrintJob(printerName, printData) {
-            try {
-                // Ensure QZ Tray is connected
-                if (!qz.websocket.isActive()) {
-                    console.log("QZ Tray is not connected. Connecting...");
-                    await qz.websocket.connect();
-                    console.log("QZ Tray connected.");
+        async function completeReciptPrintJob(printData) {
+            $.ajax({
+                url: "http://localhost:3000/print/receipt",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ 
+                    printerName: "{{ env('THERMAL_PRINTER_NAME') }}",
+                    printData: printData
+                }),
+                success: function (response) {
+                    console.log(response.message);
+
+                    // reload the page
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error('Print error:', error);
+                    // Swal.fire({
+                    //     icon: 'error',
+                    //     title: 'Error',
+                    //     text: 'Failed to print. Please check the local print server.',
+                    // });
                 }
-
-                // localhost:8181 QZ interface
-                let config = qz.configs.create(printerName);
-
-                await qz.print(config, printData);
-                console.log("Data printed successfully!");
-            } catch (err) {
-                console.error("Error printing data:", err);
-            }
-        }
-
-        // Print receipt data
-        function completeReciptPrintJob(data) {
-            // "SLK-T32EB"
-            let printerName = "{{ env('THERMAL_PRINTER_NAME') }}"; // Printer name
-            completePrintJob(printerName, data);
-        }
-
-        // Print A4: Invoice
-        function completeA4PrintJob(data) {
-            let printerName = "{{ env('A4_PRINTER_NAME') }}"; // Printer name
-            completePrintJob(printerName, data);
+            });
         }
 
         // Print Receipt
@@ -158,7 +151,32 @@
             });
         }
 
+        function completeA4PrintJob(base64data) {
+            // Send the Base64 PDF to the local print server
+            $.ajax({
+                url: "http://localhost:3000/print/a4",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ 
+                    printerName: "{{ env('A4_PRINTER_NAME') }}",
+                    pdfBase64: base64data
+                 }),
+                 success: function (response) {
+                    console.log(response.message);
 
+                    // reload the page
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error('Print error:', error);
+                    // Swal.fire({
+                    //     icon: 'error',
+                    //     title: 'Error',
+                    //     text: 'Failed to print. Please check the local print server.',
+                    // });
+                }
+            });
+        }
 
         // Print A4 invoice
         function printA4ByOrderId(orderId) {
@@ -171,9 +189,17 @@
                 success: function (response) {
                     // Convert the response into a Blob
                     var pdfBlob = new Blob([response], { type: 'application/pdf' });
-                    // Send the PDF blob to the QZ Tray printer
-                    completeA4PrintJob(pdfBlob);
-                    console.log('PDF sent to printer successfully!');
+
+                    // Convert Blob to Base64
+                    var reader = new FileReader();
+                    reader.readAsDataURL(pdfBlob);
+                    reader.onloadend = function () {
+                        // Get the Base64 part (ignore metadata)
+                        let base64data = reader.result.split(',')[1];
+
+                        // Send the Base64 PDF to QZ Tray
+                        completeA4PrintJob(base64data);
+                    };
 
                     // reload the page
                     // location.reload();

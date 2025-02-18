@@ -9,6 +9,7 @@
                     <h1>{{ $currentCustomer->name }}</h1>
                     <span>{{ $currentCustomer->email }}</span><br>
                     <span>{{ $currentCustomer->phone }}</span><br>
+                    <span>Car: {{ $currentCustomer->brand }} - {{ $currentCustomer->registration_no }}</span><br>
                     <span>{{ $currentCustomer->address }}</span>
                     
                 @endif
