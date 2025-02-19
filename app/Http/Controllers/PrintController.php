@@ -24,6 +24,7 @@ class PrintController extends Controller
 
     private function formatReceiptText($order)
     {
+        $currencySymbol = config('app.currency_symbol');
         $receiptText = "";
 
         $receiptText .= "\n\n"; // Add some space before printing
@@ -49,25 +50,32 @@ class PrintController extends Controller
 
         // Order details
         foreach ($order->orderDetails as $detail) {
-            $receiptText .= str_pad($detail->product_name . " x" . $detail->quantity, 25, " ", STR_PAD_RIGHT);
-            $receiptText .= str_pad(config('app.currency_symbol') . number_format($detail->total, 2), 15, " ", STR_PAD_LEFT) . "\n";
+            $itemText = $detail->product_name . " x" . $detail->quantity;
+            $totalText = number_format($detail->total, 2);
+            
+            // Split long item names into multiple lines of 25 characters
+            $wrappedLines = str_split($itemText, 25);
+        
+            // Print first line with total aligned properly
+            $receiptText .= sprintf("%-25s %15s\n", $wrappedLines[0], $totalText);
+        
+            // Print remaining lines, if any, but without a total to maintain alignment
+            for ($i = 1; $i < count($wrappedLines); $i++) {
+                $receiptText .= sprintf("%-25s\n", $wrappedLines[$i]);
+            }
         }
 
         $receiptText .= "------------------------------------------\n";
 
         // Totals
-        $receiptText .= str_pad("Subtotal:", 25, " ", STR_PAD_RIGHT);
-        $receiptText .= str_pad(config('app.currency_symbol') . number_format($order->total_before_tax, 2), 15, " ", STR_PAD_LEFT) . "\n";
-        $receiptText .= str_pad("Vat:", 25, " ", STR_PAD_RIGHT);
-        $receiptText .= str_pad(config('app.currency_symbol') . number_format($order->tax, 2), 15, " ", STR_PAD_LEFT) . "\n";
+        $receiptText .= sprintf("%25s %15s\n", "Subtotal:", number_format($order->total_before_tax, 2));
+        $receiptText .= sprintf("%25s %15s\n", "Vat:", number_format($order->tax, 2));
 
         if ($order->discount != 0) {
-            $receiptText .= str_pad("Discount:", 25, " ", STR_PAD_RIGHT);
-            $receiptText .= str_pad("-" . config('app.currency_symbol') . number_format($order->discount, 2), 15, " ", STR_PAD_LEFT) . "\n";
+            $receiptText .= sprintf("%25s %15s\n", "Discount:", number_format($order->discount, 2));
         }
-
-        $receiptText .= str_pad("Total:", 25, " ", STR_PAD_RIGHT);
-        $receiptText .= str_pad(config('app.currency_symbol') . number_format($order->total_after_discount, 2), 15, " ", STR_PAD_LEFT) . "\n";
+        
+        $receiptText .= sprintf("%25s %15s\n", "Total:", number_format($order->total_after_discount, 2));
         $receiptText .= "------------------------------------------\n";
 
         // Footer

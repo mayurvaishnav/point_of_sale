@@ -40,11 +40,12 @@ app.post('/print/receipt', async (req, res) => {
 
         console.log(printerName, printData);
 
-        let thermalPrinter = new ThermalPrinter({
-            type: 'epson',  // Using the correct printer type from the Types enum
-            interface: `${printerName}`,  // Ensure the interface string is correct
-            encoding: 'utf-8',
-            // timeout: 5000,  // Timeout in milliseconds (adjust if necessary)
+        const thermalPrinter = new ThermalPrinter.printer({
+            type: 'epson', // or ThermalPrinter.types.STAR if using a Star printer
+            interface: "tcp://192.168.1.100:9100", // Change this to your printer's IP
+            characterSet: "CP437", // Ensure encoding is explicitly set
+            removeSpecialCharacters: false, // Optional, depends on your printer
+            lineCharacter: "-" // Customize line character for better formatting
         });
 
         thermalPrinter.alignCenter();
@@ -82,7 +83,7 @@ app.post("/print/a4", async (req, res) => {
             color: false,          // Set to true for color printing
             fit: true,             // Fit the page to the paper size
         };
-        await printer.print(tempFilePath, options);
+        // await printer.print(tempFilePath, options);
 
         res.json({ message: "Printed A4 successfully" });
 

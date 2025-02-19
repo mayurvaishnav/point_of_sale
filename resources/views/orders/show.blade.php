@@ -29,6 +29,10 @@
                     <div class="dropdown-menu">
                         <button class="dropdown-item" id="printReceipt" data-order-id={{ $order->id }}>Receipt</button>
                         <button class="dropdown-item" id="printA4" data-order-id={{ $order->id }}>A4 Invoice</button>
+                        @if (env('ENABLE_BACKUP_PRINTING'))
+                            <button class="dropdown-item" id="printReceiptBackup" data-order-id={{ $order->id }}>Receipt (backup)</button>
+                            <button class="dropdown-item" id="printA4Backup" data-order-id={{ $order->id }}>A4 Invoice (backup)</button>
+                        @endif
                     </div>
                 </div>
                 <a href="{{route('orders.downloadInvoice', $order)}}" class="btn btn-info" id="downloadButton">
@@ -230,7 +234,8 @@
     </div>
     </div>
 </div>
-<iframe id="pdf-frame" style="display:none;" width="100%" height="6"></iframe>
+<iframe id="pdf-frame" style="display:none;" width="100%" height="1"></iframe>
+<iframe id="receipt-frame" style="display:none;" width="300px" height="1"></iframe>
 @endsection
 
 @section('custom_js')
@@ -259,6 +264,92 @@
     $('#printA4').click(function () {
         var orderId = $(this).data('order-id');
         printA4ByOrderId(orderId);
+    });
+
+    $('#printReceiptBackup').click(function() {
+        const orderId = $(this).data('order-id');
+        const url = `{{ route('print.receipt', ':orderId') }}`.replace(':orderId', orderId);
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data: { _token: "{{ csrf_token() }}" },
+            dataType: 'json',
+            success: function (response) {
+
+                let receiptData = response.receipt; // Split by newline for line-by-line printing
+                // receiptData.unshift("\x1B\x40", "\x1B\x70\x00\x19\xFA"); // Initialize & Open Cash Drawer
+                // receiptData.push("\x1D\x56\x41\x03"); // Cut paper
+
+                var iframe = document.getElementById('receipt-frame');
+                // Write the receipt data into the iframe
+                let doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.open();
+                doc.write(`
+                        <html>
+                        <head>
+                            <style>
+                                @media print {
+                                    @page {
+                                        size: 80mm auto; /* width height */
+                                    }
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <pre>${receiptData}</pre>
+                        </body>
+                        </html>
+                    `
+                );
+                doc.close();
+                iframe.style.display = 'block';
+                iframe.contentWindow.print();
+                setTimeout(function () {
+                    iframe.style.display = 'none';
+                }, 1000);
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong, Please try again printing from orders page.',
+                });
+            }
+        });
+    });
+
+    $('#printA4Backup').click(function() {
+        const orderId = $(this).data('order-id');
+        const url = `{{ route('orders.downloadInvoice', ':orderId') }}`.replace(':orderId', orderId);
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data: { _token: "{{ csrf_token() }}" },
+            xhrFields: { responseType: 'blob' },
+            success: function (response) {
+                // Convert the response into a Blob
+                var pdfBlob = new Blob([response], { type: 'application/pdf' });
+                var pdfUrl = URL.createObjectURL(pdfBlob);
+                // Set the PDF URL to the iframe
+                var iframe = document.getElementById('pdf-frame');
+                iframe.src = pdfUrl;
+                iframe.style.display = 'block';
+                // Print automatically once loaded
+                iframe.onload = function () {
+                    iframe.contentWindow.print();
+                    setTimeout(function () {
+                        iframe.style.display = 'none';
+                    }, 1000);
+                };
+            },
+            error: function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong, Please try again printing from orders page.',
+                });
+            }
+        });
     });
 
     function startLoadingEmail() {

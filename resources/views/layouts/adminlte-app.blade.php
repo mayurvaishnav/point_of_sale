@@ -98,7 +98,6 @@
             });
         });
 
-        // QZ Tray setup and Print
         async function completeReciptPrintJob(printData) {
             $.ajax({
                 url: "http://localhost:3000/print/receipt",
