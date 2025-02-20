@@ -119,8 +119,8 @@ class ReportController extends Controller
     public function customer(Request $request)
     {
         $request->validate([
-            "start_date"=> "nullable|date",
-            "end_date"=> "nullable|date",
+            // "start_date"=> "nullable|date",
+            // "end_date"=> "nullable|date",
             "customer_id"=> "nullable|exists:customers,id",
         ]);
         
@@ -128,15 +128,16 @@ class ReportController extends Controller
 
         $customers = Customer::all();
         
-        if(!$request->has(['start_date', 'end_date', 'customer_id'])) {
+        if(!$request->has(['customer_id'])) {
             return view('reports.customer', ['orders' => [], 'customers' => $customers]);
         }
         
         $currentCustomer = $customers->find($request->customer_id);
 
-        $orders = Order::whereBetween('order_date', [$request->start_date, $request->end_date])
-            ->where('customer_id', $request->customer_id)
+        // $orders = Order::whereBetween('order_date', [$request->start_date, $request->end_date])
+        $orders = Order::where('customer_id', $request->customer_id)
             ->with(['customer'])
+            ->latest()
             ->get();
         
         return view('reports.customer', compact('orders', 'customers', 'currentCustomer'));

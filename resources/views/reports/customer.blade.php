@@ -16,12 +16,12 @@
             </div>
             <div class="col-sm-8">
                 <form id="dateFilterForm" method="GET" action="{{ route('reports.customer') }}" class="form-inline float-right">
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <input type="date" name="start_date" id="orderDate" class="form-control" value="{{ request('start_date') }}" required>
                     </div>
                     <div class="form-group ml-2">
                         <input type="date" name="end_date" id="orderDate" class="form-control" value="{{ request('end_date') }}" required>
-                    </div>
+                    </div> --}}
                     <div class="form-group ml-2" style="width: 300px;">
                         <select class="form-control select2" name="customer_id" id="customerSelect" required>
                             <option value="">-- Select Customer --</option>
