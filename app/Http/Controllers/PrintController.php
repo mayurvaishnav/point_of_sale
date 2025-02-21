@@ -46,7 +46,7 @@ class PrintController extends Controller
         // Item table headers
         $receiptText .= str_pad("Item", 25, " ", STR_PAD_RIGHT);
         $receiptText .= str_pad("Total", 15, " ", STR_PAD_LEFT) . "\n";
-        $receiptText .= "------------------------------------------\n";
+        $receiptText .= "\n------------------------------------------\n";
 
         // Order details
         foreach ($order->orderDetails as $detail) {
@@ -65,7 +65,7 @@ class PrintController extends Controller
             }
         }
 
-        $receiptText .= "------------------------------------------\n";
+        $receiptText .= "\n------------------------------------------\n";
 
         // Totals
         $receiptText .= sprintf("%25s %15s\n", "Subtotal:", number_format($order->total_before_tax, 2));
@@ -76,15 +76,15 @@ class PrintController extends Controller
         }
         
         $receiptText .= sprintf("%25s %15s\n", "Total:", number_format($order->total_after_discount, 2));
-        $receiptText .= "------------------------------------------\n";
+        $receiptText .= "\n------------------------------------------\n";
 
         // Footer
         $receiptText .= "\nThank you for your purchase!\n";
-        $receiptText .= "------------------------------------------\n";
+        $receiptText .= "\n------------------------------------------\n";
         $receiptText .= str_pad("Terms & Conditions", 40, " ", STR_PAD_BOTH) . "\n";
         $receiptText .= "No refund without a valid receipt\n";
         $receiptText .= "Please retain this receipt as proof of\n";
-        $receiptText .= "purchase\n";
+        $receiptText .= "purchase\n\n\n";
 
         return $receiptText;
     }

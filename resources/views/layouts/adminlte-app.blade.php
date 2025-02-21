@@ -136,9 +136,12 @@
                 dataType: 'json',
                 success: function (response) {
                     let receiptData = response.receipt.split("\n"); // Split by newline for line-by-line printing
-                    receiptData.unshift("\x1B\x40", "\x1B\x70\x00\x19\xFA"); // Initialize & Open Cash Drawer
+                    receiptData.unshift("\x1B\x40"); // Initialize printer
+                    receiptData.unshift("\x1B\x70\x00\x19\xFA"); // Open cash drawer
                     receiptData.push("\x1D\x56\x41\x03"); // Cut paper
-                    completeReciptPrintJob(receiptData);
+
+                    const printDataString = receiptData.join("\n");
+                    completeReciptPrintJob(printDataString);
                 },
                 error: function (xhr) {
                     Swal.fire({

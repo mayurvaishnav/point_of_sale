@@ -42,43 +42,13 @@ app.post('/print/receipt', async (req, res) => {
 
         let newPrinter = new ThermalPrinter({
             type: PrinterTypes.EPSON, // Printer type: 'star' or 'epson'
-            interface: 'tcp://192.168.1.100:9100', // Replace with your printer's IP and port
+            interface: printerName, // Replace with your printer's IP and port
             characterSet: 'PC437_USA', // Printer character set
             lineCharacter: "-", // Set character for lines
             options: {
                 timeout: 5000 // Connection timeout (ms)
             }
         });
-
-        // let newPrinter = {};
-        const name = 'THERMAL Receopt Printer';
-
-        // try {
-        //     let testPrinter = printer.getPrinter(name);
-
-        //     if(testPrinter){
-        //         newPrinter = new ThermalPrinter({
-        //             type: PrinterTypes.EPSON,                                  // Printer type: 'star' or 'epson'
-        //             interface: 'printer:'+name,                       // Printer interface
-        //             characterSet: 'PC437_USA',                                 // Printer character set - default: SLOVENIA
-        //             lineCharacter: "-",                                       // Set character for lines - default: "-"
-        //             options:{                                                 // Additional options
-        //                 timeout: 5000                                           // Connection timeout (ms) [applicable only for network printers] - default: 3000
-        //             }
-        //         });
-        //     }
-        // } catch (e) {
-        //     newPrinter = new ThermalPrinter({
-        //         type: PrinterTypes.EPSON,                                  // Printer type: 'star' or 'epson'
-        //         interface: 'printer:'+'\\\\DISPLAYPC\\'+name,                       // Printer interface
-        //         characterSet: 'PC437_USA',                                 // Printer character set - default: SLOVENIA
-        //         lineCharacter: "-",                                       // Set character for lines - default: "-"
-        //         // driver: printer,
-        //         options:{                                                 // Additional options
-        //             timeout: 5000                                           // Connection timeout (ms) [applicable only for network printers] - default: 3000
-        //         }
-        //     });
-        // }
 
         newPrinter.alignCenter();
         newPrinter.println(printData);
