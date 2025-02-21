@@ -38,14 +38,12 @@ app.post('/print/receipt', async (req, res) => {
             return res.status(400).json({ error: 'printerName or printData is required' });
         }
 
-        console.log(order);
-
         let newPrinter = new ThermalPrinter({
             type: PrinterTypes.EPSON, // Printer type: 'star' or 'epson'
-            interface: printerName, // Replace with your printer's IP and port
-            characterSet: 'PC437_USA', // Printer character set
-            width: 41, // Number of characters in one line
-            lineCharacter: "-", // Set character for lines
+            interface: printerName,
+            characterSet: 'PC437_USA',
+            width: 41,
+            lineCharacter: "-",
             options: {
                 timeout: 5000 // Connection timeout (ms)
             }
@@ -121,10 +119,9 @@ app.post('/print/receipt', async (req, res) => {
         newPrinter.println("Terms & Conditions");
         newPrinter.println("No refund without a valid receipt");
         newPrinter.println("Please retain this receipt as proof of purchase");
-        newPrinter.println(" ");
-        newPrinter.println(" ");
-
-        console.log(newPrinter.getText());
+        newPrinter.println("\n");
+        newPrinter.println("\n");
+        newPrinter.println("\n");
 
         await newPrinter.execute(); // Send print job to printer
         // await newPrinter.cut(); // Cut paper if supported
@@ -132,8 +129,6 @@ app.post('/print/receipt', async (req, res) => {
 
         // await newPrinter.openCashDrawer();
         await newPrinter.raw(Buffer.from([0x1B, 0x70, 0x00, 0x19, 0xFA]));
-
-        // await newPrinter.disconnect(); // Close connection after printing
 
         res.json({ message: 'Receipt printed successfully!' });
     } catch (error) {
@@ -150,21 +145,17 @@ app.post('/open-cash-drawer', async (req, res) => {
         const { printerName, printData, order } = req.body;
 
         let newPrinter = new ThermalPrinter({
-            type: PrinterTypes.EPSON, // Printer type: 'star' or 'epson'
-            interface: printerName, // Replace with your printer's IP and port
-            characterSet: 'PC437_USA', // Printer character set
-            lineCharacter: "-", // Set character for lines
+            type: PrinterTypes.EPSON,
+            interface: printerName,
+            characterSet: 'PC437_USA',
+            lineCharacter: "-",
             options: {
                 timeout: 5000 // Connection timeout (ms)
             }
         });
 
-        // await newPrinter.init(); // Initialize the printer
-
         // await newPrinter.openCashDrawer(); // Open cash drawer
         await newPrinter.raw(Buffer.from([0x1B, 0x70, 0x00, 0x19, 0xFA]));
-
-        // await newPrinter.disconnect(); // Close connection after printing
 
         res.json({ message: 'Cash drawer opned successfully!' });
     } catch (error) {
@@ -181,15 +172,11 @@ app.post("/print/a4", async (req, res) => {
             return res.status(400).json({ error: "No PDF data received" });
         }
 
-        console.log("Printing A4 PDF on printer:", printerName);
-
         const pdfBuffer = Buffer.from(pdfBase64, "base64");
         const tempFilePath = "C:/temp/print.pdf"; // Use "C:/temp/print.pdf" on Windows "/tmp/print-input.pdf" for Mac/Linux
 
         fs.writeFileSync(tempFilePath, pdfBuffer);
-        console.log("PDF file written to disk: " + tempFilePath);
 
-        // Define options for the printer
         const options = {
             printer: printerName,  // Printer name received from request
             silent: true,         // If you want to hide the print dialog, set to true
@@ -197,6 +184,7 @@ app.post("/print/a4", async (req, res) => {
             color: false,          // Set to true for color printing
             fit: true,             // Fit the page to the paper size
         };
+        
         await printer.print(tempFilePath, options);
 
         res.json({ message: "Printed A4 successfully" });
