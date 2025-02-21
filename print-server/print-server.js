@@ -121,8 +121,8 @@ app.post('/print/receipt', async (req, res) => {
         newPrinter.println("Terms & Conditions");
         newPrinter.println("No refund without a valid receipt");
         newPrinter.println("Please retain this receipt as proof of purchase");
-        newPrinter.raw(Buffer.from([0x0A])); // Newline in ESC/POS (LF, Line Feed)
-        newPrinter.raw(Buffer.from([0x0A]));
+        newPrinter.println(" ");
+        newPrinter.println(" ");
 
         console.log(newPrinter.getText());
 
