@@ -174,7 +174,7 @@ app.post("/print/a4", async (req, res) => {
         console.log("Printing A4 PDF on printer:", printerName);
 
         const pdfBuffer = Buffer.from(pdfBase64, "base64");
-        const tempFilePath = "/tmp/print-input.pdf"; // Use "C:/temp/print.pdf" on Windows
+        const tempFilePath = "C:/temp/print.pdf"; // Use "C:/temp/print.pdf" on Windows "/tmp/print-input.pdf" for Mac/Linux
 
         fs.writeFileSync(tempFilePath, pdfBuffer);
         console.log("PDF file written to disk: " + tempFilePath);
