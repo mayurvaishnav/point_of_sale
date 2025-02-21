@@ -51,6 +51,11 @@ class AutoOrderEmailJob implements ShouldQueue
         foreach ($goupedBySupplier as $supplierId => $products) {
             $supplierEmail = $products->first()->supplier->email;
 
+            if (empty($supplierEmail)) {
+                Log::error("Supplier with ID: $supplierId has no email address. Skipping...");
+                continue;
+            }
+
             $productNames = $products->map(function($product) {
                 return $product->name;
             })->toArray();
@@ -64,6 +69,7 @@ class AutoOrderEmailJob implements ShouldQueue
     private function findProductsToReorder()
     {
         return Product::where('is_active', true)
+            ->where('stockable', true)
             ->where('auto_order_at_low_stock', true)
             ->whereRaw('CAST(quantity AS UNSIGNED) < CAST(low_stock_threshold AS UNSIGNED)')
             ->with('supplier')
