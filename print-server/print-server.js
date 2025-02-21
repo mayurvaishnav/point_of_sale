@@ -121,7 +121,6 @@ app.post('/print/receipt', async (req, res) => {
         newPrinter.println("Please retain this receipt as proof of purchase");
         newPrinter.println("\n");
         newPrinter.println("\n");
-        newPrinter.println("\n");
 
         await newPrinter.execute(); // Send print job to printer
         // await newPrinter.cut(); // Cut paper if supported
