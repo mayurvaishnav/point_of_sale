@@ -38,7 +38,7 @@ app.post('/print/receipt', async (req, res) => {
             return res.status(400).json({ error: 'printerName or printData is required' });
         }
 
-        console.log(printerName, printData);
+        console.log(order);
 
         let newPrinter = new ThermalPrinter({
             type: PrinterTypes.EPSON, // Printer type: 'star' or 'epson'
@@ -75,10 +75,10 @@ app.post('/print/receipt', async (req, res) => {
         ]);
         newPrinter.drawLine();
 
-        order.orderDetails.forEach(detail => {
+        order.order_details.forEach(detail => {
             newPrinter.tableCustom([
                 { text: `${detail.product_name} x${detail.quantity}`, align: "LEFT", width: 0.7 },
-                { text: `${detail.total.toFixed(2)}`, align: "RIGHT", width: 0.3 }
+                { text: `${parseFloat(detail.total).toFixed(2)}`, align: "RIGHT", width: 0.3 }
             ]);
         });
 
@@ -86,24 +86,24 @@ app.post('/print/receipt', async (req, res) => {
 
         // Print totals
         newPrinter.tableCustom([
-            { text: "Subtotal:", align: "LEFT", width: 0.7 },
-            { text: order.total_before_tax.toFixed(2), align: "RIGHT", width: 0.3 }
+            { text: "Subtotal:", align: "RIGHT", width: 0.7 },
+            { text: parseFloat(order.total_before_tax).toFixed(2), align: "RIGHT", width: 0.3 }
         ]);
         newPrinter.tableCustom([
-            { text: "VAT:", align: "LEFT", width: 0.7 },
-            { text: order.tax.toFixed(2), align: "RIGHT", width: 0.3 }
+            { text: "VAT:", align: "RIGHT", width: 0.7 },
+            { text: parseFloat(order.tax).toFixed(2), align: "RIGHT", width: 0.3 }
         ]);
 
         if (order.discount !== 0) {
             newPrinter.tableCustom([
-                { text: "Discount:", align: "LEFT", width: 0.7 },
-                { text: order.discount.toFixed(2), align: "RIGHT", width: 0.3 }
+                { text: "Discount:", align: "RIGHT", width: 0.7 },
+                { text: parseFloat(order.discount).toFixed(2), align: "RIGHT", width: 0.3 }
             ]);
         }
 
         newPrinter.tableCustom([
-            { text: "Total:", align: "LEFT", width: 0.7 },
-            { text: order.total_after_discount.toFixed(2), align: "RIGHT", width: 0.3 }
+            { text: "Total:", align: "RIGHT", width: 0.7 },
+            { text: parseFloat(order.total_after_discount).toFixed(2), align: "RIGHT", width: 0.3 }
         ]);
 
         newPrinter.drawLine();
@@ -124,7 +124,7 @@ app.post('/print/receipt', async (req, res) => {
         await newPrinter.execute(); // Send print job to printer
         await newPrinter.cut(); // Cut paper if supported
 
-        await newPrinter.disconnect(); // Close connection after printing
+        // await newPrinter.disconnect(); // Close connection after printing
 
         res.json({ message: 'Receipt printed successfully!' });
     } catch (error) {
@@ -154,7 +154,7 @@ app.post('/open-cash-drawer', async (req, res) => {
 
         await newPrinter.openCashDrawer(); // Open cash drawer
 
-        await newPrinter.disconnect(); // Close connection after printing
+        // await newPrinter.disconnect(); // Close connection after printing
 
         res.json({ message: 'Cash drawer opned successfully!' });
     } catch (error) {
