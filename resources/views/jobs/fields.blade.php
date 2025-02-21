@@ -61,8 +61,9 @@
 </div>
 
 <div class="form-group">
-    <label for="is_active">Active</label>
-    <input type="checkbox" name="is_active" id='is_active' {{ isset($job) && $job->is_active ? 'checked' : '' }}
+    <label for="is_active">Active: </label>
+    <input type="hidden" name="is_active" value="0">
+    <input type="checkbox" name="is_active" id='is_active' value="1" {{ isset($job) && $job->is_active ? 'checked' : '' }}
         class="@error('is_active') is-invalid @enderror">
     @error('is_active')
     <span class="invalid-feedback" role="alert">
