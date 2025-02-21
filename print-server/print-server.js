@@ -44,7 +44,7 @@ app.post('/print/receipt', async (req, res) => {
             type: PrinterTypes.EPSON, // Printer type: 'star' or 'epson'
             interface: printerName, // Replace with your printer's IP and port
             characterSet: 'PC437_USA', // Printer character set
-            width: 42, // Number of characters in one line
+            width: 41, // Number of characters in one line
             lineCharacter: "-", // Set character for lines
             options: {
                 timeout: 5000 // Connection timeout (ms)
@@ -69,7 +69,17 @@ app.post('/print/receipt', async (req, res) => {
         // Align text to left for receipt details
         newPrinter.alignLeft();
         newPrinter.println(`Receipt No: ${order.invoice_number}`);
-        newPrinter.println(`Status: ${order.status}`);
+        // newPrinter.println(`Status: ${order.status}`)s;
+        newPrinter.print("Status: ");
+
+        // Enable bold text for the status value
+        newPrinter.raw(Buffer.from([0x1B, 0x45, 0x01]));
+        newPrinter.println(order.status); // Print the bold status value
+
+        // Disable bold text after the status value
+        newPrinter.raw(Buffer.from([0x1B, 0x45, 0x00]));
+
+
         newPrinter.println(`Date: ${formattedDate}`);
         newPrinter.println(`Customer: ${order.customer ? order.customer.name : "Walk-in Customer"}`);
         newPrinter.drawLine();
@@ -100,10 +110,10 @@ app.post('/print/receipt', async (req, res) => {
             { text: parseFloat(order.tax).toFixed(2), align: "RIGHT", width: 0.3 }
         ]);
 
-        if (order.discount !== 0) {
+        if (order.discount != 0) {
             newPrinter.tableCustom([
                 { text: "Discount:", align: "RIGHT", width: 0.7 },
-                { text: parseFloat(order.discount).toFixed(2), align: "RIGHT", width: 0.3 }
+                { text: `-${parseFloat(order.discount).toFixed(2)}`, align: "RIGHT", width: 0.3 }
             ]);
         }
 
@@ -121,9 +131,8 @@ app.post('/print/receipt', async (req, res) => {
         newPrinter.println("Terms & Conditions");
         newPrinter.println("No refund without a valid receipt");
         newPrinter.println("Please retain this receipt as proof of purchase");
-        newPrinter.newLine();
-        newPrinter.newLine();
-        newPrinter.newLine();
+        newPrinter.println("");
+        newPrinter.println("");
 
         console.log(newPrinter.getText());
 
