@@ -13,7 +13,7 @@
 <div class="form-group">
     <label for="email">Email</label>
     <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" id="email"
-           placeholder="Email" value="{{ old('email', $supplier->email ?? '') }}" required>
+           placeholder="Email" value="{{ old('email', $supplier->email ?? '') }}">
     @error('email')
     <span class="invalid-feedback" role="alert">
         <strong>{{ $message }}</strong>
@@ -24,7 +24,7 @@
 <div class="form-group">
     <label for="phone">Phone</label>
     <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" id="phone"
-           placeholder="Phone" value="{{ old('phone', $supplier->phone ?? '') }}" required>
+           placeholder="Phone" value="{{ old('phone', $supplier->phone ?? '') }}">
     @error('phone')
     <span class="invalid-feedback" role="alert">
         <strong>{{ $message }}</strong>

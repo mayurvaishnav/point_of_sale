@@ -23,8 +23,8 @@ class JobScheduler
     private function getEmailJobClass($job) {
         if($job->job_name == 'daily_order_email') {
             return AutoOrderEmailJob::class;
-        } else if($job->job_name == 'monthly_customer_account_statement') {
-            return AutoOrderEmailJob::class;
+        // } else if($job->job_name == 'monthly_customer_account_statement') {
+        //     return AutoOrderEmailJob::class;
         } else {
             return null;
         }

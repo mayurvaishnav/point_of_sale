@@ -4,7 +4,7 @@
 <div class="container">
     <h2>Application Logs</h2>
     <!-- Dropdown for selecting log file -->
-    <form method="GET" action="{{ url('/logs') }}">
+    <form method="GET" action="{{ route('logs.index') }}">
         <label>Select Date:</label>
         <select name="log" onchange="this.form.submit()">
             @foreach($logFiles as $file)
