@@ -73,7 +73,7 @@
                         console.error('Print error:', error);
                     }
                 });
-                completeReciptPrintJob(data);
+                // completeReciptPrintJob(data);
             });
 
             // Reload page button
