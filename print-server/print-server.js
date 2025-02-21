@@ -44,10 +44,16 @@ app.post('/print/receipt', async (req, res) => {
             type: PrinterTypes.EPSON, // Printer type: 'star' or 'epson'
             interface: printerName, // Replace with your printer's IP and port
             characterSet: 'PC437_USA', // Printer character set
+            width: 42, // Number of characters in one line
             lineCharacter: "-", // Set character for lines
             options: {
                 timeout: 5000 // Connection timeout (ms)
             }
+        });
+
+        const formattedDate = new Date(order.created_at).toLocaleString("en-GB", { 
+            day: "2-digit", month: "2-digit", year: "numeric", 
+            hour: "2-digit", minute: "2-digit", hour12: true 
         });
 
         // await newPrinter.init(); // Initialize the printer
@@ -63,8 +69,8 @@ app.post('/print/receipt', async (req, res) => {
         // Align text to left for receipt details
         newPrinter.alignLeft();
         newPrinter.println(`Receipt No: ${order.invoice_number}`);
-        newPrinter.println(`Status: ${order.status.value}`);
-        newPrinter.println(`Date: ${order.created_at}`);
+        newPrinter.println(`Status: ${order.status}`);
+        newPrinter.println(`Date: ${formattedDate}`);
         newPrinter.println(`Customer: ${order.customer ? order.customer.name : "Walk-in Customer"}`);
         newPrinter.drawLine();
 
@@ -122,7 +128,11 @@ app.post('/print/receipt', async (req, res) => {
         console.log(newPrinter.getText());
 
         await newPrinter.execute(); // Send print job to printer
-        await newPrinter.cut(); // Cut paper if supported
+        // await newPrinter.cut(); // Cut paper if supported
+        await newPrinter.raw(Buffer.from([0x1D, 0x56, 0x00])); // ESC/POS cut command
+
+        // await newPrinter.openCashDrawer();
+        await newPrinter.raw(Buffer.from([0x1B, 0x70, 0x00, 0x19, 0xFA]));
 
         // await newPrinter.disconnect(); // Close connection after printing
 
@@ -152,7 +162,8 @@ app.post('/open-cash-drawer', async (req, res) => {
 
         // await newPrinter.init(); // Initialize the printer
 
-        await newPrinter.openCashDrawer(); // Open cash drawer
+        // await newPrinter.openCashDrawer(); // Open cash drawer
+        await newPrinter.raw(Buffer.from([0x1B, 0x70, 0x00, 0x19, 0xFA]));
 
         // await newPrinter.disconnect(); // Close connection after printing
 
