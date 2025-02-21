@@ -85,7 +85,7 @@ app.post("/print/a4", async (req, res) => {
             color: false,          // Set to true for color printing
             fit: true,             // Fit the page to the paper size
         };
-        // await printer.print(tempFilePath, options);
+        await printer.print(tempFilePath, options);
 
         res.json({ message: "Printed A4 successfully" });
 

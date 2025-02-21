@@ -27,13 +27,13 @@ class PrintController extends Controller
         $currencySymbol = config('app.currency_symbol');
         $receiptText = "";
 
-        $receiptText .= "\n\n"; // Add some space before printing
+        // $receiptText .= "\n\n"; // Add some space before printing
 
         // Store header info
-        $receiptText .= str_pad("Bowes Tyres and Auto Centre", 40, " ", STR_PAD_BOTH) . "\n";
-        $receiptText .= str_pad("Timahoe Road, Portlaoise", 40, " ", STR_PAD_BOTH) . "\n";
-        $receiptText .= str_pad("Phone: 057-8665075", 40, " ", STR_PAD_BOTH) . "\n";
-        $receiptText .= str_pad("VAT No: IE397032GH", 40, " ", STR_PAD_BOTH) . "\n";
+        $receiptText .= str_pad("Bowes Tyres and Auto Centre", 40, " ", STR_PAD_BOTH) . "";
+        $receiptText .= str_pad("Timahoe Road, Portlaoise", 40, " ", STR_PAD_BOTH) . "";
+        $receiptText .= str_pad("Phone: 057-8665075", 40, " ", STR_PAD_BOTH) . "";
+        $receiptText .= str_pad("VAT No: IE397032GH", 40, " ", STR_PAD_BOTH) . "";
         $receiptText .= "\n------------------------------------------\n";
 
         // Receipt info

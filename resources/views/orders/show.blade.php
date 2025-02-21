@@ -287,13 +287,7 @@
                 doc.write(`
                         <html>
                         <head>
-                            <style>
-                                @media print {
-                                    @page {
-                                        size: 80mm auto; /* width height */
-                                    }
-                                }
-                            </style>
+                            
                         </head>
                         <body>
                             <pre>${receiptData}</pre>
