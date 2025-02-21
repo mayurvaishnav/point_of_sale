@@ -4,13 +4,17 @@ namespace App\Services;
 
 use App\Jobs\AutoOrderEmailJob;
 use App\Models\ScheduledJob;
+use Illuminate\Support\Facades\Log as FacadesLog;
 use Illuminate\Support\Facades\Schedule;
+use Log;
 
 class JobScheduler
 {
     public function scheduleJobs()
     {
         $jobs = ScheduledJob::where('is_active', true)->get();
+
+        FacadesLog::info('In scheduleJobs()... with jobs: ' . $jobs);
 
         foreach ($jobs as $job) {
             $emailClass = $this->getEmailJobClass($job);

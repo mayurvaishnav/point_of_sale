@@ -5,6 +5,7 @@ use App\Models\ScheduledJob;
 use App\Services\JobScheduler;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
@@ -13,6 +14,7 @@ Artisan::command('inspire', function () {
 
 Schedule::call(function () {
     $scheduler = new JobScheduler();
+    Log::info('Scheduling jobs...');
     $scheduler->scheduleJobs();
 })->everyMinute();
 

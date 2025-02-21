@@ -40,6 +40,7 @@ class AutoOrderEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info('In AutoOrderEmailJob...');
         $productsToReorder = $this->findProductsToReorder();
 
         if ($productsToReorder->isEmpty()) {
