@@ -118,3 +118,65 @@ pm2 save
 pm2 startup
 
 
+
+
+Steps to run your Node.js script with PM2:
+1. Install PM2 globally
+
+First, you need to install PM2 globally on your system if you haven't done so already:
+```
+npm install -g pm2
+```
+2. Start your script with PM2
+
+To start your Node.js script with PM2, run:
+```
+pm2 start path\to\your\script.js
+```
+This will run your script in the background and PM2 will manage it.
+
+3. Set PM2 to auto-start on system boot
+
+PM2 provides a command to configure it to start your application when the system reboots.
+
+To generate a startup script, run:
+```
+pm2 startup
+```
+This will output a command specific to your system (for Windows, it will be using pm2-windows-startup). Copy and run that command.
+
+4. Save the PM2 process list
+
+Once your script is running with PM2, you can save the process list so that PM2 can remember which apps to restart on boot:
+
+```
+pm2 save
+```
+5. Reboot your machine to test
+
+After setting up the startup, you can reboot your system to test if PM2 starts your Node.js script automatically.
+
+6. Managing your PM2 processes
+You can manage your running Node.js script with PM2 using the following commands:
+
+Check running processes:
+```
+pm2 list
+```
+Stop a process:
+```
+pm2 stop <process_id_or_name>
+```
+Restart a process:
+```
+pm2 restart <process_id_or_name>
+```
+View logs:
+```
+pm2 logs
+```
+Benefits of using PM2:
+Process Management: PM2 will handle keeping your script alive and restart it if it crashes.
+Automatic Startup: It ensures that your script starts on reboot.
+Monitoring: PM2 provides logs and monitoring features for your application.
+This is a great solution for keeping your Node.js script running persistently.
