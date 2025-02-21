@@ -42,7 +42,7 @@
                         {!! nl2br(e($order->customer->address)) !!}<br>
                         Phone: {{ $order->customer->phone }}<br>
                         Email: {{ $order->customer->email }}<br>
-                        Car: {{ $currentCustomer->brand }} - {{ $currentCustomer->registration_no }}
+                        Car: {{ $order->customer->brand }} - {{ $order->customer->registration_no }}
                     @else
                         <strong>Walk-in Customer</strong><br>
                     @endif
