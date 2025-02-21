@@ -235,7 +235,7 @@
     </div>
 </div>
 <iframe id="pdf-frame" style="display:none;" width="100%" height="1"></iframe>
-<iframe id="receipt-frame" style="display:none;" width="300px" height="1"></iframe>
+<iframe id="receipt-frame" style="display:none;" width="100%" height="1"></iframe>
 @endsection
 
 @section('custom_js')
