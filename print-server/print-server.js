@@ -69,17 +69,7 @@ app.post('/print/receipt', async (req, res) => {
         // Align text to left for receipt details
         newPrinter.alignLeft();
         newPrinter.println(`Receipt No: ${order.invoice_number}`);
-        // newPrinter.println(`Status: ${order.status}`)s;
-        newPrinter.print("Status: ");
-
-        // Enable bold text for the status value
-        newPrinter.raw(Buffer.from([0x1B, 0x45, 0x01]));
-        newPrinter.println(order.status); // Print the bold status value
-
-        // Disable bold text after the status value
-        newPrinter.raw(Buffer.from([0x1B, 0x45, 0x00]));
-
-
+        newPrinter.println(`Status: ${order.status}`);
         newPrinter.println(`Date: ${formattedDate}`);
         newPrinter.println(`Customer: ${order.customer ? order.customer.name : "Walk-in Customer"}`);
         newPrinter.drawLine();
@@ -131,8 +121,8 @@ app.post('/print/receipt', async (req, res) => {
         newPrinter.println("Terms & Conditions");
         newPrinter.println("No refund without a valid receipt");
         newPrinter.println("Please retain this receipt as proof of purchase");
-        newPrinter.println("");
-        newPrinter.println("");
+        newPrinter.raw(Buffer.from([0x0A])); // Newline in ESC/POS (LF, Line Feed)
+        newPrinter.raw(Buffer.from([0x0A]));
 
         console.log(newPrinter.getText());
 
