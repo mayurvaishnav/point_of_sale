@@ -49,8 +49,6 @@
 
 @section('js')
     
-    <script src="{{ asset('js/qz-tray.js') }}"></script>
-
     <script>
         $(document).ready(function() {
 
@@ -61,6 +59,20 @@
                     "\x1B\x40",  // Initialize printer
                     "\x1B\x70\x00\x19\xFA" // ESC/POS: Open cash drawer
                 ];
+                $.ajax({
+                    url: "http://localhost:3000/open-cash-drawer",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ 
+                        printerName: "{{ env('THERMAL_PRINTER_NAME') }}",
+                    }),
+                    success: function (response) {
+                        console.log(response.message);
+                    },
+                    error: function (error) {
+                        console.error('Print error:', error);
+                    }
+                });
                 completeReciptPrintJob(data);
             });
 
@@ -105,7 +117,8 @@
                 contentType: "application/json",
                 data: JSON.stringify({ 
                     printerName: "{{ env('THERMAL_PRINTER_NAME') }}",
-                    printData: printData
+                    printData: printData,
+                    order: printData.order
                 }),
                 success: function (response) {
                     console.log(response.message);
@@ -141,7 +154,7 @@
                     receiptData.push("\x1D\x56\x41\x03"); // Cut paper
 
                     const printDataString = receiptData.join("\n");
-                    completeReciptPrintJob(printDataString);
+                    completeReciptPrintJob(response);
                 },
                 error: function (xhr) {
                     Swal.fire({

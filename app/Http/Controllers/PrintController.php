@@ -19,7 +19,10 @@ class PrintController extends Controller
     
         $formattedReceipt = $this->formatReceiptText($order);
     
-        return response()->json(['receipt' => $formattedReceipt]);
+        return response()->json([
+            'receipt' => $formattedReceipt,
+            'order'=> $order,
+        ]);
     }
 
     private function formatReceiptText($order)
@@ -30,18 +33,18 @@ class PrintController extends Controller
         // $receiptText .= "\n\n"; // Add some space before printing
 
         // Store header info
-        $receiptText .= sprintf("%-42s\n", "Bowes Tyres and Auto Centre"); // Center alignment using padding
-        $receiptText .= sprintf("%-42s\n", "Timahoe Road, Portlaoise");
-        $receiptText .= sprintf("%-42s\n", "Phone: 057 8665075");
-        $receiptText .= sprintf("%-42s\n", "VAT No: IE397032GH");
-        $receiptText .= "------------------------------------------\n";
+        $receiptText .= str_pad("Bowes Tyres and Auto Centre", 42, " ", STR_PAD_BOTH) . "\n";
+        $receiptText .= str_pad("Timahoe Road, Portlaoise", 42, " ", STR_PAD_BOTH) . "\n";
+        $receiptText .= str_pad("Phone: 057 8665075", 42, " ", STR_PAD_BOTH) . "\n";
+        $receiptText .= str_pad("VAT No: IE397032GH", 42, " ", STR_PAD_BOTH) . "\n";
+        $receiptText .= str_repeat("-", 42) . "\n";
 
         // Receipt info
-        $receiptText .= sprintf("%-20s %22s\n", "Receipt No: " . $order->invoice_number, "");
-        $receiptText .= sprintf("%-20s %22s\n", "Status: " . $order->status->value, "");
-        $receiptText .= sprintf("%-20s %22s\n", "Date: " . $order->created_at->format('d-m-Y h:i A'), "");
-        $receiptText .= sprintf("%-20s %22s\n", "Customer: " . ($order->customer ? $order->customer->name : "Walk-in Customer"), "");
-        $receiptText .= "------------------------------------------\n";
+        $receiptText .= str_pad("Receipt No: " . $order->invoice_number, 40, " ", STR_PAD_RIGHT) . "";
+        $receiptText .= str_pad("Status: " . $order->status->value, 40, " ", STR_PAD_RIGHT) . "";
+        $receiptText .= str_pad("Date: " . $order->created_at->format('d-m-Y h:i A'), 40, " ", STR_PAD_RIGHT) . "";
+        $receiptText .= str_pad("Customer: " . ($order->customer ? $order->customer->name : "Walk-in Customer"), 40, " ", STR_PAD_RIGHT) . "";
+        $receiptText .= str_repeat("-", 42) . "\n";
 
         // Item table headers
         // $receiptText .= str_pad("Item", 25, " ", STR_PAD_RIGHT);
@@ -80,8 +83,8 @@ class PrintController extends Controller
 
         // Footer
         $receiptText .= "Thank you for your purchase!\n";
-        $receiptText .= "------------------------------------------\n";
-        $receiptText .= sprintf("%-42s\n", "Terms & Conditions");
+        $receiptText .= str_repeat("-", 42) . "\n";
+        $receiptText .= str_pad("Terms & Conditions", 42, " ", STR_PAD_BOTH) . "\n";
         $receiptText .= "No refund without a valid receipt\n";
         $receiptText .= "Please retain this receipt as proof of\n";
         $receiptText .= "purchase\n\n\n";

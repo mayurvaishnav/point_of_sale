@@ -33,7 +33,7 @@ app.get('/printers', async (req, res) => {
 // Thermal receipt printing
 app.post('/print/receipt', async (req, res) => {
     try {
-        const { printerName, printData } = req.body;
+        const { printerName, printData, order } = req.body;
         if (!printerName || !printData) {
             return res.status(400).json({ error: 'printerName or printData is required' });
         }
@@ -50,11 +50,113 @@ app.post('/print/receipt', async (req, res) => {
             }
         });
 
-        newPrinter.alignCenter();
-        newPrinter.println(printData);
+        // await newPrinter.init(); // Initialize the printer
 
-        let executed = await newPrinter.execute();
+        // Center header text
+        newPrinter.alignCenter();
+        newPrinter.println("Bowes Tyres and Auto Centre");
+        newPrinter.println("Timahoe Road, Portlaoise");
+        newPrinter.println("Phone: 057 8665075");
+        newPrinter.println("VAT No: IE397032GH");
+        newPrinter.drawLine(); // Prints a separator line
+
+        // Align text to left for receipt details
+        newPrinter.alignLeft();
+        newPrinter.println(`Receipt No: ${order.invoice_number}`);
+        newPrinter.println(`Status: ${order.status.value}`);
+        newPrinter.println(`Date: ${order.created_at}`);
+        newPrinter.println(`Customer: ${order.customer ? order.customer.name : "Walk-in Customer"}`);
+        newPrinter.drawLine();
+
+        // Print items table with fixed-width formatting
+        newPrinter.tableCustom([
+            { text: "Item", align: "LEFT", width: 0.7 },
+            { text: "Total", align: "RIGHT", width: 0.3 }
+        ]);
+        newPrinter.drawLine();
+
+        order.orderDetails.forEach(detail => {
+            newPrinter.tableCustom([
+                { text: `${detail.product_name} x${detail.quantity}`, align: "LEFT", width: 0.7 },
+                { text: `${detail.total.toFixed(2)}`, align: "RIGHT", width: 0.3 }
+            ]);
+        });
+
+        newPrinter.drawLine();
+
+        // Print totals
+        newPrinter.tableCustom([
+            { text: "Subtotal:", align: "LEFT", width: 0.7 },
+            { text: order.total_before_tax.toFixed(2), align: "RIGHT", width: 0.3 }
+        ]);
+        newPrinter.tableCustom([
+            { text: "VAT:", align: "LEFT", width: 0.7 },
+            { text: order.tax.toFixed(2), align: "RIGHT", width: 0.3 }
+        ]);
+
+        if (order.discount !== 0) {
+            newPrinter.tableCustom([
+                { text: "Discount:", align: "LEFT", width: 0.7 },
+                { text: order.discount.toFixed(2), align: "RIGHT", width: 0.3 }
+            ]);
+        }
+
+        newPrinter.tableCustom([
+            { text: "Total:", align: "LEFT", width: 0.7 },
+            { text: order.total_after_discount.toFixed(2), align: "RIGHT", width: 0.3 }
+        ]);
+
+        newPrinter.drawLine();
+
+        // Print footer
+        newPrinter.alignCenter();
+        newPrinter.println("Thank you for your purchase!");
+        newPrinter.drawLine();
+        newPrinter.println("Terms & Conditions");
+        newPrinter.println("No refund without a valid receipt");
+        newPrinter.println("Please retain this receipt as proof of purchase");
+        newPrinter.newLine();
+        newPrinter.newLine();
+        newPrinter.newLine();
+
+        console.log(newPrinter.getText());
+
+        await newPrinter.execute(); // Send print job to printer
+        await newPrinter.cut(); // Cut paper if supported
+
+        await newPrinter.disconnect(); // Close connection after printing
+
         res.json({ message: 'Receipt printed successfully!' });
+    } catch (error) {
+        console.error('Receipt Print Error:', error);
+        res.status(500).json({ error: 'Failed to print receipt: ' + error });
+    }
+});
+
+
+
+// Thermal receipt printing
+app.post('/open-cash-drawer', async (req, res) => {
+    try {
+        const { printerName, printData, order } = req.body;
+
+        let newPrinter = new ThermalPrinter({
+            type: PrinterTypes.EPSON, // Printer type: 'star' or 'epson'
+            interface: printerName, // Replace with your printer's IP and port
+            characterSet: 'PC437_USA', // Printer character set
+            lineCharacter: "-", // Set character for lines
+            options: {
+                timeout: 5000 // Connection timeout (ms)
+            }
+        });
+
+        // await newPrinter.init(); // Initialize the printer
+
+        await newPrinter.openCashDrawer(); // Open cash drawer
+
+        await newPrinter.disconnect(); // Close connection after printing
+
+        res.json({ message: 'Cash drawer opned successfully!' });
     } catch (error) {
         console.error('Receipt Print Error:', error);
         res.status(500).json({ error: 'Failed to print receipt: ' + error });
