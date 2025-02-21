@@ -40,13 +40,44 @@ app.post('/print/receipt', async (req, res) => {
 
         console.log(printerName, printData);
 
-        const thermalPrinter = new ThermalPrinter.printer({
-            type: 'epson', // or ThermalPrinter.types.STAR if using a Star printer
-            interface: "tcp://192.168.1.100:9100", // Change this to your printer's IP
-            characterSet: "CP437", // Ensure encoding is explicitly set
-            removeSpecialCharacters: false, // Optional, depends on your printer
-            lineCharacter: "-" // Customize line character for better formatting
-        });
+        // const thermalPrinter = new ThermalPrinter.printer({
+        //     type: 'epson', // or ThermalPrinter.types.STAR if using a Star printer
+        //     interface: "tcp://192.168.1.100:9100", // Change this to your printer's IP
+        //     characterSet: "CP437", // Ensure encoding is explicitly set
+        //     removeSpecialCharacters: false, // Optional, depends on your printer
+        //     lineCharacter: "-" // Customize line character for better formatting
+        // });
+
+        let newPrinter = {};
+        const name = 'THERMAL Receopt Printer';
+
+        try {
+            let testPrinter = printer.getPrinter(name);
+
+            if(testPrinter){
+                newPrinter = new ThermalPrinter({
+                    type: PrinterTypes.EPSON,                                  // Printer type: 'star' or 'epson'
+                    interface: 'printer:'+name,                       // Printer interface
+                    characterSet: 'PC437_USA',                                 // Printer character set - default: SLOVENIA
+                    lineCharacter: "-",                                       // Set character for lines - default: "-"
+                    driver: printer,
+                    options:{                                                 // Additional options
+                        timeout: 5000                                           // Connection timeout (ms) [applicable only for network printers] - default: 3000
+                    }
+                });
+            }
+        } catch (e) {
+            newPrinter = new ThermalPrinter({
+                type: PrinterTypes.EPSON,                                  // Printer type: 'star' or 'epson'
+                interface: 'printer:'+'\\\\DISPLAYPC\\'+name,                       // Printer interface
+                characterSet: 'PC437_USA',                                 // Printer character set - default: SLOVENIA
+                lineCharacter: "-",                                       // Set character for lines - default: "-"
+                driver: printer,
+                options:{                                                 // Additional options
+                    timeout: 5000                                           // Connection timeout (ms) [applicable only for network printers] - default: 3000
+                }
+            });
+        }
 
         thermalPrinter.alignCenter();
         thermalPrinter.println(printData);
