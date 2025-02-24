@@ -23,7 +23,7 @@ class JobScheduler
         //     AutoOrderEmailJob::dispatch($job);
         // }
 
-        if (empty($scheduledJobs)) {
+        if ($scheduledJobs->count() > 0) {
             Log::info('No jobs found to schedule...');
             return;
         }
