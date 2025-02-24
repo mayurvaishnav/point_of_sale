@@ -4,9 +4,8 @@ namespace App\Services;
 
 use App\Jobs\AutoOrderEmailJob;
 use App\Models\ScheduledJob;
-use Illuminate\Support\Facades\Log as FacadesLog;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
-use Log;
 
 class JobScheduler
 {
@@ -14,7 +13,7 @@ class JobScheduler
     {
         $jobs = ScheduledJob::where('is_active', true)->get();
 
-        FacadesLog::info('In scheduleJobs()... with jobs: ' . $jobs);
+        Log::info('In scheduleJobs()... with jobs: ' . $jobs->count());
 
         foreach ($jobs as $job) {
             $emailClass = $this->getEmailJobClass($job);
@@ -38,6 +37,7 @@ class JobScheduler
     {
         switch ($job->frequency) {
             case 'daily':
+                Log::info('Scheduling daily job...', ['job' => $job]);
                 Schedule::job(new $jobClass($job))->dailyAt($job->execution_time);
                 break;
             case 'weekly':
