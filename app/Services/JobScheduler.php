@@ -26,6 +26,7 @@ class JobScheduler
         $productsToReorder = $this->findProductsToReorder();
 
         if ($productsToReorder->isEmpty()) {
+            Log::info('No products found with low stock for Daily auto reorder email.');
             return;
         }
 
