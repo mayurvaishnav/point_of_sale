@@ -35,9 +35,9 @@ class JobScheduler
 
     private function scheduleJob($job, $jobClass)
     {
+        Log::info("Scheduling job: {$job->job_name} with frequency: {$job->frequency} at {$job->execution_time}");
         switch ($job->frequency) {
             case 'daily':
-                Log::info('Scheduling daily job...', ['job' => $job]);
                 Schedule::job(new $jobClass($job))->dailyAt($job->execution_time);
                 break;
             case 'weekly':
