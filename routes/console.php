@@ -15,7 +15,8 @@ Artisan::command('inspire', function () {
 Schedule::call(function () {
     $scheduler = new JobScheduler();
     Log::info('Scheduling jobs...');
-    $scheduler->scheduleJobs();
-})->everyMinute();
+
+    $scheduler->scheduleDailyAutoOrderMail();
+})->name('Send daily email to supplier for auto order')->dailyAt("12:20");
 
 Schedule::command('backup:run')->dailyAt('00:00');

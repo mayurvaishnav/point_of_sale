@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\Schedule;
 
 class JobScheduler
 {
+    public function scheduleDailyAutoOrderMail()
+    {
+        $jobs = ScheduledJob::where('name', 'daily_order_email')
+            ->where('is_active', true)
+            ->get();
+
+        foreach ($jobs as $job) {
+            Log::info('In JobScheduler()...');
+            AutoOrderEmailJob::dispatch($job);
+        }
+        Log::info('Done JobScheduler()...');
+    }
+
     public function scheduleJobs()
     {
         $jobs = ScheduledJob::where('is_active', true)->get();
