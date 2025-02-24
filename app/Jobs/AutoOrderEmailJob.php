@@ -61,8 +61,7 @@ class AutoOrderEmailJob implements ShouldQueue
                 return $product->name;
             })->toArray();
             Log::info("Sending auto reorder email to supplier: $supplierEmail with Products: " . implode(', ', $productNames));
-            Mail::to($supplierEmail)
-                ->send(new AutoReOrderProductsMail($this->scheduledJob, $products));
+            // Mail::to($supplierEmail)->send(new AutoReOrderProductsMail($this->scheduledJob, $products));
         }
         
     }

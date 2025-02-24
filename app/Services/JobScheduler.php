@@ -14,21 +14,14 @@ class JobScheduler
 {
     public function scheduleDailyAutoOrderMail()
     {
-        $scheduledJobs = ScheduledJob::where('job_name', 'daily_order_email')
+        $scheduledJob = ScheduledJob::where('job_name', 'daily_order_email')
             ->where('is_active', true)
-            ->get();
+            ->first();
 
-        // foreach ($jobs as $job) {
-        //     Log::info('In JobScheduler()...');
-        //     AutoOrderEmailJob::dispatch($job);
-        // }
-
-        if ($scheduledJobs->count() > 0) {
-            Log::info('No jobs found to schedule...');
+        if ($scheduledJob == null) {
+            Log::info('No jobs found to schedule for Daily auto reorder email.');
             return;
         }
-
-        $scheduledJob = $scheduledJobs->first();
 
         $productsToReorder = $this->findProductsToReorder();
 
@@ -49,12 +42,9 @@ class JobScheduler
             $productNames = $products->map(function($product) {
                 return $product->name;
             })->toArray();
-            Log::info("Sending auto reorder email to supplier: $supplierEmail with Products: " . implode(', ', $productNames));
-            Mail::to($supplierEmail)
-                ->send(new AutoReOrderProductsMail($scheduledJob, $products));
+            Mail::to($supplierEmail)->send(new AutoReOrderProductsMail($scheduledJob, $products));
+            Log::info("Sent auto reorder email to supplier: $supplierEmail with Products: " . implode(', ', $productNames));
         }
-
-        Log::info('Done JobScheduler()...');
     }
 
     private function findProductsToReorder()
