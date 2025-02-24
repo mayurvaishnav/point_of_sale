@@ -11,7 +11,7 @@ class JobScheduler
 {
     public function scheduleDailyAutoOrderMail()
     {
-        $jobs = ScheduledJob::where('name', 'daily_order_email')
+        $jobs = ScheduledJob::where('job_name', 'daily_order_email')
             ->where('is_active', true)
             ->get();
 

@@ -17,6 +17,6 @@ Schedule::call(function () {
     Log::info('Scheduling jobs...');
 
     $scheduler->scheduleDailyAutoOrderMail();
-})->name('Send daily email to supplier for auto order')->dailyAt("12:20");
+})->name('Send daily email to supplier for auto order')->dailyAt("12:23");
 
 Schedule::command('backup:run')->dailyAt('00:00');
