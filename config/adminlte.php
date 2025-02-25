@@ -261,7 +261,7 @@ return [
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => null,
-    'password_reset_url' => 'password/reset',
+    'password_reset_url' => null , //'password/reset',
     'password_email_url' => 'password/email',
     'profile_url' => false,
     'disable_darkmode_routes' => false,
