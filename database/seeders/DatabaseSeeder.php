@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $admin = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'username' => 'admin',
+            'name' => 'Mayur',
+            'email' => 'mayurvaishnav36@gmail.com',
+            'username' => 'mayurvaishnav36',
         ]);
 
         $role = Role::create(['name' => 'Admin']);
@@ -37,9 +37,9 @@ class DatabaseSeeder extends Seeder
         $role->syncPermissions($permissions);
         $admin->assignRole([$role->id]);
 
-        Customer::factory(5)->create();
-        Supplier::factory(2)->create();
-        Category::factory(2)->create();
-        Product::factory(10)->create();
+        // Customer::factory(5)->create();
+        // Supplier::factory(2)->create();
+        // Category::factory(2)->create();
+        // Product::factory(10)->create();
     }
 }
