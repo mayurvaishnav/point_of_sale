@@ -18,4 +18,5 @@ Schedule::call(function () {
     $scheduler->scheduleDailyAutoOrderMail();
 })->name('Send daily email to supplier for auto order')->dailyAt("17:30");
 
-Schedule::command('backup:run')->dailyAt('00:00');
+Schedule::command('backup:run')->everyFiveMinutes();
+// ->dailyAt('00:00');
