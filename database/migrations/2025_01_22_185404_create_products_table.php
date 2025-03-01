@@ -34,6 +34,7 @@ return new class extends Migration
             $table->integer('low_stock_threshold')->nullable();
             $table->integer('new_order_quantity')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

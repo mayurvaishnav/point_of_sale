@@ -182,7 +182,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        Log::info("OrderController destory method called by user: ". Auth::id() . " for order Id:" . $order->id);
+        Log::info("OrderController destroy method called by user: ". Auth::id() . " for order Id:" . $order->id);
         if (!$order->canBeDeleted()) {
             return redirect()->back()->with('error', 'This order cannot be deleted');
         }

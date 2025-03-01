@@ -32,10 +32,32 @@ class DatabaseSeeder extends Seeder
             'username' => 'mayurvaishnav36',
         ]);
 
-        $role = Role::create(['name' => 'Admin']);
+        $manager = User::factory()->create([
+            'name' => 'Manager',
+            'email' => 'manager@bowesautocentre.ie',
+            'username' => 'manager',
+        ]);
+
+        $frontdesk = User::factory()->create([
+            'name' => 'Frontdesk',
+            'email' => 'frontdesk@bowesautocentre.ie',
+            'username' => 'frontdesk',
+        ]);
+
+        $adminRole = Role::create(['name' => 'Admin']);
+        $managerRole = Role::create(['name'=> 'Manager']);
+        $frontdeskRole = Role::create(['name'=> 'Frontdesk']);
+        
         $permissions = Permission::pluck('id','id')->all();
-        $role->syncPermissions($permissions);
-        $admin->assignRole([$role->id]);
+        $frontdeskPermissions = Permission::where('id', [9,13,14,15,16,17,21,25,26,27,28,29,30,31,32,33,34,45,36])->pluck('id','id')->all();
+        
+        $adminRole->syncPermissions($permissions);
+        $managerRole->syncPermissions($permissions);
+        $frontdeskRole->syncPermissions($frontdeskPermissions);
+        
+        $admin->assignRole([$adminRole->id]);
+        $manager->assignRole([$managerRole->id]);
+        $frontdesk->assignRole([$frontdeskRole->id]);
 
         // Customer::factory(5)->create();
         // Supplier::factory(2)->create();

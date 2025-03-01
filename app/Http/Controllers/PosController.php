@@ -253,7 +253,7 @@ class PosController extends Controller
             }
 
             // Delete existing order details
-            OrderDetail::where('order_id', $order->id)->delete();
+            OrderDetail::where('order_id', $order->id)->forceDelete();
 
             foreach ($cart->cartItems as $cartItem) {
                 OrderDetail::create([

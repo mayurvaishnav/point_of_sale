@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('amount_due',10,2);
             $table->string('payment_status')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

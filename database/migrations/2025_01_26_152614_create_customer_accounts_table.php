@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers')->onDelete('restrict');
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
         Schema::create('customer_account_transactions', function (Blueprint $table) {
             $table->id();
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->decimal('paid_amount',10,2)->nullable();
             $table->decimal('balance',10,2)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

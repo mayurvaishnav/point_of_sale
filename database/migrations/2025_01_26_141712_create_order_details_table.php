@@ -25,6 +25,7 @@ return new class extends Migration
             $table->decimal('total',8,2)->nullable();
             $table->decimal('total_after_discount',8,2)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

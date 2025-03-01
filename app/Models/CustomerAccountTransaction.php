@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CustomerAccountTransaction extends Model
 {
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         "customer_account_id",
         "customer_id",

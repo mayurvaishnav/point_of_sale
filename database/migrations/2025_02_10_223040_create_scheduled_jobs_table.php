@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('frequency', ['daily', 'weekly', 'monthly']);
             $table->boolean('is_active')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

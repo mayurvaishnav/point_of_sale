@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('model')->nullable();
             $table->string('registration_no')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
