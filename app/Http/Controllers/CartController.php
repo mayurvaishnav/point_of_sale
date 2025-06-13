@@ -69,6 +69,15 @@ class CartController extends Controller
         return response()->json(CartService::getCart());
     }
 
+    public function updateOrderNote(Request $request)
+    {
+        $orderNote = $request->orderNote;
+
+        CartService::updateOrderNote($orderNote);
+
+        return response()->json(CartService::getCart());
+    }
+
     public function update(Request $request)
     {
         $request->validate([

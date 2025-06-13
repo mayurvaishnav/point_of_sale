@@ -108,6 +108,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/updateCustomer', [CartController::class, 'updateCustomer'])->name('cart.updateCustomer');
     Route::post('/cart/empty', [CartController::class, 'empty'])->name('cart.empty');
+    Route::post('/cart/updateOrderNote', [CartController::class, 'updateOrderNote'])->name('cart.updateOrderNote');
 
 
     // REPORTS

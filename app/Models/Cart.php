@@ -8,6 +8,7 @@ class Cart extends Facade {
     public ?Customer $customer;
 
     public ?Order $order;
+    public ?string $orderNote;
     public ?float $discount = 0;
 
     /**
@@ -16,12 +17,13 @@ class Cart extends Facade {
     public array $cartItems;
     public CartItem $total;
 
-    public function __construct(?Customer $customer = null, ?Order $order = null, ?array $cartItems = null, ?float $discount = null)
+    public function __construct(?Customer $customer = null, ?Order $order = null, ?array $cartItems = null, ?float $discount = null, ?string $orderNote = null)
     {
         $this->customer = $customer;
         $this->order = $order;
         $this->cartItems = $cartItems ?? [];
         $this->discount = $discount ?? 0;
+        $this->orderNote = $orderNote;
     }
 
     public function update(?Customer $customer, ?Order $order, array $cartItems)

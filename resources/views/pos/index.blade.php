@@ -161,6 +161,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <a href="#" id="openUpdateNoteModal" class="btn btn-link p-0">+ Order Note</a>
                     <div class="card-footer">
                         <div class="row mb-2">
                             <table class="col-md-12">
@@ -291,6 +292,7 @@
 @include('pos.payment-modal')
 @include('pos.itemUpdate-modal')
 @include('pos.paymentReceipt-modal')
+@include('pos.updateNote-modal')
 <iframe id="pdf-frame" style="display:none;" width="100%" height="1"></iframe>
 
 @endsection
@@ -490,6 +492,39 @@
                     dataType: 'json',
                     success: function (response) {
                         // nothing to do here
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong, Please refresh and try again.',
+                        });
+                    }
+                });
+            });
+
+            $('#openUpdateNoteModal').on('click', function(e) {
+                e.preventDefault();
+                $('#updateNoteModal').modal('show');
+            });
+
+            // Update Note selection
+            $('#note-update-button').on('click', function() {
+                const orderNote = $('#updateOrderNote').val();
+
+                // Add your AJAX request or other logic here to handle the note change
+                $.ajax({
+                    url: "{{ route('cart.updateOrderNote') }}",
+                    method: "POST",
+                    data: {
+                        orderNote: orderNote,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        $("#updateOrderNote").val(response.orderNote);
+                        $("#orderNote").val(response.orderNote);
+                        $('#updateNoteModal').modal('hide');
                     },
                     error: function (xhr) {
                         Swal.fire({

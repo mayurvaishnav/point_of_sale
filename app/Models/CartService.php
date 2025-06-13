@@ -31,6 +31,12 @@ class CartService {
         session()->put('cart', $cart);
     }
 
+    public static function updateOrderNote($orderNote) {
+        $cart = self::getCart();
+        $cart->orderNote = $orderNote;
+        session()->put('cart', $cart);
+    }
+
     public static function updateDiscount($discount) {
         $cart = self::getCart();
         $cart->discount = $discount;

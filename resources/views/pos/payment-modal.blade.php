@@ -25,7 +25,7 @@
                     </div>
                     <div class="form-group">
                         <label for="orderNote">Note</label>
-                        <textarea class="form-control" id="orderNote" name="order_note" rows="3"></textarea>
+                        <textarea class="form-control" id="orderNote" name="order_note" rows="3">{{ old('order_note', $cart->orderNote ?? '') }}</textarea>
                     </div>
 
                     <!-- Payment Method Buttons -->

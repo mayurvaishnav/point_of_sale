@@ -231,6 +231,7 @@ class PosController extends Controller
 
             $orderData = [
                 'customer_id' => $customer_id,
+                'note' => $cart->orderNote,
                 'user_id' => Auth::user()->id,
                 'status' => OrderStatus::LAYAWAY,
                 'order_date' => now()->toDateString(),
