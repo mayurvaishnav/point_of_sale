@@ -59,7 +59,7 @@
                     "\x1B\x40",  // Initialize printer
                     "\x1B\x70\x00\x19\xFA" // ESC/POS: Open cash drawer
                 ];
-                let printerName1: "{{ env('THERMAL_PRINTER_NAME') }}"
+                let printerName1 = "{{ env('THERMAL_PRINTER_NAME') }}"
                 console.log('Opening cash drawer on printer:', printerName1);
                 $.ajax({
                     url: "http://localhost:3000/open-cash-drawer",
