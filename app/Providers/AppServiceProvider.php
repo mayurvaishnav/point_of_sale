@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('*', function ($view) {
             $view->with('thermalPrinterName', config('app.thermal_printer_name'));
             $view->with('a4PrinterName', config('app.a4_printer_name'));
+            $view->with('enableBackupPrinting', config('app.enable_backup_printing'));
         });
         Storage::extend('dropbox', function (Application $app, array $config) {
             $accessToken = $this->getDropboxAccessToken($config);

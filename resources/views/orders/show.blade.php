@@ -29,7 +29,7 @@
                     <div class="dropdown-menu">
                         <button class="dropdown-item" id="printReceipt" data-order-id={{ $order->id }}>Receipt</button>
                         <button class="dropdown-item" id="printA4" data-order-id={{ $order->id }}>A4 Invoice</button>
-                        @if (env('ENABLE_BACKUP_PRINTING'))
+                        @if ($enableBackupPrinting)
                             <button class="dropdown-item" id="printReceiptBackup" data-order-id={{ $order->id }}>Receipt (backup)</button>
                             <button class="dropdown-item" id="printA4Backup" data-order-id={{ $order->id }}>A4 Invoice (backup)</button>
                         @endif

@@ -4,7 +4,7 @@ return [
 
     'thermal_printer_name' => env('THERMAL_PRINTER_NAME', 'tcp://192.168.1.100'),
     'a4_printer_name' => env('A4_PRINTER_NAME', 'RICOH SP 311DN PCL 6'),
-
+    'enable_backup_printing' => env('ENABLE_BACKUP_PRINTING', false),
 
     "currency"=> env("APP_CURRENCY", "EUR"),
     "currency_symbol"=> env("APP_CURRENCY_SYMBOL","€"),

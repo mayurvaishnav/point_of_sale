@@ -118,8 +118,8 @@ app.post('/print/receipt', async (req, res) => {
         newPrinter.drawLine();
         newPrinter.println("Terms & Conditions");
         newPrinter.println("All wheel nuts to be checked after 12 km");
-        newPrinter.println("Please retain this receipt as proof of purchase");
-        newPrinter.println("\n");
+        newPrinter.println("Please retain this receipt as proof of");
+        newPrinter.println("purchase");
         newPrinter.println("\n");
         newPrinter.println("\n");
 
