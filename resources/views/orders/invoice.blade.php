@@ -47,10 +47,9 @@
                         <strong>Walk-in Customer</strong><br>
                     @endif
                 </td>
-                <td class="text-right no-border">
-                    @if ($customerAccountBalance != 0)
-                    <p><h3>Customer Account Balance: @if ($customerAccountBalance < 0) - @endif {{ config( 'app.currency_symbol') }}{{ abs($customerAccountBalance) }}</h3></p>
-                @endif
+                <td class="text-left no-border">
+                    <p>Note:</p>
+                    <p> {{ $order->note }}</p>
                 </td>
             </tr>
         </table>
@@ -101,7 +100,10 @@
                 </tr>
             </tbody>
         </table>
-        <br>
+
+        @if ($customerAccountBalance != 0)
+            <p><h3>Customer Account Balance: @if ($customerAccountBalance < 0) - @endif {{ config( 'app.currency_symbol') }}{{ abs($customerAccountBalance) }}</h3></p>
+        @endif
 
         <div>
             <h3>Terms and Conditions</h3>
