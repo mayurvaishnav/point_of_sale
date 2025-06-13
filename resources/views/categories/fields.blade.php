@@ -23,6 +23,18 @@
 </div>
 
 <div class="form-group">
+    <label for="sorting_order">Sorting Order</label>
+    <input type="number" name="sorting_order" class="form-control @error('sorting_order') is-invalid @enderror"
+           id="sorting_order"
+           placeholder="Sorting Order" value="{{ old('sorting_order', $category->sorting_order ?? '') }}" required>
+    @error('sorting_order')
+    <span class="invalid-feedback" role="alert">
+        <strong>{{ $message }}</strong>
+    </span>
+    @enderror
+</div>
+
+<div class="form-group">
     <label for="description">Description</label>
     <textarea type="text" name="description" class="form-control @error('description') is-invalid @enderror"
            id="description"

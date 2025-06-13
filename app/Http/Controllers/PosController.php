@@ -29,7 +29,7 @@ class PosController extends Controller
         $cart = CartService::getCart();
         $customers = Customer::all();
 
-        $categories = $products->pluck('category')->unique();
+        $categories = $products->pluck('category')->unique()->sortBy('sorting_order')->values();
 
         return view("pos.index", compact("products","cart", "customers", "categories"));
     }

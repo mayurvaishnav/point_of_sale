@@ -51,6 +51,7 @@ class CategoryController extends Controller
             'name' => 'required|unique:categories,name',
             'slug' => 'required|unique:categories,slug|alpha_dash',
             'description' => 'nullable|string|max:1000',
+            'sorting_order' => 'nullable|integer|min:0',
         ];
 
         $validatedData = $request->validate($rules);
@@ -91,6 +92,7 @@ class CategoryController extends Controller
             'name' => 'required|unique:categories,name,'.$category->id,
             'slug' => 'required|alpha_dash|unique:categories,slug,'.$category->id,
             'description' => 'nullable|string|max:1000',
+            'sorting_order' => 'nullable|integer|min:0',
         ];
 
         $validatedData = $request->validate($rules);

@@ -29,6 +29,7 @@
                     <th>Id</th>
                     <th>Name</th>
                     <th>Slug</th>
+                    <th>Sorting Order</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
@@ -39,6 +40,7 @@
                     <td>{{$category->id}}</td>
                     <td>{{$category->name}}</td>
                     <td>{{$category->slug}}</td>
+                    <td>{{$category->sorting_order}}</td>
                     <td>{{$category->description}}</td>
                     <td>
                         @can('category-edit')
