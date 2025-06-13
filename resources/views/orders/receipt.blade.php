@@ -18,10 +18,10 @@
 <body>
     <div class="receipt">
         <div class="center">
-            <strong>Bowes Tyres and Auto Centre</strong><br>
+            <strong>Bowes Auto Centre Ltd</strong><br>
             Timahoe Road, Portlaoise, Co. Laois<br>
             Phone: 057-8665075<br>
-            VAT No: IE397032GH
+            VAT No: IE3970329GH
         </div>
 
         <div class="dashed-line"></div>
@@ -90,7 +90,7 @@
         <p>Thank you for your purchase!</p>
         <div class="dashed-line"></div>
         <h3><strong>Terms & Conditions</strong></h3>
-        <p>No refund without a valid receipt</p>
+        <p>All wheel nuts to be checked after 12 km</p>
         <p>Please retain this receipt as proof of purchase</p>
     </div>
 </body>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Invoice from Bowes Tyres and Auto Centre</title>
+    <title>Invoice from Bowes Auto Centre Ltd</title>
 </head>
 <body>
     <p>Dear {{ $order->customer->name ?? 'Customer' }},</p>
 
-    <p>Thank you for your recent purchase at Bowes Tyres and Auto Centre.</p>
+    <p>Thank you for your recent purchase at Bowes Auto Centre Ltd.</p>
 
     <p>Please find attached your invoice for your order placed on {{ $order->created_at->format('d-m-Y h:i A') }}.</p>
 
@@ -16,8 +16,8 @@
     <p>If you have any questions regarding this invoice, feel free to contact us.</p>
 
     <p>Best regards,<br>
-    <strong>Bowes Tyres and Auto Centre</strong><br>
+    <strong>Bowes Auto Centre Ltd</strong><br>
     Timahoe Road, Portlaoise, Co. Laois<br>
-    Phone: 057-8665075 | Email: info@bowestyres.com</p>
+    Phone: 057-8665075 | Email: info@bowesautocentre.ie</p>
 </body>
 </html>

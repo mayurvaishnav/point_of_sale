@@ -31,7 +31,7 @@ class CustomerAccountStatementMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Account Statement From Bowes Tyres and Auto Centre',
+            subject: 'Account Statement From Bowes Auto Centre Ltd',
             cc: [env('MAIL_CC_ADDRESS')]
         );
     }

@@ -58,10 +58,10 @@ app.post('/print/receipt', async (req, res) => {
 
         // Center header text
         newPrinter.alignCenter();
-        newPrinter.println("Bowes Tyres and Auto Centre");
+        newPrinter.println("Bowes Auto Centre Ltd");
         newPrinter.println("Timahoe Road, Portlaoise");
         newPrinter.println("Phone: 057 8665075");
-        newPrinter.println("VAT No: IE397032GH");
+        newPrinter.println("VAT No: IE3970329GH");
         newPrinter.drawLine(); // Prints a separator line
 
         // Align text to left for receipt details
@@ -117,7 +117,7 @@ app.post('/print/receipt', async (req, res) => {
         newPrinter.println("Thank you for your purchase!");
         newPrinter.drawLine();
         newPrinter.println("Terms & Conditions");
-        newPrinter.println("No refund without a valid receipt");
+        newPrinter.println("All wheel nuts to be checked after 12 km");
         newPrinter.println("Please retain this receipt as proof of purchase");
         newPrinter.println("\n");
         newPrinter.println("\n");

@@ -33,10 +33,10 @@ class PrintController extends Controller
         // $receiptText .= "\n\n"; // Add some space before printing
 
         // Store header info
-        $receiptText .= str_pad("Bowes Tyres and Auto Centre", 42, " ", STR_PAD_BOTH) . "\n";
+        $receiptText .= str_pad("Bowes Auto Centre Ltd", 42, " ", STR_PAD_BOTH) . "\n";
         $receiptText .= str_pad("Timahoe Road, Portlaoise", 42, " ", STR_PAD_BOTH) . "\n";
         $receiptText .= str_pad("Phone: 057 8665075", 42, " ", STR_PAD_BOTH) . "\n";
-        $receiptText .= str_pad("VAT No: IE397032GH", 42, " ", STR_PAD_BOTH) . "\n";
+        $receiptText .= str_pad("VAT No: IE3970329GH", 42, " ", STR_PAD_BOTH) . "\n";
         $receiptText .= str_repeat("-", 42) . "\n";
 
         // Receipt info
@@ -85,7 +85,7 @@ class PrintController extends Controller
         $receiptText .= "Thank you for your purchase!\n";
         $receiptText .= str_repeat("-", 42) . "\n";
         $receiptText .= str_pad("Terms & Conditions", 42, " ", STR_PAD_BOTH) . "\n";
-        $receiptText .= "No refund without a valid receipt\n";
+        $receiptText .= "All wheel nuts to be checked after 12 km\n";
         $receiptText .= "Please retain this receipt as proof of\n";
         $receiptText .= "purchase\n\n\n";
 

@@ -22,11 +22,11 @@
         <table>
             <tr class="no-border">
                 <td class="text-left no-border">
-                    <strong>Bowes Tyres and Auto Centre</strong><br>
+                    <strong>Bowes Auto Centre Ltd</strong><br>
                     Timahoe Road, Portlaoise, Co. Laois<br>
                     Phone: 057-8665075<br>
-                    Email: info@bowestyres.com<br>
-                    Vat No: IE397032GH
+                    Email: info@bowesautocentre.ie<br>
+                    Vat No: IE3970329GH
                 </td>
                 <td class="text-right no-border">
                     <h2 style="margin: 0;">Account Statement</h2>
