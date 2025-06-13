@@ -187,7 +187,7 @@
             </div>
 
             <div class="form-group col-md-6">
-                <label for="store">Store</label>
+                <label for="store">Paul's Store</label>
                 <input type="text" name="store" class="form-control @error('store') is-invalid @enderror"
                     id="store"
                     placeholder="Store" value="{{ old('store', $product->store ?? '') }}">
