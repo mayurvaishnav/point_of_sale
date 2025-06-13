@@ -32,6 +32,7 @@
                     <th>Supplier</th>
                     <th>Price</th>
                     <th>Quantity</th>
+                    <th>Garage</th>
                     <th>Is Active</th>
                     <th>Actions</th>
                 </tr>
@@ -44,7 +45,8 @@
                     <td>{{$product->category->name ?? ''}}</td>
                     <td>{{$product->supplier->name ?? ''}}</td>
                     <td class="text-right">€ {{$product->selling_price}}</td>
-                    <td class="text-right">{{$product->quantity}}</td>
+                    <td class="text-right">{{ $product->quantity }}</td>
+                    <td class="text-right">{{ $product->garage }}</td>
                     <td class="text-right">{{ $product->is_active ? 'Active' : 'Inactive' }}</td>
                     <td>
                         <span class="d-none">{{$product->description}}</span>
